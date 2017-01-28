@@ -143,7 +143,7 @@ $debug_mode=1;
 $PM{'admin_passwd'} = '4139';		# 管理人による記事削除時のパスワード
 #					# (変更してください)
 #
-$PM{'title'} 	= "画像掲示板(携帯用URL)";	
+$PM{'title'} 	= "ネ実ろだ";	
 #  ↑「お気に入り or ブックマーク」保存時のタイトルになります。
 #
 #  ■<終了時戻り先ＵＲＬ>
@@ -171,7 +171,7 @@ $PM{'cgi_hontai_name'}	= 'imgboard2015.cgi';	# imgboard本体の名前
 #  imodeと共用する場合は、テキスト投稿の比率が上がりますので、保存メッセージ
 #  数を2-3倍に増やした方がバランスいいでしょう。
 #
-$PM{'max_message'} 		= 600;
+$PM{'max_message'} 		= 500;
 #
 #  ■ <時差>	# imgboardと設定を合わせてください
 #
@@ -290,22 +290,22 @@ $PM{'no_upload_by_spam_word'}=1;
 ," 妊娠契約 "," 素人女性 "," 女性登録者 "," 登録無料 "
 ," 逆指名 "," サイトだよ "," 見放題 "
 # アダルト系
-#," セックス "," 無修正 "," 調教 "," セフレ ", " 人気ＡＶ "
-#," 女性が "," エッチ "," ゲット "," ご指名 "," 援交 ", " ヤリマン "
-#," 若い女性 "," 童貞 "," 出会い "," 人妻 "
-#," 旦那 "," サイトだよ "," 援助 "," 若妻 "
+," セックス "," 無修正 "," 調教 "," セフレ ", " 人気ＡＶ "
+," 女性が "," エッチ "," ゲット "," ご指名 "," 援交 ", " ヤリマン "
+," 若い女性 "," 童貞 "," 出会い "," 人妻 "
+," 旦那 "," サイトだよ "," 援助 "," 若妻 "
 #
 # 海外
 # アダルト系
-#," fuck "," porn "
-#," fetish "," pics "," adult "," teen "," stripper "
+," fuck "," porn "
+," fetish "," pics "," adult "," teen "," stripper "
 #
 # ブランドコピーSPAM
 ," クス専売 "," ハイレプ "," copy33 "," brand188 "," スーパーコピー "
 ," louis "," vuitton "," taschen "," fossil  "," ローレックス "," ロレックス "
 ," cartier "," カルティエ "," 高級腕時計 "," S級  "," N級 "
-#," check "," thank "," More "," free "
-#," online "," site "," visit "
+," check "," thank "," More "," free "
+," online "," site "," visit "
 # 勧誘系
 ," links "," insurance "," cheap "," buy "
 ," Molto "," cheap "," Airfare "," Furniture "," Ashley "
@@ -407,7 +407,7 @@ $PM{'no_upload_by_spam_country_mail'}=1;
 #
 #  URLリンクやメールアドレスのある書き込みを、問答無用ですべて廃棄
 #  (0=廃棄しない（デフォルト）,1=廃棄する)
-$filter_bbs_spam=0;
+$filter_bbs_spam=1;
 #
 #
 #  <友達へ教えるURL>
@@ -424,7 +424,7 @@ $PM{'cgi_url'}	="http://www.aaa.bbb.com/~myname/im.cgi";
 #
 #  デフォルト7
 #  １ページに表示するメッセージの数です。imodeの場合は5以下を推奨
-$PM{'message_per_page'} 		= 7;
+$PM{'message_per_page'} 		= 10;
 #
 #  ■ <携帯で表示する場合の、１記事あたりの最大文字数>
 #
@@ -441,7 +441,7 @@ $PM{'kiji_disp_limit_foma'}=3000; # FOMA以降の場合
 #
 #  返信機能を使うことができます。
 #  (1=返信機能あり(推奨),0=返信機能なし)
-$PM{'use_rep'} 		= 1;
+$PM{'use_rep'} 		= 0;
 #
 # 返信でアップロードを許諾する場合は1にする(2005.04.16NEW)
 $PM{'allow_res_upload'}=0;
@@ -464,21 +464,21 @@ $PM{'use_sage'} = 1;
 #  ら表示する機能を追加しました。
 #
 #  1=変換してから表示(推奨),0=なにもしない
-$PM{'hankaku_filter'}=1;
+$PM{'hankaku_filter'}=0;
 #
 #  ■ <PCからの投稿を許可>
 #
 #  PCから、携帯アクセス経由で投稿する行為を許可するかどうかを設定してください。
 #
 #  1=許可しない(推奨),0=許可する(デモ用)
-$PM{'no_upload_from_pc'}=0;
+$PM{'no_upload_from_pc'}=1;
 #
 #  ■ <PCからの閲覧を許可> 2002.04 new
 #
 #  PCから、携帯アクセス経由で閲覧する行為を許可するかどうかを設定してください。
 #
 #  1=許可しない,0=許可する(推奨)
-$PM{'no_view_from_pc'}=0;
+$PM{'no_view_from_pc'}=1;
 #
 #  ■ <フォーム入力項目のデータ有無チェック>
 #
@@ -533,7 +533,7 @@ $PM{'max_upload_size'} 	= 6000;	# 単位KB TODO
 $diet_org_img	=1;
 # このサイズ以上のものをダイエットする(標準200KB)
 # (100KB未満は指定できません)
-$MICRO_DIET{'SIZE'}="200";
+$MICRO_DIET{'SIZE'}="1024";
 #
 # アニメ専用圧縮アルゴリズム(2010 new)
 # 実写写真でなく、アニメやイラスト、CG画像のみ
@@ -570,7 +570,7 @@ $PM{'allow_other_multimedia_data'}	= '0';
 #
 #  記事中にURL,メールアドレス等が含まれる場合、自動的にリンクにします。
 #  (1=自動リンク(推奨),0=自動リンクしない)
-$PM{'auto_url_link'}=1;
+$PM{'auto_url_link'}=0;
 #
 #
 #
@@ -600,7 +600,7 @@ $PM{'counter_fig_height'} = ''; # 縦
 #
 # 同一IPチェック
 #  (1=チェックする,0=チェックしない(デフォルト))
-$PM{'counter_check_same_ip'} = 0;
+$PM{'counter_check_same_ip'} = 1;
 #
 #  IPアドレスやHOST名のパターンでカウントやアクセスログを
 #  残さない人を指定することもできます。
@@ -655,7 +655,7 @@ $PM{'view_passwd'}="1234";
 #  デフォルトはタグ使用可です。(1)
 #
 #  (1=使用可能,0=使用不可)
-$PM{'use_html_tag_in_comment'}=1;
+$PM{'use_html_tag_in_comment'}=0;
 #
 #  <IMGタグ許可・非許可>
 #
@@ -681,7 +681,7 @@ $PM{'no_upload_by_no_RH_user'}=0;	# imode 使用時は変更しないこと
 #  えるユーザからしつこいイタズラを受けている場合に、最終手段として使ってみて
 #  ください。
 #  (1=制限する,0=制限しない(推奨))
-$PM{'no_upload_by_black_word'}=0;	
+$PM{'no_upload_by_black_word'}=1;	
 #
 #   マッチした場合のエラーメッセージ（変更可）
 #   （排除されたことが相手にわからないように、できるだけ、
@@ -811,7 +811,7 @@ $PM{'oyasumi_message'}=qq|
 #  のデメリットがありますので、普通の人は使わないでください。
 #  (使い方詳細は新FAQページを参照)
 #
-$PM{'make_bbs_html_top'}=0;# (1=yes,0=no)デフォルトは0
+$PM{'make_bbs_html_top'}=1;# (1=yes,0=no)デフォルトは0
 #
 # Yesにした場合は必ずPerlのパスを正しく設定してください。
 $PM{'perl_prog_for_win_server'}="perl.exe";			# Win32上のWebサーバ用
@@ -886,7 +886,7 @@ print<<HTML_END;
 <HTML>
 <HEAD><TITLE>$PM{'title'}</TITLE>$top_html_header</HEAD>
 <BODY BGCOLOR="$PM{'im_body_bgcolor'}" BACKGROUND="$PM{'body_background'}" TEXT="$PM{'im_body_text'}" LINK="#6060FF" VLINK="#4040FF">
-画像Upload掲示板<BR>
+ネ実ろだ<BR>
 <CENTER>
 (2015携帯ｱｸｾｽ) <BR>
 -$ACCESS_COUNTER{total}-<BR>
