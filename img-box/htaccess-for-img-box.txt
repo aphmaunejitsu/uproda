@@ -1,0 +1,153 @@
+#Access config file for imgboard img-box directory (Security Level will UP!)
+#
+# Version1.12 2010/03/18
+#
+# For Apache & NCSA WWW server
+# 1)Rename this file to ".htaccess".
+# 2)Put this file in img-box directory. (IMG upload directory)
+# 3)Change file permission to 604. (you must do!)
+#
+# if you put this file, your imgboard security-level will up.
+#
+# Effects:
+# Nobody can exec SSI in img-box directory.
+# Nobody can exec CGI in img-box directory.
+# 
+#Options	Indexes	
+#
+# SoftBank add==============
+AddType	image/bmp	bmp
+AddType	image/png	png pnz
+#
+#AddType	image/jpeg	jpe jpz
+#AddType	audio/x-smd	smd smz smx
+#AddType	video/x-mng	mng
+#AddType	text/x-vbookmark	vbm
+#AddType	text/x-vcard	vcf
+#AddType	text/x-vcalendar	vcs
+#AddType	text/x-vmessage	vmg
+#AddType	text/x-vnote	vnt
+#
+AddType	application/x-htmlmail-template	hmt
+# DDI-P======================================
+# H"
+#AddType	Audio/X-Alpha5	als
+#AddType	Audio/X-PdxMidi	dxm
+#
+# Docomo======================================
+#AddType	application/x-pana-melody	pmd
+#
+#AddType	audio/mp4	m4a
+#AddType	audio/amr	amr
+#
+# i APL
+#AddType	application/x-jam	jam
+#
+#AddType	application/x-decomail-template	dmt
+#AddType	application/x-ucf-package	ucm ucp
+#
+# au ======================================
+#AddType	text/x-hdml;charset=Shift_JIS	hdml
+#AddType	application/x-smaf	mmf
+#AddType	audio/vnd.qcelp	qcp
+#AddType	application/x-pmd	pmd
+# ezmovie
+#AddType	application/x-mpeg	amc
+# EZ APL
+#AddType	application/x-kjx	kjx
+#AddType	application/x-kddi-htmlmail	khm
+#
+# WindowsMedia ==============================
+#AddType	video/x-ms-asf	asf asx
+#AddType	audio/x-ms-wma	wma
+#AddType	audio/x-ms-wax	wax
+#AddType	video/x-ms-wmv	wmv
+#AddType	video/x-ms-wvx	wvx
+#AddType	video/x-ms-wm	wm
+#AddType	application/x-ntt-vod	vod
+#AddType	application/x-ntt-vod2	nsmil
+#AddType	application/x-ms-wmz	wmz
+#AddType	application/x-ms-wmd	wmd
+#
+# Flash Video ==============================
+#AddType	video/x-flv	flv
+#AddType	application/x-shockwave-flash	swf
+#
+# iPhone/iPod ==============================
+#AddType	video/3gpp2	3g2 3gp2
+#AddType	video/3gpp	3gp 3gpp
+#AddType	audio/3gpp2	3g2
+#AddType	audio/3gpp	3gp
+#AddType	video/quicktime	mov
+#AddType	video/3gpp	mp4
+#AddType	video/mp4	mp4
+#AddType	audio/mpeg	mp3
+#AddType	audio/x-m4a	m4a
+#AddType	audio/x-m4b	m4b
+#AddType	audio/x-m4p	m4p
+#AddType	video/x-m4v	m4v
+#AddType	audio/audible	aa
+#AddType	audio/vnd.audible.aax	aax
+#AddType	audio/x-aiff	aiff
+#AddType	audio/x-wav	wav
+#
+AddType application/x-mpegURL .m3u8
+#AddType video/MP2T .ts
+#
+# New DATA ==============================
+#AddType	application/vnd.ms-xpsdocument	xps
+#AddType	application/epub+zip 	epub
+#AddType	application/x-ogg 	ogg
+#AddType	application/ogg 	ogm
+#AddType	audio/x-matroska 	mka mks
+#AddType	video/x-matroska 	mkv mks
+#AddType	application/x-7z-compressed	7z
+#
+# OLD JPN APL DATA ==============================
+#AddType	application/vnd.fujitsu.oasys	oas
+#AddType	application/vnd.fujitsu.oasys2	oa2
+#AddType	application/vnd.fujitsu.oasys3	oa3
+#AddType	application/x-js-hana	jhd jhdc
+#AddType	application/x-js-taro	jtd jvw
+#AddType	application/vnd.fujixerox.docuworks	xdw
+#AddType	application/vnd.fujixerox.docuworks.binder	xbd
+#
+# 3D DATA ==============================
+#AddType	application/dxf	dxf
+#AddType	application/x-3ds	3ds
+#AddType	application/jwc	jwc jww
+#
+# Adobe ==============================
+#AddType	application/pdf	pdf
+#AddType	application/postscript	ai eps ps
+#AddType	application/x-indesign	inx indd indt indl indb
+#
+# OTHER ==============================
+#AddType	audio/midi	kar
+#
+# Microsoft DATA ==============================
+#AddType	message/rfc822	mht mhtml
+#AddType	application/x-mswrite 	wri
+#
+#AddType	application/msword 	doc
+#AddType	application/vnd.ms-powerpoint 	ppt
+#AddType	application/vnd.ms-excel	xls
+#AddType	application/vnd.ms-project	mpp
+#AddType	application/vnd.openxmlformats-officedocument.presentationml.presentation 	pptx
+#AddType	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet	xlsx
+#AddType	application/vnd.openxmlformats-officedocument.wordprocessingml.document		docx
+#AddType	application/vnd.ms-powerpoint.presentation.macroenabled.12	pptm
+#AddType	application/vnd.ms-excel.sheet.macroenabled.12	xlsm
+#AddType	application/vnd.ms-word.document.macroenabled.12	docm
+#
+# need mod_header on on httpd.conf
+#
+#<Files ~ "?.3gp$">
+#Header set x-jphone-copyright "no-transfer"
+#</Files>
+#<FilesMatch "\.3gpp?2?$">
+#Header set x-jphone-copyright no-store
+#Header	unset	x-jphone-copyright	"no-transfer"
+#Header append x-jphone-copyright no-peripheral
+#Header set x-jphone-copyright "no-transfer"
+#</FilesMatch
