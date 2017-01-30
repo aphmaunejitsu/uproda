@@ -377,22 +377,22 @@ $PM{'no_upload_by_spam_word'}=1;
 ," 妊娠契約 "," 素人女性 "," 女性登録者 "," 登録無料 "
 ," 逆指名 "," サイトだよ "," 見放題 "
 # アダルト系
-#," セックス "," 無修正 "," 調教 "," セフレ ", " 人気ＡＶ "
-#," 女性が "," エッチ "," ゲット "," ご指名 "," 援交 ", " ヤリマン "
-#," 若い女性 "," 童貞 "," 出会い "," 人妻 "
-#," 旦那 "," サイトだよ "," 援助 "," 若妻 "
+" セックス "," 無修正 "," 調教 "," セフレ ", " 人気ＡＶ "
+," 女性が "," エッチ "," ゲット "," ご指名 "," 援交 ", " ヤリマン "
+," 若い女性 "," 童貞 "," 出会い "," 人妻 "
+," 旦那 "," サイトだよ "," 援助 "," 若妻 "
 #
 # 海外
 # アダルト系
-#," fuck "," porn "
-#," fetish "," pics "," adult "," teen "," stripper "
+," fuck "," porn "
+," fetish "," pics "," adult "," teen "," stripper "
 #
 # ブランドコピーSPAM
 ," クス専売 "," ハイレプ "," copy33 "," brand188 "," スーパーコピー "
 ," louis "," vuitton "," taschen "," fossil  "," ローレックス "," ロレックス "
 ," cartier "," カルティエ "," 高級腕時計 "," S級  "," N級 "
-#," check "," thank "," More "," free "
-#," online "," site "," visit "
+," check "," thank "," More "," free "
+," online "," site "," visit "
 # 勧誘系
 ," links "," insurance "," cheap "," buy "
 ," Molto "," cheap "," Airfare "," Furniture "," Ashley "
@@ -548,7 +548,7 @@ $diet_org_img	=1;
 #
 # このサイズ以上のものダイエットする
 # (200KBがデフォルト。100KB未満は指定できません)
-$MICRO_DIET{'SIZE'}="200";
+$MICRO_DIET{'SIZE'}="1000";
 #
 # アニメ専用DIETモード(2010 new)
 #
@@ -642,7 +642,7 @@ $disp_message 		= 10;
 #
 #  返信機能を使うことができます。
 #  (1=返信機能あり(推奨),0=返信機能なし)
-$PM{'use_rep'} 		= 1;
+$PM{'use_rep'} 		= 0;
 #
 #  返信をテキストだけにするか、画像を添付するか、決めてください。
 #  (1=添付可能,0=添付不能(デフォルト))
@@ -719,7 +719,7 @@ $CIMGSIZE{'smooze_mode'}=0;
 #
 #  マルチデータアップロードを
 #  (1=可能にする,0=可能にしない)デフォルトは0
-$allow_other_multimedia_data=1;	
+$allow_other_multimedia_data=0;	
 #
 #   <2012.10.1以降のDL違法化対策として、動画、音楽のアップロードを禁止する>
 #  2012.10.1以降、違法な動画、音声のダウンロードに罰則が適用されます。
@@ -824,7 +824,7 @@ $gisa=0;		# 時差(h)
 #  記事中にURLや住所等が含まれる場合、自動的にリンクにします。
 #  なお、youTubeタグ埋め込み機能利用時は必ず1に設定してください。
 #  (1=自動リンク(推奨),0=自動リンクしない)
-$auto_url_link=1;
+$auto_url_link=0;
 #
 #
 #  ■ <twitter紹介用リンク> 2010NEW
@@ -957,7 +957,7 @@ $use_view_passwd_flag=0;
 #  い。（詳細はsub form_checkを参照）  
 #  デフォルトはタグ使用可です。(1)
 #  (1=使用可能,0=使用不可)
-$use_tag=1;
+$use_tag=0;
 #
 #  <IMGタグ許可・非許可>
 #
@@ -970,7 +970,7 @@ $use_img_tag_in_comment=0;
 #  動画共有サイトの埋め込みタグの許可を例外的に
 #  認める場合は、以下のフラグをONにしてください。
 #  (1=許可,0=非許可(推奨))
-$use_youtube_tag_in_comment=1;
+$use_youtube_tag_in_comment=0;
 #
 # URLチェック
 #
@@ -990,7 +990,7 @@ $yt_check_level=1;
 # 返信記事に動画共有サイトのタグ埋め込みを許可するかどうか
 # ルールを決めてください。
 #  (1=許可,0=非許可(推奨))
-$allow_youtube_tag_in_res=1;
+$allow_youtube_tag_in_res=0;
 #
 #
 # （注意）返信への埋め込み許可等はyouTubeの設定と同じポリシになります。
@@ -1000,21 +1000,21 @@ $allow_youtube_tag_in_res=1;
 #  ニコニコ動画の埋め込みを例外的に認める場合は、
 #  以下のフラグをONにしてください。
 #  (1=許可,0=非許可(推奨))
-$PM{'auto_nicovideo_find'}=1;
+$PM{'auto_nicovideo_find'}=0;
 #
 #  <Google MAP ストリートビュー関連タグ許可・非許可> NEW
 #
 #  ストリートビューの画像埋め込みタグの許可を例外的に認める場合は、
 #  以下のフラグをONにしてください。
 #  (1=許可(推奨),0=非許可)
-$use_stview_tag_in_comment=1;
+$use_stview_tag_in_comment=0;
 #
 #  <Google MAP 自動住所リンクのオンオフ> 
 #
 #  本文中にある住所らしき文字を拾って、Google Mapのリンク化する自動住所リンクは
 #  デフォルトでONです。オフにしたい場合は、以下のフラグを変更してください。
 #  (1=ON(推奨),0=OFF)
-$PM{'auto_japanese_address_find'}=1;
+$PM{'auto_japanese_address_find'}=0;
 #
 #
 #  <リコーTheta360関連タグ許可・非許可> NEW
@@ -1043,7 +1043,7 @@ $PM{'auto_theta360_find'} = 1;
 # イタズラをするユーザの中には、ホスト名による制限を逃れるために、自分のホスト
 # 名情報を出さない設定にしている人がいます。これらホスト名を出さないユーザから
 # の投稿を禁止するかどうかを以下で決めて下さい。(1=禁止する,0=禁止しない(推奨))
-$no_upload_by_no_RH_user=0;	
+$no_upload_by_no_RH_user=1;	
 #
 #  (レベル２）禁止単語による制限 (BLACK_WORD)
 #
@@ -1052,7 +1052,7 @@ $no_upload_by_no_RH_user=0;
 #  えるユーザからしつこいイタズラを受けている場合に、最終手段として使ってみて
 #  ください。
 #  (1=制限する,0=制限しない(推奨))
-$PM{'no_upload_by_black_word'}=0;	
+$PM{'no_upload_by_black_word'}=1;	
 #
 #   マッチした場合のエラーメッセージ（変更可）
 #   （排除されたことが相手にわからないように、できるだけ、
@@ -1196,7 +1196,7 @@ $oyasumi_message=qq|
 #  ありますので、普通の人は使わないでください。
 #  (使い方詳細は新FAQページを参照)
 #
-$PM{'make_bbs_html_top'}=0;# (1=yes,0=no)デフォルトは0
+$PM{'make_bbs_html_top'}=1;# (1=yes,0=no)デフォルトは0
 #
 # Yesにした場合は必ずPerlのパスを正しく設定してください。
 $PM{'perl_prog_for_win_server'}="perl.exe";			# Win32上のWebサーバ用
