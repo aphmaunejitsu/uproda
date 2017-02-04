@@ -1,15 +1,12 @@
 board:
-  dir: up          #アップロードするディレクトリ
-  maxsize: 2048    #アップロード最大サイズ(KB)
-  ext: jpg,png,gif #許可する拡張子、カンマ区切り
-	maxfiles: 5000   #最大ファイル数
-  prefix: null     #ファイルのプレフィックス
-arrow: #http://php.net/manual/ja/function.exif-imagetype.php
-  gif: IMAGETYPE_GIF    #gif
-  jpg: IMAGETYPE_JPEG   #jpg
-  png: IMAGETYPE_PNG    #png
-  bmp: IMAGETYPE_BMP    #bmp
+  dir: up              #アップロードするディレクトリ DocumentRoor配下に作成 パーミッション777
+  maxsize: 2           #アップロード最大サイズ(MB)
+  maxfiles: 5000       #最大ファイル数
+  prefix: up           #ファイルのプレフィックス
+  type: image          #許可するmimetypeのtype image/jpegならimageを指定する,カンマ区切り
+  ext: git,jpg,png,bmp #許可する拡張子,カンマ区切り
+  pad: 5               #ゼロパディングする数字
 admin:
   id: admin        #変更すること
-  pass: qwer       #変更すること
+  uass: qwer       #変更すること
   email: ahumau_nejitu@icloud.com #管理者メール

@@ -113,12 +113,12 @@ return array(
 	 * Security settings
 	 */
 	'security' => array(
-		// 'csrf_autoload'            => false,
-		// 'csrf_autoload_methods'    => array('post', 'put', 'delete'),
-		// 'csrf_bad_request_on_fail' => false,
-		// 'csrf_auto_token'          => false,
-		// 'csrf_token_key'           => 'fuel_csrf_token',
-		// 'csrf_expiration'          => 0,
+		'csrf_autoload'            => false,
+		'csrf_autoload_methods'    => ['post', 'put', 'delete'],
+		'csrf_bad_request_on_fail' => false,
+		'csrf_auto_token'          => false,
+		'csrf_token_key'           => 'uproda_token',
+		'csrf_expiration'          => 0,
 
 		/**
 		 * A salt to make sure the generated security tokens are not predictable
@@ -259,7 +259,7 @@ return array(
 	/**************************************************************************/
 	/* Always Load                                                            */
 	/**************************************************************************/
-	// 'always_load'  => array(
+	'always_load'  => array(
 
 		/**
 		 * These packages are loaded on Fuel's startup.
@@ -272,9 +272,9 @@ return array(
 		 *     array('auth'	=> PKGPATH.'auth/')
 		 * );
 		 */
-		// 'packages'  => array(
-		// 	//'orm',
-		// ),
+		'packages'  => array(
+		 	'orm',
+		),
 
 		/**
 		 * These modules are always loaded on Fuel's startup. You can specify them
@@ -310,6 +310,6 @@ return array(
 		 * If you don't want the lang in a group use null as groupname.
 		 */
 		// 'language'  => array(),
-	// ),
+	),
 
 );

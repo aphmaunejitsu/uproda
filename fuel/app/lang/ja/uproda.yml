@@ -2,6 +2,17 @@ common:
   title: ネ実うｐろだ（仮）
   description: ネ実, nejitsu, FF11, オススメ
   header_message: テスト運用中。違法とされるファイル、削除依頼があれば気がついた時点で削除します。
+imgform:
+  filelabel: FILE max :sizeKB (:countFiles)
+  dellabel: DELKEY
+  commentlabel: COMMENT
+  buttonlabel: Upload
+failedup:
+  うｐにしっぱいしましたし
+  はー？うｐれじれじ・・・
+  画像を探して見てください＾＾
+  ユーザーがデバッグすればいい
 neta:
   便乗ばかりで、ごめんなさいね。
-  なんてこった、ここはネ実だったのか
+  なんてことだ、ここはネ実だったのか
+  つよさは？とら。全滅しますた。
