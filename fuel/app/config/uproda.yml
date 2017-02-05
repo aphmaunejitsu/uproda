@@ -2,7 +2,6 @@ board:
   dir: up              #アップロードするディレクトリ DocumentRoor配下に作成 パーミッション777
   maxsize: 2           #アップロード最大サイズ(MB)
   maxfiles: 5000       #最大ファイル数
-  prefix: up           #ファイルのプレフィックス
   type: image          #許可するmimetypeのtype image/jpegならimageを指定する,カンマ区切り
   ext: git,jpg,png,bmp #許可する拡張子,カンマ区切り
   pad: 5               #ゼロパディングする数字

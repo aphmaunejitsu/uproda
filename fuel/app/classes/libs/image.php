@@ -4,7 +4,7 @@ class Libs_Image
 	/**
 	 * ファイルIDからファイルを見つける
 	 * @param $id string
-	 * @return mix success file_path, fail null
+	 * @return string success file_path, fail null
 	 **/
 	public static function search($id)
 	{
@@ -14,23 +14,30 @@ class Libs_Image
 				return null;
 			}
 
+			$id = htmlspecialchars($id);
+
 			$v = \Validation::forge();
-			$v->add_field('image', 'image file', 'required|valid_string[alpha,numeric]');
+			$v->add_field('image', 'image file', 'required|valid_string[alpha,numeric,dashes]');
 			if ( ! $v->run(['image' => $id], true))
 			{
-				throw new \Exception('validate error:'.$id);
+				throw new \Exception('validate error: '.$id);
 			}
 
-			$path = Str::tr(':dir/:id.*',[
-				'dir' => Libs_Config::get('board.dir'),
-				'id'  => $id,
+			if ( ! ($image = Model_Image::find_one_by('basename', $id)))
+			{
+				throw new \Exception('image not fond: '.$id);
+			}
+
+			$path = Str::tr(':dir/:subdir/:basename.:ext',[
+				'dir'      => Libs_Config::get('board.dir'),
+				'subdir'   => \Str::lower(\Str::sub($image->basename, 0, 2)),
+				'basename' => $image->basename,
+				'ext'      => $image->ext,
 			]);
 
-			foreach (glob($path) as $file)
+			if (\File::exists(DOCROOT.$path))
 			{
-				//IDは一意なので、1つでも見つかった場合はリターン
-				Log::debug(__FILE__.' '.$file);
-				return $file;
+				return $path;
 			}
 
 			return null;
@@ -44,19 +51,10 @@ class Libs_Image
 	{
 		try {
 			\Upload::register('validate', function(&$file) {
-				$count = 1;
-				$image = Model_Image::find([
-					'select'   => ['id', 'name'],
-					'order_by' => ['id' => 'desc'],
-					'limit'    => 1,
-				]);
-
-				if ($image)
-				{
-					$count = reset($image)->id + 1;
-				}
-
-				$file['basename'] = str_pad($count, Libs_Config::get('board.pad'), '0', STR_PAD_LEFT);
+				$file['basename'] = \Str::random('alnum', 8);
+			});
+			\Upload::register('before', function(&$file) {
+				$file['path'] = $file['path'].\Str::lower(\Str::sub($file['basename'],0,2)).'/';
 			});
 
 			\Upload::process([
@@ -64,8 +62,7 @@ class Libs_Image
 				'path'           => DOCROOT.Libs_Config::get('board.dir'),
 				'ext_whitelist'  => explode(',', Libs_Config::get('board.ext')),
 				'type_whitelist' => explode(',', Libs_Config::get('board.type')),
-				'max_size'       => Libs_Config::get('board.maxsize') * 1024 * 1024,
-				'prefix'         => Libs_Config::get('board.prefix'),
+				'max_size'       => Libs_Config::get('board.maxsize') * 1024 * 1024, //バイトに変換
 			]);
 
 			if (\Upload::is_valid())
@@ -75,7 +72,8 @@ class Libs_Image
 				$file = reset($files);
 
 				$image = Model_Image::forge()->set([
-					'name'       => $file['saved_as'],
+					'basename'   => $file['basename'],
+					'ext'        => $file['extension'],
 					'original'   => $file['name'],
 					'delkey'     => htmlspecialchars(\Input::post('delky')),
 					'mimetype'   => $file['mimetype'],
@@ -97,7 +95,6 @@ class Libs_Image
 			}
 			else
 			{
-				\Log::debug(print_r(\Upload::get_errors(),1));
 				return null;
 			}
 		} catch (\Exception $e) {
