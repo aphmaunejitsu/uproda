@@ -9,11 +9,11 @@
 
 # you may install these packages with `oil package`.
 # http://fuelphp.com/docs/packages/oil/package.html
-# /fuel/packages/auth/
-# /fuel/packages/email/
-# /fuel/packages/oil/
-# /fuel/packages/orm/
-# /fuel/packages/parser/
+/fuel/packages/auth/
+/fuel/packages/email/
+/fuel/packages/oil/
+/fuel/packages/orm/
+/fuel/packages/parser/
 
 # dynamically generated files
 /fuel/app/logs/*/*/*
