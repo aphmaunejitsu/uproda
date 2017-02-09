@@ -1,37 +1,65 @@
 <?php
 class Libs_Image
 {
+	private static function build_thumbnail_path($saved_to, $thumbnail_dir, $saved_as)
+	{
+		return \Str::tr(':to:thumbnail/:as', [
+			'to'        => $saved_to,
+			'thumbnail' => $thumbnail_dir,
+			'as'        => $saved_as,
+		]);
+	}
+
+	private static function build_image_path($saved_to, $saved_as)
+	{
+		return \Str::tr(':to:as', [
+			'to' => $saved_to,
+			'as' => $saved_as,
+	    ]);
+	}
+
+
 	public static function thumbnail($file)
 	{
 		try {
 			$thumbnail = Libs_Config::get('board.thumbnail.dir');
-			$path = \Str::tr(':to:as', [
-				'to' => \Arr::get($file, 'saved_to', null),
-				'as' => \Arr::get($file, 'saved_as', null),
-			]);
-
 			if ( ! \File::exists(\Arr::get($file, 'saved_to', null).$thumbnail.'/'))
 			{
-				$dir = \File::create_dir(\Arr::get($file, 'saved_to'), $thumbnail, 0777);
+				\File::create_dir(\Arr::get($file, 'saved_to'), $thumbnail, 0777);
 			}
 
+			$image_path = self::build_image_path(\Arr::get($file, 'saved_to', null), \Arr::get($file, 'saved_as', null));
 
-			$image = \Image::load($path)->crop_resize(Libs_Config::get('board.thumbnail.width', 'board.thumbnail.height');
-			$save_path = \Str::tr(':to:thumbnail/:as', [
-				'to'        => \Arr::get($file, 'saved_to', null),
-				'thumbnail' => $thumbnail,
-				'as'        => \Arr::get($file, 'saved_as', null),
-			]);
+			$image = \Image::load($image_path)->crop_resize(Libs_Config::get('board.thumbnail.width'), Libs_Config::get('board.thumbnail.height'));
+			$save_path = self::build_thumbnail_path(\Arr::get($file, 'saved_to', null), $thumbnail, \Arr::get($file, 'saved_as', null));
 			$image->save($save_path);
 
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.'('.__LINE__.')'.$e->getMessage());
+			\Log::error(__FILE__.'('.__LINE__.'): '.$e->getMessage());
 			throw new \Exception('fail create thumbnail');
 		}
 	}
 
-	public static function mosic($image)
+	public static function moasic($file)
 	{
+		try {
+			if (Libs_Config::get('board.mosaic') === 0)
+			{
+				return;
+			}
+
+			$mosaic_dir = Libs_Config::get('board.thumbnail.dir');
+			$save_path = self::build_thumbnail_path(\Arr::get($file, 'saved_to', null), $thumbnail, \Arr::get($file, 'saved_as', null));
+
+			if ( ! \File::exists($save_path))
+			{
+				return;
+			}
+
+		} catch (\Exception $e) {
+			\Log::error(__FILE__.'('.__LINE__.'): '.$e->getMessage());
+			throw new \Exception('fail create thumbnail');
+		}
 	}
 
 
