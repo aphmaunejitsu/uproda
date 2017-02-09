@@ -1,5 +1,6 @@
 board:
   dir: up              #アップロードするディレクトリ DocumentRoor配下に作成 パーミッション777
+  thumbnail: thumbnail #サムネイルディレクトリ
   maxsize: 2           #アップロード最大サイズ(MB)
   maxfiles: 5000       #最大ファイル数
   type: image          #許可するmimetypeのtype image/jpegならimageを指定する,カンマ区切り
