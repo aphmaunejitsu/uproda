@@ -42,6 +42,10 @@ class Controller_Image extends Controller_Uproda
 
 			if (($file = Libs_Image::upload()) !== null)
 			{
+				//サムネイル作成
+				Libs_Image::thumbnail($file);
+
+
 				//アップロード成功
 				$name = explode('.', $file['saved_as']);
 				//画像ビューへリダイレクト

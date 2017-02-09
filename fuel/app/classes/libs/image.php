@@ -1,6 +1,40 @@
 <?php
 class Libs_Image
 {
+	public static function thumbnail($file)
+	{
+		try {
+			$thumbnail = Libs_Config::get('board.thumbnail');
+			$path = \Str::tr(':to:as', [
+				'to' => \Arr::get($file, 'saved_to', null),
+				'as' => \Arr::get($file, 'saved_as', null),
+			]);
+
+			if ( ! \File::exists(\Arr::get($file, 'saved_to', null).$thumbnail.'/'))
+			{
+				$dir = \File::create_dir(\Arr::get($file, 'saved_to'), $thumbnail, 0777);
+			}
+
+
+			$image = \Image::load($path)->crop_resize(150, 150);
+			$save_path = \Str::tr(':to:thumbnail/:as', [
+				'to'        => \Arr::get($file, 'saved_to', null),
+				'thumbnail' => $thumbnail,
+				'as'        => \Arr::get($file, 'saved_as', null),
+			]);
+			$image->save($save_path);
+
+		} catch (\Exception $e) {
+			\Log::error(__FILE__.'('.__LINE__.')'.$e->getMessage());
+			throw new \Exception('fail create thumbnail');
+		}
+	}
+
+	public static function mosic($image)
+	{
+	}
+
+
 	/**
 	 * ファイルIDからファイルを見つける
 	 * @param $id string
@@ -57,12 +91,15 @@ class Libs_Image
 				$file['path'] = $file['path'].\Str::lower(\Str::sub($file['basename'],0,2)).'/';
 			});
 
+			umask(0);
 			\Upload::process([
 				'auto_process'   => false,
 				'path'           => DOCROOT.Libs_Config::get('board.dir'),
 				'ext_whitelist'  => explode(',', Libs_Config::get('board.ext')),
 				'type_whitelist' => explode(',', Libs_Config::get('board.type')),
 				'max_size'       => Libs_Config::get('board.maxsize') * 1024 * 1024, //バイトに変換
+				'path_chmod'     => 0777,
+				'file_chmod'     => 0666,
 			]);
 
 			if (\Upload::is_valid())
@@ -91,7 +128,7 @@ class Libs_Image
 					throw new \Exception('faild save data');
 				}
 
-				return $files[0];
+				return $file;
 			}
 			else
 			{
