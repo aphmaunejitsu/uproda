@@ -4,7 +4,7 @@ class Libs_Image
 	public static function thumbnail($file)
 	{
 		try {
-			$thumbnail = Libs_Config::get('board.thumbnail');
+			$thumbnail = Libs_Config::get('board.thumbnail.dir');
 			$path = \Str::tr(':to:as', [
 				'to' => \Arr::get($file, 'saved_to', null),
 				'as' => \Arr::get($file, 'saved_as', null),
@@ -16,7 +16,7 @@ class Libs_Image
 			}
 
 
-			$image = \Image::load($path)->crop_resize(150, 150);
+			$image = \Image::load($path)->crop_resize(Libs_Config::get('board.thumbnail.width', 'board.thumbnail.height');
 			$save_path = \Str::tr(':to:thumbnail/:as', [
 				'to'        => \Arr::get($file, 'saved_to', null),
 				'thumbnail' => $thumbnail,
