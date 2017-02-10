@@ -4,6 +4,9 @@
 /composer.lock
 /fuel/vendor
 
+# LocalError対策
+/fuel/core
+
 # the fuelphp document
 /docs/
 
