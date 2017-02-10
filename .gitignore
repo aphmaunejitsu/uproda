@@ -5,7 +5,7 @@
 /fuel/vendor
 
 # LocalError対策
-/fuel/core
+#/fuel/core
 
 # the fuelphp document
 /docs/
