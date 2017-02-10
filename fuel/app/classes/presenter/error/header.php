@@ -1,5 +1,5 @@
 <?php
-class Presenter_Image_Header extends \Presenter
+class Presenter_Error_Header extends \Presenter
 {
 	public function view()
 	{
