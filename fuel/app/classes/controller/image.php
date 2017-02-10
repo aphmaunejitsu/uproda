@@ -54,10 +54,13 @@ class Controller_Image extends Controller_Uproda
 			}
 			else
 			{
-				//アップロード失敗
-				$this->theme->set_partial('header', $this->theme->presenter('image/header'));
-				$this->theme->set_partial('content', $this->theme->presenter('image/upload'));
+				//気持ち悪いけど・・・
+				throw new HttpServerErrorException('failed up image');
 			}
+		} catch (\HttpServerErrorException $e) {
+			\Log::error(__FILE__.':'.$e->getMessage());
+			//もう一回
+			throw new HttpServerErrorException();
 		} catch (\Exception $e) {
 			\Log::error(__FILE__.':'.$e->getMessage());
 			throw new HttpNotFoundException();
