@@ -6,6 +6,7 @@
 // create user maintenance@'localhost' IDENTIFIED by 'password'
 // grant select on uproda.* to reader@'localhost'
 // grant select,insert,update,delete on uproda.* to updater@'localhost'
+// grant alter,create,drop,index,select,insert,update,delete on uproda.* to maintenance@'localhost'
 abstract class Model_Base extends Model_Crud
 {
 	protected static function pre_find(&$query)
