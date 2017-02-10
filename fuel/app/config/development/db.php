@@ -15,5 +15,10 @@ return [
 			'password'   => '0p;/.Lo9'
 		],
 		'profiling'      => true,
+	],
+	'uproda-maintenance' => [
+		'connection'  => [
+			'password'   => '9Ol.,ki8'
+		],
 	]
 ];

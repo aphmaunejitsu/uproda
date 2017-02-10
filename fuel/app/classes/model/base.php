@@ -3,6 +3,7 @@
 // create database uproda default character set=utf8
 // create user updater@'localhost' indentified by 'password'
 // create user reader@'localhost' IDENTIFIED by 'password'
+// create user maintenance@'localhost' IDENTIFIED by 'password'
 // grant select on uproda.* to reader@'localhost'
 // grant select,insert,update,delete on uproda.* to updater@'localhost'
 abstract class Model_Base extends Model_Crud
