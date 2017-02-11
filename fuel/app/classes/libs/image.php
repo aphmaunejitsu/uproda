@@ -1,12 +1,13 @@
 <?php
 class Libs_Image
 {
-	public static function build_thumbnail_path($saved_to, $thumbnail_dir, $saved_as)
+	public static function build_thumbnail_path($saved_to, $thumbnail_dir, $basename)
 	{
-		return \Str::tr(':to:thumbnail/:as', [
+		//サムネイルはjpg固定
+		return \Str::tr(':to:thumbnail/:basename.jpg', [
 			'to'        => $saved_to,
 			'thumbnail' => $thumbnail_dir,
-			'as'        => $saved_as,
+			'basename'  => $basename,
 		]);
 	}
 
@@ -27,6 +28,7 @@ class Libs_Image
 	public static function thumbnail($file)
 	{
 		try {
+			\Log::debug(print_r($file,1));
 			$thumbnail = Libs_Config::get('board.thumbnail.dir');
 			if ( ! \File::exists(\Arr::get($file, 'saved_to', null).$thumbnail.'/'))
 			{
@@ -36,7 +38,7 @@ class Libs_Image
 			$image_path = self::build_image_path(\Arr::get($file, 'saved_to', null), \Arr::get($file, 'saved_as', null));
 
 			$image = \Image::load($image_path)->crop_resize(Libs_Config::get('board.thumbnail.width'), Libs_Config::get('board.thumbnail.height'));
-			$save_path = self::build_thumbnail_path(\Arr::get($file, 'saved_to', null), $thumbnail, \Arr::get($file, 'saved_as', null));
+			$save_path = self::build_thumbnail_path(\Arr::get($file, 'saved_to', null), $thumbnail, \Arr::get($file, 'basename', null));
 			$image->save($save_path);
 
 		} catch (\Exception $e) {
@@ -146,6 +148,7 @@ class Libs_Image
 			}
 			else
 			{
+				\Log::warning(print_r(\Upload::get_errors(),1));
 				return null;
 			}
 		} catch (\Exception $e) {

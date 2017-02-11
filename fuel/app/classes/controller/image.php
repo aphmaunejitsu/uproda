@@ -23,6 +23,33 @@ class Controller_Image extends Controller_Uproda
 		}
 	}
 
+	public function get_list()
+	{
+		try {
+			if (\Input::method() !== 'GET')
+			{
+				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
+			}
+
+			$this->deafult_format = 'html';
+			//バリデーションを行う
+			$page = $this->param('page');
+			if (is_numeric($page))
+			{
+			}
+			$view = $this->theme->presenter('image/list')->set('param', ['page' => $this->param('page')]);
+
+			return $this->response($view->render());
+		} catch (\HttpServerErrorException $e) {
+			\Log::error(__FILE__.':'.$e->getMessage());
+			//もう一回
+			throw new HttpServerErrorException();
+		} catch (\Exception $e) {
+			\Log::error(__FILE__.':'.$e->getMessage());
+			throw new HttpNotFoundException();
+		}
+	}
+
 	/**
 	 *
 	 **/

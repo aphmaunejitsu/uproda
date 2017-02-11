@@ -9,12 +9,8 @@
 	}
 
 	a.image-list:nth-of-type(2n) { margin-right: 0; }
-
-
 	a.image-list:hover img { transform: scale(1.15); }
-
 	figure { margin: 0; }
-
 	img.image-item {
 	  border: none;
 	  max-width: 100%;
@@ -24,6 +20,52 @@
 	  transition: transform .2s ease-in-out;
 	}
 
+
+/* ローディング */
+.is-hide{
+ display:none;
+}
+.loading{
+  position:fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  background:rgba(0,0,0,.5);
+}
+.loading::before{
+  content:"";
+  display:block;
+  position:fixed;
+  left:50%;
+  top:50%;
+  width:50px;
+  height:50px;
+  border-radius:5px;
+  margin-top:-15px;
+  margin-left:-15px;
+  background:white;
+}
+.loading::after{
+  content:"";
+  display:block;
+  position:fixed;
+  left:50%;
+  top:50%;
+  width:32px;
+  height:32px;
+  border-radius:20px;
+  margin-top:-10px;
+  margin-left:-10px;
+  border:4px solid #60ABB9;
+  border-right:4px solid white;
+  animation: rotate 1s infinite linear;
+}
+@keyframes rotate {
+  0%    { transform: rotate(0deg); }
+  100%  { transform: rotate(360deg); }
+}
+
 @media screen and (min-width: 50em) {
   a.image-list { width: calc(25% - 6px); }
   a.image-list:nth-of-type(2n) { margin-right: 8px; }
@@ -31,19 +73,12 @@
 }
 
 /* Larger than mobile */
-@media (min-width: 400px)
-{
-}
+@media (min-width: 400px) {}
 
-/* Larger than phablet (also point when grid becomes active) */
-@media (min-width: 550px)
-{
-}
+@media (min-width: 550px) {}
 
 /* Larger than tablet */
-@media (min-width: 750px)
-{
-}
+@media (min-width: 750px) {}
 
 /* Larger than desktop */
 @media (min-width: 1000px) {}
