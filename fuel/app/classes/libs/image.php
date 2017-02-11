@@ -1,7 +1,7 @@
 <?php
 class Libs_Image
 {
-	private static function build_thumbnail_path($saved_to, $thumbnail_dir, $saved_as)
+	public static function build_thumbnail_path($saved_to, $thumbnail_dir, $saved_as)
 	{
 		return \Str::tr(':to:thumbnail/:as', [
 			'to'        => $saved_to,
@@ -10,12 +10,17 @@ class Libs_Image
 		]);
 	}
 
-	private static function build_image_path($saved_to, $saved_as)
+	public static function build_image_path($saved_to, $saved_as)
 	{
 		return \Str::tr(':to:as', [
 			'to' => $saved_to,
 			'as' => $saved_as,
 	    ]);
+	}
+
+	public static function get_two_char_from_basename($basename)
+	{
+		return \Str::lower(\Str::sub($basename, 0, 2));
 	}
 
 
@@ -39,29 +44,6 @@ class Libs_Image
 			throw new \Exception('fail create thumbnail');
 		}
 	}
-
-	public static function moasic($file)
-	{
-		try {
-			if (Libs_Config::get('board.mosaic') === 0)
-			{
-				return;
-			}
-
-			$mosaic_dir = Libs_Config::get('board.thumbnail.dir');
-			$save_path = self::build_thumbnail_path(\Arr::get($file, 'saved_to', null), $thumbnail, \Arr::get($file, 'saved_as', null));
-
-			if ( ! \File::exists($save_path))
-			{
-				return;
-			}
-
-		} catch (\Exception $e) {
-			\Log::error(__FILE__.'('.__LINE__.'): '.$e->getMessage());
-			throw new \Exception('fail create thumbnail');
-		}
-	}
-
 
 	/**
 	 * ファイルIDからファイルを見つける
@@ -116,7 +98,11 @@ class Libs_Image
 				$file['basename'] = \Str::random('alnum', 8);
 			});
 			\Upload::register('before', function(&$file) {
-				$file['path'] = $file['path'].\Str::lower(\Str::sub($file['basename'],0,2)).'/';
+				$file['path'] = $file['path'].self::get_two_char_from_basename($file['basename']).'/';
+				//保存する拡張子は全て小文字変換
+				$file['extension'] = \Str::lower($file['extension']);
+				$file['saved_as']  = $file['basename'].'.'.$file['extension'];
+				$file['filename']  = $file['saved_as'];
 			});
 
 			umask(0);
@@ -164,6 +150,23 @@ class Libs_Image
 			}
 		} catch (\Exception $e) {
 			\Log::error(__FILE__.': '.$e);
+			return null;
+		}
+	}
+
+	public static function get_images($offset, $limit )
+	{
+		try {
+			$images = Model_Image::find([
+				'where'    => ['ng' => 0],
+				'order_by' => ['created_at' => 'desc'],
+				'limit'    => $limit,
+				'offset'   => $offset,
+			]);
+
+			return $images;
+		} catch (\Exception $e) {
+			\Log::error(__FILE.': '.$e);
 			return null;
 		}
 	}

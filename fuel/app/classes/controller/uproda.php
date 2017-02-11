@@ -24,11 +24,10 @@ class Controller_Uproda extends Controller_Rest
 
 			//画像取得
 			$pager = $this->theme->view('uproda/content/pager');
-			$images = $this->theme->view('uproda/content/images')->set(['images' => []]);
 			$this->theme->set_partial('content', 'uproda/content')->set([
 				'form'   => $this->theme->presenter('uproda/content/form'),
 				'pager'  => $pager,
-				'images' => $images,
+				'images' => $this->theme->presenter('uproda/content/images'), //初期表示のみ直接表示
 			]);
 		} catch (\Exception $e) {
 			\Log::error($e->getMessage());

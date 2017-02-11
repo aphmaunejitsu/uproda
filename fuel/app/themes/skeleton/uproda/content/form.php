@@ -1,5 +1,5 @@
-<div class='container'>
-  <div class='docs-section form'>
+<div class='section form'>
+  <div class='container'>
     <?php echo \Form::open(['action' => 'image/upload', 'enctype' => 'multipart/form-data']); ?>
   	<?php echo \Form::csrf(); ?>
       <div class="row">

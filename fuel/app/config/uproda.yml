@@ -6,9 +6,11 @@ board:
   ext: gif,jpg,png,bmp # 許可する拡張子,カンマ区切り
   thumbnail:           # サムネイル
     dir: thumbnail     # 保存ディレクトリ
-    width: 180         # 横 できれば縦横同じ大きさ
-    height: 180        # 縦
+    width: 400         # 横 できれば縦横同じ大きさ
+    height: 400        # 縦
   mosaic: 1            # 保存ディレクトリ・縦・横はサムネイル共通
+  pagenation:
+    per_page: 50       # 1ページあたりの数(デフォルト)
 admin:
   id: admin        #変更すること
   uass: qwer       #変更すること
