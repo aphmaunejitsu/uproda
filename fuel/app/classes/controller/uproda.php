@@ -29,10 +29,9 @@ class Controller_Uproda extends Controller_Rest
 			$this->theme->set_partial('header', $this->theme->presenter('uproda/header'));
 
 			//画像取得
-			$pager = $this->theme->view('uproda/content/pager');
 			$this->theme->set_partial('content', 'uproda/content')->set([
 				'form'   => $this->theme->presenter('uproda/content/form'),
-				'pager'  => $pager,
+				'pager'  => $this->theme->presenter('uproda/content/pager')->set('param', ['page' => $page]),
 				'images' => $this->theme->presenter('uproda/content/images')->set('param', ['page' => $page]),
 			]);
 		} catch (\Exception $e) {

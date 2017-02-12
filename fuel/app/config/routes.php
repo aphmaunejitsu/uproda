@@ -4,6 +4,7 @@ return array(
 	'_404_'             => 'error/404',     // The main 404 route
 	'_500_'             => 'error/500',     // the main 500 route
 
+	'(:num)'            => [['get', new Route('uproda/index/$1')]],
 	'image/list/(:num)' => 'image/list/$1',
-	'image/(:image)'    => [['get', new Route('image/index/$1')]],
+	'image/(:alnum)'    => [['get', new Route('image/index/$1')]],
 );

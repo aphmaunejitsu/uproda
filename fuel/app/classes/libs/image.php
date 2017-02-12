@@ -157,6 +157,20 @@ class Libs_Image
 		}
 	}
 
+	public static function count_all()
+	{
+		try {
+			return Model_Image::count(
+				'id',
+				false,
+				[['ng', '=', 0]]
+			);
+		} catch (\Exception $e) {
+			\Log::error(__FILE__.': '.$e);
+			return 0;
+		}
+	}
+
 	public static function get_images($offset, $limit )
 	{
 		try {
@@ -169,7 +183,7 @@ class Libs_Image
 
 			return $images;
 		} catch (\Exception $e) {
-			\Log::error(__FILE.': '.$e);
+			\Log::error(__FILE__.': '.$e);
 			return null;
 		}
 	}

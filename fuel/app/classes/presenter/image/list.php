@@ -3,7 +3,7 @@ class Presenter_Image_List extends \Presenter
 {
 	public function view()
 	{
-		$per_page = \Libs_Config::get('board.pagenation.per_page', 100);
+		$per_page = \Libs_Config::get('board.pagination.per_page', 100);
 		$offset = (\Arr::get($this->param, 'page', 1) - 1) * $per_page;
 		$this->set('images', Libs_Image::get_images($offset, $per_page));
 		$this->set('image_dir', Libs_Config::get('board.dir'));

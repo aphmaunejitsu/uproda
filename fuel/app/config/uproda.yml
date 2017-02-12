@@ -9,8 +9,8 @@ board:
     width: 400              # 横 できれば縦横同じ大きさ
     height: 400             # 縦
   mosaic: 1                 # 保存ディレクトリ・縦・横はサムネイル共通
-  pagenation:
-    per_page: 100           # 1ページあたりの数(デフォルト)
+  pagination:
+    per_page: 40           # 1ページあたりの数(デフォルト)
 admin:
   id: admin        #変更すること
   uass: qwer       #変更すること
