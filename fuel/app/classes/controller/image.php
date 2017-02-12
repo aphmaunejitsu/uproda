@@ -6,11 +6,16 @@ class Controller_Image extends Controller_Uproda
 		parent::before();
 	}
 
-	public function action_index()
+	public function action_index($page = null)
 	{
 		try {
+			if ($page === null)
+			{
+				throw new \Exception('image not found: param is null');
+			}
 
-			if (($path = Libs_image::search($this->param('image'))) === null)
+
+			if (($path = Libs_image::search($page)) === null)
 			{
 				throw new \Exception('image not found.');
 			}
@@ -18,6 +23,33 @@ class Controller_Image extends Controller_Uproda
 			$this->theme->set_partial('header', $this->theme->presenter('image/header'));
 			$this->theme->set_partial('content', $this->theme->presenter('image/content')->set('param' ,['src' => Uri::base(false).$path]));
 		} catch ( \Exception $e ) {
+			\Log::error(__FILE__.':'.$e->getMessage());
+			throw new HttpNotFoundException();
+		}
+	}
+
+	public function get_list($page)
+	{
+		try {
+			if (\Input::method() !== 'GET')
+			{
+				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
+			}
+
+			if (! is_numeric($page))
+			{
+				throw new \Exception('invalid access [bad page]: '.\Input::real_ip());
+			}
+
+			$this->deafult_format = 'html';
+			$view = $this->theme->presenter('image/list')->set('param', ['page' => $page]);
+
+			return $this->response($view->render());
+		} catch (\HttpServerErrorException $e) {
+			\Log::error(__FILE__.':'.$e->getMessage());
+			//もう一回
+			throw new HttpServerErrorException();
+		} catch (\Exception $e) {
 			\Log::error(__FILE__.':'.$e->getMessage());
 			throw new HttpNotFoundException();
 		}

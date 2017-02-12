@@ -14,6 +14,11 @@ class Controller_Error extends Controller
 		$this->theme->set_partial('head', $this->theme->presenter('head'));
 	}
 
+	public function action_index($page = 1)
+	{
+		throw new HttpNotFoundException();
+	}
+
 	public function action_404()
 	{
 		$this->theme->set_partial('header', $this->theme->presenter('error/header'));

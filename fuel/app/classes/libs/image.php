@@ -1,16 +1,17 @@
 <?php
 class Libs_Image
 {
-	private static function build_thumbnail_path($saved_to, $thumbnail_dir, $saved_as)
+	public static function build_thumbnail_path($saved_to, $thumbnail_dir, $basename)
 	{
-		return \Str::tr(':to:thumbnail/:as', [
+		//サムネイルはjpg固定
+		return \Str::tr(':to:thumbnail/:basename.jpg', [
 			'to'        => $saved_to,
 			'thumbnail' => $thumbnail_dir,
-			'as'        => $saved_as,
+			'basename'  => $basename,
 		]);
 	}
 
-	private static function build_image_path($saved_to, $saved_as)
+	public static function build_image_path($saved_to, $saved_as)
 	{
 		return \Str::tr(':to:as', [
 			'to' => $saved_to,
@@ -18,10 +19,16 @@ class Libs_Image
 	    ]);
 	}
 
+	public static function get_two_char_from_basename($basename)
+	{
+		return \Str::lower(\Str::sub($basename, 0, 2));
+	}
+
 
 	public static function thumbnail($file)
 	{
 		try {
+			\Log::debug(print_r($file,1));
 			$thumbnail = Libs_Config::get('board.thumbnail.dir');
 			if ( ! \File::exists(\Arr::get($file, 'saved_to', null).$thumbnail.'/'))
 			{
@@ -31,7 +38,7 @@ class Libs_Image
 			$image_path = self::build_image_path(\Arr::get($file, 'saved_to', null), \Arr::get($file, 'saved_as', null));
 
 			$image = \Image::load($image_path)->crop_resize(Libs_Config::get('board.thumbnail.width'), Libs_Config::get('board.thumbnail.height'));
-			$save_path = self::build_thumbnail_path(\Arr::get($file, 'saved_to', null), $thumbnail, \Arr::get($file, 'saved_as', null));
+			$save_path = self::build_thumbnail_path(\Arr::get($file, 'saved_to', null), $thumbnail, \Arr::get($file, 'basename', null));
 			$image->save($save_path);
 
 		} catch (\Exception $e) {
@@ -39,29 +46,6 @@ class Libs_Image
 			throw new \Exception('fail create thumbnail');
 		}
 	}
-
-	public static function moasic($file)
-	{
-		try {
-			if (Libs_Config::get('board.mosaic') === 0)
-			{
-				return;
-			}
-
-			$mosaic_dir = Libs_Config::get('board.thumbnail.dir');
-			$save_path = self::build_thumbnail_path(\Arr::get($file, 'saved_to', null), $thumbnail, \Arr::get($file, 'saved_as', null));
-
-			if ( ! \File::exists($save_path))
-			{
-				return;
-			}
-
-		} catch (\Exception $e) {
-			\Log::error(__FILE__.'('.__LINE__.'): '.$e->getMessage());
-			throw new \Exception('fail create thumbnail');
-		}
-	}
-
 
 	/**
 	 * ファイルIDからファイルを見つける
@@ -116,7 +100,11 @@ class Libs_Image
 				$file['basename'] = \Str::random('alnum', 8);
 			});
 			\Upload::register('before', function(&$file) {
-				$file['path'] = $file['path'].\Str::lower(\Str::sub($file['basename'],0,2)).'/';
+				$file['path'] = $file['path'].self::get_two_char_from_basename($file['basename']).'/';
+				//保存する拡張子は全て小文字変換
+				$file['extension'] = \Str::lower($file['extension']);
+				$file['saved_as']  = $file['basename'].'.'.$file['extension'];
+				$file['filename']  = $file['saved_as'];
 			});
 
 			umask(0);
@@ -160,8 +148,40 @@ class Libs_Image
 			}
 			else
 			{
+				\Log::warning(print_r(\Upload::get_errors(),1));
 				return null;
 			}
+		} catch (\Exception $e) {
+			\Log::error(__FILE__.': '.$e);
+			return null;
+		}
+	}
+
+	public static function count_all()
+	{
+		try {
+			return Model_Image::count(
+				'id',
+				false,
+				[['ng', '=', 0]]
+			);
+		} catch (\Exception $e) {
+			\Log::error(__FILE__.': '.$e);
+			return 0;
+		}
+	}
+
+	public static function get_images($offset, $limit )
+	{
+		try {
+			$images = Model_Image::find([
+				'where'    => ['ng' => 0],
+				'order_by' => ['created_at' => 'desc'],
+				'limit'    => $limit,
+				'offset'   => $offset,
+			]);
+
+			return $images;
 		} catch (\Exception $e) {
 			\Log::error(__FILE__.': '.$e);
 			return null;

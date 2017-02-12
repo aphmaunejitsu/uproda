@@ -1,6 +1,10 @@
 <?php
 class Controller_Uproda extends Controller_Rest
 {
+	protected $default_format = 'json';
+	protected $ignore_http_accept = true;
+
+
 	public function before()
 	{
 		parent::before();
@@ -8,27 +12,27 @@ class Controller_Uproda extends Controller_Rest
 		Libs_Config::load();
 		Libs_Lang::load();
 
+		$this->theme = \Theme::instance();
+		$this->theme->active('skeleton');
+
 		if ( ! \Input::is_ajax())
 		{
-			$this->theme = \Theme::instance();
-			$this->theme->active('skeleton');
 			$template = $this->theme->set_template('template');
 			$this->theme->set_partial('head', $this->theme->presenter('head'));
 		}
 	}
 
-	public function action_index()
+	public function action_index($page = 1)
 	{
 		try {
+			$this->theme->asset->js(['jquery.lazyload.min.js', 'list.image.js'], [], 'jquery-list-loading', false);
 			$this->theme->set_partial('header', $this->theme->presenter('uproda/header'));
 
 			//画像取得
-			$pager = $this->theme->view('uproda/content/pager');
-			$images = $this->theme->view('uproda/content/images')->set(['images' => []]);
 			$this->theme->set_partial('content', 'uproda/content')->set([
 				'form'   => $this->theme->presenter('uproda/content/form'),
-				'pager'  => $pager,
-				'images' => $images,
+				'pager'  => $this->theme->presenter('uproda/content/pager')->set('param', ['page' => $page]),
+				'images' => $this->theme->presenter('uproda/content/images')->set('param', ['page' => $page]),
 			]);
 		} catch (\Exception $e) {
 			\Log::error($e->getMessage());

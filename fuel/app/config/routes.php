@@ -1,8 +1,10 @@
 <?php
 return array(
-	'_root_'  => 'uproda/index',  // The default route
-	'_404_'   => 'error/404',     // The main 404 route
-	'_500_'   => 'error/500',     // the main 500 route
+	'_root_'            => 'uproda/index',  // The default route
+	'_404_'             => 'error/404',     // The main 404 route
+	'_500_'             => 'error/500',     // the main 500 route
 
-	'image/:image' => [['get', new Route('image/index')]],
+	'(:num)'            => [['get', new Route('uproda/index/$1')]],
+	'image/list/(:num)' => 'image/list/$1',
+	'image/(:alnum)'    => [['get', new Route('image/index/$1')]],
 );

@@ -1,4 +1,5 @@
-<div class='container'>
-  <div class='docs-section pager'>
+<div class='section pager'>
+  <div class='container'>
+	<?php echo $pagination; ?>
   </div>
 </div>
