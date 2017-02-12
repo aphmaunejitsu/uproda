@@ -22,7 +22,7 @@ class Controller_Uproda extends Controller_Rest
 		}
 	}
 
-	public function action_index()
+	public function action_index($page = 1)
 	{
 		try {
 			$this->theme->asset->js(['jquery.lazyload.min.js', 'list.image.js'], [], 'jquery-list-loading', false);
@@ -33,7 +33,7 @@ class Controller_Uproda extends Controller_Rest
 			$this->theme->set_partial('content', 'uproda/content')->set([
 				'form'   => $this->theme->presenter('uproda/content/form'),
 				'pager'  => $pager,
-				'images' => $this->theme->presenter('uproda/content/images')->set('param', ['page' => 1]),
+				'images' => $this->theme->presenter('uproda/content/images')->set('param', ['page' => $page]),
 			]);
 		} catch (\Exception $e) {
 			\Log::error($e->getMessage());

@@ -6,11 +6,16 @@ class Controller_Image extends Controller_Uproda
 		parent::before();
 	}
 
-	public function action_index()
+	public function action_index($page = null)
 	{
 		try {
+			if ($page === null)
+			{
+				throw new \Exception('image not found: param is null');
+			}
 
-			if (($path = Libs_image::search($this->param('image'))) === null)
+
+			if (($path = Libs_image::search($page)) === null)
 			{
 				throw new \Exception('image not found.');
 			}
@@ -23,7 +28,7 @@ class Controller_Image extends Controller_Uproda
 		}
 	}
 
-	public function get_list()
+	public function get_list($page)
 	{
 		try {
 			if (\Input::method() !== 'GET')
@@ -31,13 +36,13 @@ class Controller_Image extends Controller_Uproda
 				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
 			}
 
-			$this->deafult_format = 'html';
-			//バリデーションを行う
-			$page = $this->param('page');
-			if (is_numeric($page))
+			if (! is_numeric($page))
 			{
+				throw new \Exception('invalid access [bad page]: '.\Input::real_ip());
 			}
-			$view = $this->theme->presenter('image/list')->set('param', ['page' => $this->param('page')]);
+
+			$this->deafult_format = 'html';
+			$view = $this->theme->presenter('image/list')->set('param', ['page' => $page]);
 
 			return $this->response($view->render());
 		} catch (\HttpServerErrorException $e) {
