@@ -28,7 +28,6 @@ class Libs_Image
 	public static function thumbnail($file)
 	{
 		try {
-			\Log::debug(print_r($file,1));
 			$thumbnail = Libs_Config::get('board.thumbnail.dir');
 			if ( ! \File::exists(\Arr::get($file, 'saved_to', null).$thumbnail.'/'))
 			{
