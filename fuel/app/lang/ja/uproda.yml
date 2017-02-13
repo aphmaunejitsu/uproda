@@ -1,7 +1,10 @@
 common:
-  title: ネ実うｐろだ（仮）
+  title: ネ実うpろだ
   description: ネ実, nejitsu, FF11, オススメ
   header_message: テスト運用中。違法とされるファイル、削除依頼があれば気がついた時点で削除します。
+  menu:
+    upload: うp
+    about: ここ
 imgform:
   filelabel: FILE max :sizeKB (:countFiles)
   dellabel: DELKEY

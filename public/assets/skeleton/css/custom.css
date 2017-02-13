@@ -1,3 +1,44 @@
+.sticking {
+	width: 100%;
+	z-index: 999;
+	background-color: #ffffff;
+}
+
+.white-popup {
+  position: relative;
+  background: #FFF;
+  padding: 20px;
+  width: auto;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+ul, li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.uproda-header-spacer { height:10px; width: 100%}
+.navi { width: 100%; }
+.navi li	{
+	float: left;
+	text-align: center;
+}
+.navi li a	{
+	display: block;
+	width: 85px;
+	padding: 2px 2px;
+	text-decoration: none;
+	color: black;
+}
+.navi li a:hover {
+	padding: 2px 2px;
+	text-decoration: none;
+	color: blue;
+}
+
+
 div.image-list { font-size:0 }
 a.image-list  {
   font-size: 16px;

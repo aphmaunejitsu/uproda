@@ -21,7 +21,7 @@ class Controller_Error extends Controller
 
 	public function action_404()
 	{
-		$this->theme->set_partial('header', $this->theme->presenter('error/header'));
+		$this->theme->set_partial('header', $this->theme->presenter('header'));
 		$this->theme->set_partial('content', $this->theme->presenter('error/404'));
 		$this->response_status = 404;
 	}

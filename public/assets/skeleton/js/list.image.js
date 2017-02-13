@@ -10,8 +10,12 @@ $(document).on("ajaxSend", function(e,jqXHR,obj){
 });
 
 $(function() {
-  var url = '/image/list/' + $('#image-list').data('page');
-  console.log(url);
+  var page = $('#image-list').data('page');
+  if (page === undefined) {
+	  page = 1;
+  }
+
+  var url = '/image/list/' + page;
 	$.ajax({
 		url: url,
 		dataType:"html",

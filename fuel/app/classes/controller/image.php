@@ -20,8 +20,12 @@ class Controller_Image extends Controller_Uproda
 				throw new \Exception('image not found.');
 			}
 
-			$this->theme->set_partial('header', $this->theme->presenter('image/header'));
-			$this->theme->set_partial('content', $this->theme->presenter('image/content')->set('param' ,['src' => Uri::base(false).$path]));
+			$this->theme->set_partial('header', $this->theme->presenter('header'));
+			$this->theme->set_partial('content', 'image/content')->set([
+				'form'   => $this->theme->presenter('uproda/content/form'),
+				'image'  => $this->theme->presenter('image/content/image')->set('param', ['src' => Uri::base(false).$path])
+			]);
+			//$this->theme->set_partial('image',
 		} catch ( \Exception $e ) {
 			\Log::error(__FILE__.':'.$e->getMessage());
 			throw new HttpNotFoundException();

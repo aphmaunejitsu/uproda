@@ -26,7 +26,7 @@ class Controller_Uproda extends Controller_Rest
 	{
 		try {
 			$this->theme->asset->js(['jquery.lazyload.min.js', 'list.image.js'], [], 'jquery-list-loading', false);
-			$this->theme->set_partial('header', $this->theme->presenter('uproda/header'));
+			$this->theme->set_partial('header', $this->theme->presenter('header'));
 
 			//画像取得
 			$this->theme->set_partial('content', 'uproda/content')->set([
