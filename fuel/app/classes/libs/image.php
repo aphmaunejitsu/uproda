@@ -29,7 +29,7 @@ class Libs_Image
 	{
 		try {
 			$thumbnail = Libs_Config::get('board.thumbnail.dir');
-			if ( ! \File::exists(\Arr::get($file, 'saved_to', null).$thumbnail.'/'))
+			if ( ! file_exists(\Arr::get($file, 'saved_to', null).$thumbnail.'/'))
 			{
 				\File::create_dir(\Arr::get($file, 'saved_to'), $thumbnail, 0777);
 			}
