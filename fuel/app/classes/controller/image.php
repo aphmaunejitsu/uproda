@@ -20,9 +20,7 @@ class Controller_Image extends Controller_Uproda
 				throw new \Exception('image not found.');
 			}
 
-			$this->theme->set_partial('header', $this->theme->presenter('header'));
 			$this->theme->set_partial('content', 'image/content')->set([
-				'form'   => $this->theme->presenter('uproda/content/form'),
 				'image'  => $this->theme->presenter('image/content/image')->set('param', ['src' => Uri::base(false).$path])
 			]);
 			//$this->theme->set_partial('image',
@@ -85,7 +83,7 @@ class Controller_Image extends Controller_Uproda
 				//アップロード成功
 				$name = explode('.', $file['saved_as']);
 				//画像ビューへリダイレクト
-				\Response::redirect('image/'.$name[0]);
+				\Response::redirect('image/'.reset($name));
 				return;
 			}
 			else

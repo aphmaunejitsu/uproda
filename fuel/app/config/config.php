@@ -115,15 +115,15 @@ return array(
 	'security' => array(
 		'csrf_autoload'            => false,
 		'csrf_autoload_methods'    => ['post', 'put', 'delete'],
-		'csrf_bad_request_on_fail' => false,
+		'csrf_bad_request_on_fail' => true,
 		'csrf_auto_token'          => false,
 		'csrf_token_key'           => 'uproda_token',
-		'csrf_expiration'          => 0,
+		'csrf_expiration'          => 3600,
 
 		/**
 		 * A salt to make sure the generated security tokens are not predictable
 		 */
-		// 'token_salt'            => 'put your salt value here to make the token more secure',
+		'token_salt'            => 'nantekotodakokohanejitsudattanoka',
 
 		/**
 		 * Allow the Input class to use X headers when present

@@ -19,6 +19,9 @@ class Controller_Uproda extends Controller_Rest
 		{
 			$template = $this->theme->set_template('template');
 			$this->theme->set_partial('head', $this->theme->presenter('head'));
+			$this->theme->set_partial('header', $this->theme->presenter('header'));
+			$this->theme->set_partial('footer', $this->theme->presenter('footer'));
+			$this->theme->set_partial('form', $this->theme->presenter('form'));
 		}
 	}
 
@@ -26,11 +29,9 @@ class Controller_Uproda extends Controller_Rest
 	{
 		try {
 			$this->theme->asset->js(['jquery.lazyload.min.js', 'list.image.js'], [], 'jquery-list-loading', false);
-			$this->theme->set_partial('header', $this->theme->presenter('header'));
 
 			//画像取得
 			$this->theme->set_partial('content', 'uproda/content')->set([
-				'form'   => $this->theme->presenter('uproda/content/form'),
 				'pager'  => $this->theme->presenter('uproda/content/pager')->set('param', ['page' => $page]),
 				'images' => $this->theme->presenter('uproda/content/images')->set('param', ['page' => $page]),
 			]);
