@@ -1,5 +1,5 @@
 <?php
-class Presenter_Uproda_Content_Form extends \Presenter
+class Presenter_Form extends \Presenter
 {
 	public function view()
 	{

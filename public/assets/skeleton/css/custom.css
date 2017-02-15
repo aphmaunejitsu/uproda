@@ -1,46 +1,19 @@
-.sticking {
-	width: 100%;
-	z-index: 999;
-	background-color: #ffffff;
-}
+html, body {height: 100%; margin 0; padding:0}
+#nejitsu { position: relative; min-height: 100%; }
+#osusume { padding-bottom: 3.5em;}
+header { height:3em; padding-top: 8px; }
+footer { bottom: 0; height: 3.5em; position: absolute; width: 100%; padding-top: 8px;}
 
-.white-popup {
-  position: relative;
-  background: #FFF;
-  padding: 20px;
-  width: auto;
-  max-width: 500px;
-  margin: 20px auto;
-}
+.sticking { width: 100%; z-index: 999; background-color: #ffffff; margin: 0 auto; }
+.white-popup { position: relative; background: #FFF; padding: 20px; width: auto; max-width: 500px; margin: 20px auto; }
 
-ul, li {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.uproda-header-spacer { height:10px; width: 100%}
-.navi { width: 100%; }
-.navi li	{
-	float: left;
-	text-align: center;
-}
-.navi li a	{
-	display: block;
-	width: 85px;
-	padding: 2px 2px;
-	text-decoration: none;
-	color: black;
-}
-.navi li a:hover {
-	padding: 2px 2px;
-	text-decoration: none;
-	color: blue;
-}
+.navi { margin: 0 auto; }
+.navi a	{ text-decoration: none; color: black; }
+.navi a:hover { text-decoration: none; color: blue; }
 
 
 div.image-list { font-size:0 }
-a.image-list  {
+.image-list a {
   font-size: 16px;
   overflow: hidden;
   display: inline-block;
@@ -48,19 +21,15 @@ a.image-list  {
   width: calc(50% - 4px);
   margin-right: 8px;
 }
+.image-list a:nth-of-type(2n) { margin-right: 0; }
 
-
-a.image-list:nth-of-type(2n) { margin-right: 0; }
-
-@media screen and (min-width: 50em) {
-  a.image-list { width: calc(25% - 6px); }
-  a.image-list:nth-of-type(2n) { margin-right: 8px; }
-  a.image-list:nth-of-type(4n) { margin-right: 0; }
+@media screen and (min-width: 40em) {
+  .image-list a { width: calc(25% - 6px); }
+  .image-list a:nth-of-type(2n) { margin-right: 8px; }
+  .image-list a:nth-of-type(4n) { margin-right: 0; }
 }
-
-a.image-list:hover img { transform: scale(1.15); }
+.image-list a:hover img { transform: scale(1.15); }
 figure { margin: 0;}
-
 img.image-item {
   border: none;
   max-width: 100%;
@@ -118,9 +87,9 @@ img.image-item {
 
 
 /* Larger than mobile */
-@media (min-width: 400px) {}
+@media (min-width: 400px) { }
 
-@media (min-width: 550px) {}
+@media (min-width: 550px) { }
 
 /* Larger than tablet */
 @media (min-width: 750px) {}

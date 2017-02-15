@@ -1,9 +1,15 @@
 <?php
-class Controller_Error extends Controller_Uproda
+class Controller_Error extends Controller
 {
 	public function before()
 	{
 		parent::before();
+
+		Libs_Config::load();
+		Libs_Lang::load();
+
+		$this->theme = \Theme::instance();
+		$this->theme->active('skeleton');
 	}
 
 	public function action_index($page = 1)
@@ -13,9 +19,7 @@ class Controller_Error extends Controller_Uproda
 
 	public function action_404()
 	{
-		$this->theme->set_partial('header', $this->theme->presenter('header'));
 		$this->theme->set_partial('content', 'error/content')->set([
-			'form'   => $this->theme->presenter('uproda/content/form'),
 			'error'  => $this->theme->presenter('error/404'),
 		]);
 		$this->response_status = 404;
@@ -23,9 +27,7 @@ class Controller_Error extends Controller_Uproda
 
 	public function action_500()
 	{
-		$this->theme->set_partial('header', $this->theme->presenter('header'));
 		$this->theme->set_partial('content', 'error/content')->set([
-			'form'   => $this->theme->presenter('uproda/content/form'),
 			'error'  => $this->theme->presenter('error/500'),
 		]);
 		$this->response_status = 500;

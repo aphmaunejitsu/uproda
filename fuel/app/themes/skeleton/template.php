@@ -4,14 +4,18 @@
   <?php echo $partials['head'];?>
 </head>
 <body>
-<!-- Primary Page Layout
-   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<div id='nejitsu'>
+	<header class='warecoli'>
   <?php echo $partials['header'] ?>
+	</header>
+	<div id='osusume'>
   <?php echo $partials['content'] ?>
-  <?php //echo $partials['footer'] ?>
-<!-- End Document
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-
+	</div>
+	<footer>
+  <?php echo $partials['footer'] ?>
+	<?php echo $partials['form'] ?>
+	</footer>
+</div>
 </body>
 </html>
 <!--
