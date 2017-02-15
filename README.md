@@ -1,6 +1,7 @@
                                                                                                                                                                                                               
 # uproda
-ほんまはDockerとか使いたかってん・・・
+http://minus-k.com/nejitsu/upload.html の管理人さん今までありがとうだよ  
+
 ## インストール
 - apacheの設定とか
 FUEL_ENVは環境によって変更する。  
