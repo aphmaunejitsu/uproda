@@ -245,7 +245,8 @@ abstract class Database_Connection
 	 */
 	public function select(array $args = null)
 	{
-		return new \Database_Query_Builder_Select($args);
+		$instance = new \Database_Query_Builder_Select($args);
+		return $instance->set_connection($this);
 	}
 
 	/**
@@ -260,7 +261,8 @@ abstract class Database_Connection
 	 */
 	public function insert($table = null, array $columns = null)
 	{
-		return new \Database_Query_Builder_Insert($table, $columns);
+		$instance = new \Database_Query_Builder_Insert($table, $columns);
+		return $instance->set_connection($this);
 	}
 
 	/**
@@ -274,7 +276,8 @@ abstract class Database_Connection
 	 */
 	public function update($table = null)
 	{
-		return new \Database_Query_Builder_Update($table);
+		$instance = new \Database_Query_Builder_Update($table);
+		return $instance->set_connection($this);
 	}
 
 	/**
@@ -288,7 +291,8 @@ abstract class Database_Connection
 	 */
 	public function delete($table = null)
 	{
-		return new \Database_Query_Builder_Delete($table);
+		$instance = new \Database_Query_Builder_Delete($table);
+		return $instance->set_connection($this);
 	}
 
 	/**
@@ -338,7 +342,7 @@ abstract class Database_Connection
 			if (stripos($sql, 'ORDER BY') !== false)
 			{
 				// Remove ORDER BY clauses from the SQL to improve count query performance
-				$sql = preg_replace('/ ORDER BY [^,\s)]*(\s|)*(?:ASC|DESC)?(?:\s*(?:ASC|DESC)?,\s*(?:ASC|DESC)?[^,\s)]+\s*(?:ASC|DESC))*/', '', $sql);
+				$sql = preg_replace('/ORDER BY (.+?)(?=LIMIT|GROUP|PROCEDURE|INTO|FOR|LOCK|\)|$)/mi', '', $sql);
 			}
 
 			// Get the total rows from the last query executed
