@@ -10,7 +10,7 @@ board:
     height: 400             # 縦
   mosaic: 1                 # 保存ディレクトリ・縦・横はサムネイル共通
   pagination:
-    per_page: 40           # 1ページあたりの数(デフォルト)
+    per_page: 100           # 1ページあたりの数(デフォルト)
 admin:
   id: admin        #変更すること
   uass: qwer       #変更すること

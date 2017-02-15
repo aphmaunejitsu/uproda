@@ -10,6 +10,19 @@ class Controller_Error extends Controller
 
 		$this->theme = \Theme::instance();
 		$this->theme->active('skeleton');
+
+		try {
+			//テンプレートがセットされてくることがある
+			$this->theme->get_template();
+		} catch (\Exception $e) {
+			//取れない場合にエクセプションを吐くので、無理やりセット
+			\Log::info($e->getMessage());
+			$template = $this->theme->set_template('template');
+			$this->theme->set_partial('head', $this->theme->presenter('head'));
+			$this->theme->set_partial('header', $this->theme->presenter('header'));
+			$this->theme->set_partial('footer', $this->theme->presenter('footer'));
+			$this->theme->set_partial('form', $this->theme->presenter('form'));
+		}
 	}
 
 	public function action_index($page = 1)

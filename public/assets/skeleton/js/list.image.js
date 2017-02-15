@@ -23,7 +23,10 @@ $(function() {
 			var list = $(data);
 			$("#image-list").html(list);
 			list.ready(function () {
-				$("img.lazy").lazyload();
+				//$(".images").fadeIn(function() {
+				  $("img.lazy").lazyload({effect : "fadeIn"});
+				  $(".pager").fadeIn();
+				//});
 			});
 		}
 	});

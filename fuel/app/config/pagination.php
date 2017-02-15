@@ -13,7 +13,7 @@
 return array(
 
 	// the active pagination template
-	'active'                      => 'default',
+	'active'                      => 'skeleton',
 
 	// default FuelPHP pagination template, compatible with pre-1.4 applications
 	'default'                     => array(
@@ -54,42 +54,43 @@ return array(
 		'last-inactive-link'      => "",
 	),
 
-	//'skeleton' => [
-	//	'wrapper'                 => "<div class=\"row\">\n\t{pagination}\n\t</div>\n",
-	//	'first'                   => "",
-	//	'first-link'              => "<a href=\"{uri}\" class="button">{page}</a>",
+	'skeleton' => [
+		'wrapper'                 => "<ul class=\"uproda-pager\">{pagination}</ul>",
+		'first'                   => "<li clas=\"pager-first\">{link}</li>",
+		'first-marker'            => "&lt;&lt;",
+		'first-link'              => "<a href=\"{uri}\" >{page}</a>",
 
-	//	'first-inactive'          => "",
-	//	'first-inactive-link'     => "",
+		'first-inactive'          => "",
+		'first-inactive-link'     => "",
 
-	//	'previous'                => "\n\t\t<li>{link}</li>",
-	//	'previous-marker'         => "&laquo;",
-	//	'previous-link'           => "<a href=\"{uri}\" class="button" rel=\"prev\">{page}</a>",
+		'previous'                => "<li>{link}</li>",
+		'previous-marker'         => "&lt;",
+		'previous-link'           => "<a href=\"{uri}\"  rel=\"prev\">{page}</a>",
 
-	//	'previous-inactive'       => "\n\t\t<li class=\"disabled\">{link}</li>",
-	//	'previous-inactive-link'  => "<a href=\"#\" rel=\"prev\">{page}</a>",
+		'previous-inactive'       => "<li class=\"disabled\">{link}</li>",
+		'previous-inactive-link'  => "<a>{page}</a>",
 
-	//	'regular'                 => "\n\t\t<li>{link}</li>",
-	//	'regular-link'            => "<a href=\"{uri}\">{page}</a>",
+		'regular'                 => "<li>{link}</li>",
+		'regular-link'            => "<a href=\"{uri}\" >{page}</a>",
 
-	//	'active'                  => "\n\t\t<li class=\"active\">{link}</li>",
-	//	'active-link'             => "<a href=\"#\">{page} <span class=\"sr-only\"></span></a>",
+		'active'                  => "<li class=\"active\">{link}</li>",
+		'active-link'             => "<a >{page} <span class=\"sr-only\"></span></a>",
 
-	//	'next'                    => "\n\t\t<li>{link}</li>",
-	//	'next-marker'             => "&raquo;",
-	//	'next-link'               => "<a href=\"{uri}\" rel=\"next\">{page}</a>",
+		'next'                    => "<li>{link}</li>",
+		'next-marker'             => "&gt;",
+		'next-link'               => "<a href=\"{uri}\" rel=\"next\" >{page}</a>",
 
-	//	'next-inactive'           => "\n\t\t<li class=\"disabled\">{link}</li>",
-	//	'next-inactive-link'      => "<a href=\"#\" rel=\"next\">{page}</a>",
+		'next-inactive'           => "<li class=\"disabled\">{link}</li>",
+		'next-inactive-link'      => "<a>{page}</a>",
 
-	//	'last'                    => "\n\t\t<li>{link}</li>",
-	//	'last-marker'             => "&raquo;&raquo;",
-	//	'last-link'               => "<a href=\"{uri}\">{page}</a>",
+		'last'                    => "<li class=\"pager-last\">{link}</li>",
+		'last-marker'             => "&gt;&gt;",
+		'last-link'               => "<a href=\"{uri}\" >{page}</a>",
 
-	//	'last-inactive'           => "",
-	//	'last-inactive-link'      => "",
+		'last-inactive'           => "",
+		'last-inactive-link'      => "",
 
-	//],
+	],
 
 	// Twitter bootstrap 3.x template
 	'bootstrap3'                   => array(

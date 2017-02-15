@@ -9,7 +9,7 @@
   <?php echo $partials['header'] ?>
 	</header>
 	<div id='osusume'>
-  <?php echo $partials['content'] ?>
+  	<?php echo $partials['content'] ?>
 	</div>
 	<footer>
   <?php echo $partials['footer'] ?>
