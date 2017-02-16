@@ -16,8 +16,8 @@ footer { bottom: 0; height: 3.5em; position: absolute; width: 100%; padding-top:
 .navi a:hover { text-decoration: none; color: blue; }
 
 /* イメージリスト */
-div.images { font-size:0;}
-.images a { font-size: 16px; overflow: hidden; display: inline-block; margin-bottom: 8px; width: calc(50% - 4px); margin-right: 8px;}
+div.images { font-size:0; }
+.images a { font-size: 16px; overflow: hidden; display: inline-block; margin-bottom: 8px; width: calc(50% - 4px); margin-right: 8px;box-shadow: 2px 2px 2px #aaa;}
 .images a:nth-of-type(2n) { margin-right: 0; }
 
 @media screen and (min-width: 25em) {
@@ -27,8 +27,17 @@ div.images { font-size:0;}
 }
 .images a:hover img { transform: scale(1.15); }
 figure { margin: 0;}
-img.image-item { border: none; max-width: 100%; height: auto; display: block; background: #ccc; transition: transform .2s ease-in-out;  }
-.image-box {text-align:center;border:solid #ccc 1px; padding:1em; margin-bottom:1em; border-radius:4px}
+.images img { border: none; max-width: 100%; height: auto; display: block; background: #ccc; transition: transform .2s ease-in-out;  }
+.image-box {margin-bottom:1em; text-align:center; padding:2px;}
+.image-box img {max-height: 80%;border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px; box-shadow: 2px 2px 2px #ccc}
+
+/* 吹き出し */
+.bubble { position: relative; max-width: 100%;}
+.bubble .body { padding:0.5em; border: solid 1px #ccc; border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px; box-shadow: 1px 1px 1px #ccc}
+.bbubble .tail { border-top: 18px solid #ccc; border-right: 24px solid transparent; position: absolute; bottom: -18px; left: 36px; width: 0; height: 0; }
+.bubble .tail-top-left { border-right: 24px solid transparent; border-bottom: 18px solid #ccc; position: absolute; top: -18px; left: 36px; width: 0; height: 0; }
+.bubble .tail-top-right { border-bottom: 18px solid #ccc; border-left: 24px solid transparent; position: absolute; top: -18px; right: 36px; width: 0; height: 0; }
+.bubble .tail-top-center { margin-left: -12px; border-right: 12px solid transparent; border-bottom: 18px solid #66aa11; border-left: 12px solid transparent; position: absolute; top: -18px; left: 50%; width: 0; height: 0; }
 
 /* ページネーション */
 .pager {display: none}

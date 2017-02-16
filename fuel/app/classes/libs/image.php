@@ -46,21 +46,10 @@ class Libs_Image
 		}
 	}
 
-	/**
-	 * ファイルIDからファイルを見つける
-	 * @param $id string
-	 * @return string success file_path, fail null
-	 **/
-	public static function search($id)
+	public static function get($id)
 	{
 		try {
-			if (empty($id))
-			{
-				return null;
-			}
-
 			$id = htmlspecialchars($id);
-
 			$v = \Validation::forge();
 			$v->add_field('image', 'image file', 'required|valid_string[alpha,numeric,dashes]');
 			if ( ! $v->run(['image' => $id], true))
@@ -73,23 +62,26 @@ class Libs_Image
 				throw new \Exception('image not fond: '.$id);
 			}
 
-			$path = Str::tr(':dir/:subdir/:basename.:ext',[
-				'dir'      => Libs_Config::get('board.dir'),
-				'subdir'   => \Str::lower(\Str::sub($image->basename, 0, 2)),
-				'basename' => $image->basename,
-				'ext'      => $image->ext,
-			]);
-
-			if (\File::exists(DOCROOT.$path))
-			{
-				return $path;
-			}
-
-			return null;
+			return $image;
 		} catch (\Exception $e) {
-			\Log::warning(__FILE__.':'.$e->getMessage());
+			\Log::error(__FILE__.'('.__LINE__.'): '.$e->getMessage());
 			return null;
 		}
+	}
+
+	/**
+	 * ファイルの存在チェック
+	 * @param $image_path string
+	 * @return string success file_path, fail null
+	 **/
+	public static function exists($image_path)
+	{
+		if (\File::exists(DOCROOT.$path))
+		{
+			return $path;
+		}
+
+		return null;
 	}
 
 	public static function upload()

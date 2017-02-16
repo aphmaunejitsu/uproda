@@ -118,7 +118,7 @@ return array(
 		'csrf_bad_request_on_fail' => true,
 		'csrf_auto_token'          => false,
 		'csrf_token_key'           => 'uproda_token',
-		'csrf_expiration'          => 3600,
+		'csrf_expiration'          => 86400,
 
 		/**
 		 * A salt to make sure the generated security tokens are not predictable

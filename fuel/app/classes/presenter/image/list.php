@@ -26,14 +26,5 @@ class Presenter_Image_List extends \Presenter
 			return \Str::tr('/image/:basename', ['basename' => $basename]);
 	   	});
 
-		//image実体パス作成
-		$this->set_safe('build_real_image_url', function($image_dir, $basename, $ext) {
-			return \Str::tr('/:image_dir/:image_short_dir/:basename.:ext', [
-				'image_dir'       => $image_dir,
-				'image_short_dir' => Libs_Image::get_two_char_from_basename($basename),
-				'basename'        => $basename,
-				'ext'             => $ext,
-			]);
-		});
 	}
 }
