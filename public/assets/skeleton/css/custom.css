@@ -1,4 +1,4 @@
-html, body {height: 100%; margin 0; padding:0}
+html, body {height: 100%; }
 /* テンプレート */
 #nejitsu { position: relative; min-height: 100%; }
 #osusume { padding-bottom: 3.5em;}
@@ -28,8 +28,12 @@ div.images { font-size:0; }
 .images a:hover img { transform: scale(1.15); }
 figure { margin: 0;}
 .images img { border: none; max-width: 100%; height: auto; display: block; background: #ccc; transition: transform .2s ease-in-out;  }
+
+/* イメージ */
 .image-box {margin-bottom:1em; text-align:center; padding:2px;}
 .image-box img {max-height: 80%;border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px; box-shadow: 2px 2px 2px #ccc}
+.image-box ul { list-style:none}
+.image-box li { border-bottom: #ccc 1px solid; display: block; padding:0.5em}
 
 /* 吹き出し */
 .bubble { position: relative; max-width: 100%;}

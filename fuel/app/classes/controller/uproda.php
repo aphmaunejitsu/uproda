@@ -9,11 +9,13 @@ class Controller_Uproda extends Controller_Rest
 	{
 		parent::before();
 
+
 		Libs_Config::load();
 		Libs_Lang::load();
 
 		$this->theme = \Theme::instance();
 		$this->theme->active('skeleton');
+		$this->theme->asset->add_path('assets/global', ['css', 'js', 'img']);
 
 		if ( ! \Input::is_ajax())
 		{
@@ -28,7 +30,7 @@ class Controller_Uproda extends Controller_Rest
 	public function action_index($page = 1)
 	{
 		try {
-			$this->theme->asset->js(['jquery.lazyload.min.js', 'list.image.js'], [], 'jquery-list-loading', false);
+			$this->theme->asset->js(['jquery.lazyload.min.js','list.image.js'], [], 'jquery-list-loading', false);
 
 			//画像取得
 			$this->theme->set_partial('content', 'uproda/content')->set([

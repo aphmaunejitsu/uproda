@@ -19,6 +19,8 @@ class Controller_Image extends Controller_Uproda
 				throw new \Exception('image not found');
 			}
 
+			$this->theme->asset->js(['clipboard.min.js', 'cp.js'], [], 'clipboard', false);
+
 			$this->theme->set_partial('content', 'image/content')->set([
 				'image' =>  $this->theme->presenter('image/content/image')->set('param', ['id' => $page, 'image' => $image])
 			]);
