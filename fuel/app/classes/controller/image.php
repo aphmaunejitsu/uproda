@@ -14,16 +14,16 @@ class Controller_Image extends Controller_Uproda
 				throw new \Exception('image not found: param is null');
 			}
 
-
-			if (($path = Libs_image::search($page)) === null)
+			if (($image = Libs_Image::get($page)) === null)
 			{
-				throw new \Exception('image not found.');
+				throw new \Exception('image not found');
 			}
 
+			$this->theme->asset->js(['clipboard.min.js', 'cp.js'], [], 'clipboard', false);
+
 			$this->theme->set_partial('content', 'image/content')->set([
-				'image'  => $this->theme->presenter('image/content/image')->set('param', ['src' => Uri::base(false).$path])
+				'image' =>  $this->theme->presenter('image/content/image')->set('param', ['id' => $page, 'image' => $image])
 			]);
-			//$this->theme->set_partial('image',
 		} catch ( \Exception $e ) {
 			\Log::error(__FILE__.':'.$e->getMessage());
 			throw new HttpNotFoundException();
