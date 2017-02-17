@@ -1,4 +1,5 @@
 html, body {height: 100%; }
+.container { max-width: 1024px }
 /* テンプレート */
 #nejitsu { position: relative; min-height: 100%; }
 #osusume { padding-bottom: 3.5em;}
@@ -26,22 +27,16 @@ div.images { font-size:0; }
   .images a:nth-of-type(4n) { margin-right: 0; }
 }
 .images a:hover img { transform: scale(1.15); }
-figure { margin: 0;}
 .images img { border: none; max-width: 100%; height: auto; display: block; background: #ccc; transition: transform .2s ease-in-out;  }
+figure { margin: 0;}
 
 /* イメージ */
-.image-box {margin-bottom:1em; text-align:center; padding:2px;}
-.image-box img {max-height: 80%;border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px; box-shadow: 2px 2px 2px #ccc}
+.image-box {margin-bottom:1em; }
+.image-box img {max-height: 80%; border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px; box-shadow: 2px 2px 2px #ccc}
 .image-box ul { list-style:none}
-.image-box li { border-bottom: #ccc 1px solid; display: block; padding:0.5em}
-
-/* 吹き出し */
-.bubble { position: relative; max-width: 100%;}
-.bubble .body { padding:0.5em; border: solid 1px #ccc; border-radius:4px; -webkit-border-radius:4px; -moz-border-radius:4px; box-shadow: 1px 1px 1px #ccc}
-.bbubble .tail { border-top: 18px solid #ccc; border-right: 24px solid transparent; position: absolute; bottom: -18px; left: 36px; width: 0; height: 0; }
-.bubble .tail-top-left { border-right: 24px solid transparent; border-bottom: 18px solid #ccc; position: absolute; top: -18px; left: 36px; width: 0; height: 0; }
-.bubble .tail-top-right { border-bottom: 18px solid #ccc; border-left: 24px solid transparent; position: absolute; top: -18px; right: 36px; width: 0; height: 0; }
-.bubble .tail-top-center { margin-left: -12px; border-right: 12px solid transparent; border-bottom: 18px solid #66aa11; border-left: 12px solid transparent; position: absolute; top: -18px; left: 50%; width: 0; height: 0; }
+.image-box li { border-bottom: #ccc 1px solid; display: block; padding-bottom:0.5em; word-wrap: break-word; white-space: normal; text-align:left}
+.image-box li:last-of-type { border-bottom:none;}
+.image-box div.columns { float:left; }
 
 /* ページネーション */
 .pager {display: none}
@@ -75,7 +70,11 @@ ul { -webkit-padding-start: 0px; }
 
 
 /* Larger than mobile */
-@media (min-width: 400px) {}
+
+@media (min-width: 400px)
+{
+.container { width: 95% }
+}
 
 @media (min-width: 550px) {}
 
