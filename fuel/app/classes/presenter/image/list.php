@@ -1,8 +1,9 @@
 <?php
-class Presenter_Image_List extends \Presenter
+class Presenter_Image_List extends Presenter_Image
 {
 	public function view()
 	{
+		parent::view();
 		$per_page = \Libs_Config::get('board.pagination.per_page', 100);
 		$offset = (\Arr::get($this->param, 'page', 1) - 1) * $per_page;
 		$this->set('images', Libs_Image::get_images($offset, $per_page));
@@ -13,17 +14,12 @@ class Presenter_Image_List extends \Presenter
 
 		//thumbnailパス作成
 		$this->set_safe('build_thumbnail_url', function($image_dir, $thumbnail_dir, $basename) {
-			return \Str::tr('/:image_dir/:image_short_dir/:thumbnail_dir/:basename.jpg', [
-				'image_dir'       => $image_dir,
-				'image_short_dir' => Libs_Image::get_two_char_from_basename($basename),
-				'thumbnail_dir'   => $thumbnail_dir,
-				'basename'        => $basename,
-			]);
+			return $this->build_thumbnail_url($image_dir, $thumbnail_dir, $basename);
 		});
 
 		//imageパス作成
 		$this->set_safe('build_image_url', function($basename) {
-			return \Str::tr('/image/:basename', ['basename' => $basename]);
+			return $this->build_image_url($basename);
 	   	});
 
 	}

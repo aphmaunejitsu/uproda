@@ -1,8 +1,9 @@
 <?php
-class Presenter_Form extends \Presenter
+class Presenter_Form extends Presenter_Uproda
 {
 	public function view()
 	{
+		parent::view();
 		//$this->filelabel = 'AA';
 		$this->filelabel = Libs_Lang::get('imgform.filelabel', [
 			'size'  => Libs_Config::get('board.maxsize') * 1024,

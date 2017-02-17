@@ -1,8 +1,3 @@
 <?php
-class Presenter_Image_Content extends \Presenter
-{
-	public function view()
-	{
-	}
-}
+class Presenter_Image_Content extends Presenter_Image {}
 

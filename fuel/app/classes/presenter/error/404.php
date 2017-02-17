@@ -1,5 +1,5 @@
 <?php
-class Presenter_Error_404 extends \Presenter
+class Presenter_Error_404 extends Presenter_Error
 {
 	public function view()
 	{
