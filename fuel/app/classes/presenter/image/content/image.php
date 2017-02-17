@@ -5,10 +5,7 @@ class Presenter_Image_Content_Image extends Presenter_Image_Content
 	{
 		parent::view();
 		$id = $this->param['id'];
-		if (($image = Libs_Image::get($id)) === null)
-		{
-			throw new \Exception('image not found');
-		}
+		$image = $this->param['image'];
 
 		$this->src = $this->build_image_real_url(\Arr::get($image, 'basename', null), \Arr::get($image, 'ext', null));
 		$this->message = \Arr::get($image, 'comment', null);
