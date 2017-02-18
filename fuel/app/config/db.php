@@ -15,7 +15,7 @@ return [
 			'username'   => 'updater',
 			'password'   => 'tekitou'
 		],
-		'identifier'     => '`',
+		'identifier'     => '',
 	    'table_prefix'   => '',
 	    'charset'        => 'utf8',
 		'profiling'      => false,
@@ -28,7 +28,7 @@ return [
 			'username'   => 'reader',
 			'password'   => 'tekitou'
 		],
-		'identifier'     => '`',
+		'identifier'     => '',
 	    'table_prefix'   => '',
 	    'charset'        => 'utf8',
 		'profiling'      => false,
@@ -41,7 +41,7 @@ return [
 			'username'   => 'maintenance',
 			'password'   => 'tekitou'
 		],
-		'identifier'     => '`',
+		'identifier'     => '',
 	    'table_prefix'   => '',
 	    'charset'        => 'utf8',
 		'profiling'      => false,

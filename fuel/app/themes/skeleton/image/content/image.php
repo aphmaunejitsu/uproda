@@ -14,6 +14,14 @@
 				<input id='image-path' type='text' class='u-full-width' value='<?php echo $src;?>'>
 				<button class="btn button u-full-width" data-clipboard-target="#image-path">copy</button>
 			</li>
+			<li>
+			</li>
+    			<?php echo \Form::open(['action' => 'image/delete', 'name' => 'image-delete']); ?>
+  				<?php echo \Form::csrf(); ?>
+				<?php echo \Form::hidden('file', $hash(\Arr::get($image, 'id'))); ?>
+				<?php echo \Form::input(['type' => 'text', 'name' => 'pass', 'maxlength' => 8, 'class' => 'u-full-width'], null); ?>
+				<?php echo \Form::submit('delete', 'delete', ['class' => 'button u-full-width']);?>
+				<?php echo \Form::close();?>
 			</ul>
 		</div>
 	</div>

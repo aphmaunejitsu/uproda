@@ -1,6 +1,7 @@
 <?php
 class Presenter_Image extends Presenter_Uproda
 {
+	const MAGICCODE = 'desushiosushi';
 	protected function build_thumbnail_url($image_dir, $thumbnail_dir, $basename)
 	{
 		if ($image_dir === null or $thumbnail_dir === null or $basename === null)
@@ -47,4 +48,11 @@ class Presenter_Image extends Presenter_Uproda
 			]);
 		}
 	}
+
+	protected function hash($id)
+	{
+		$mc = Libs_Config::get('board.key', self::MAGICCODE);
+		return sha1($mc.$id);
+	}
+
 }
