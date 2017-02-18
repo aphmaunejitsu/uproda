@@ -79,15 +79,17 @@ class Controller_Image extends Controller_Uproda
 				//サムネイル作成
 				Libs_Image::thumbnail($file);
 
+				//ファイル数がｔぽｋ
+				$delete_images = Libs_Image::get_images_for_delete();
+				Libs_Image::delete_by_images($delete_images);
+
 				//画像ビューへリダイレクト
 				\Response::redirect('image/'.\Arr::get($file, 'basename'));
 				return;
 			}
-			else
-			{
-				//気持ち悪いけど・・・
-				throw new HttpServerErrorException('failed up image');
-			}
+
+			//気持ち悪いけど・・・
+			throw new HttpServerErrorException('failed up image');
 		} catch (\HttpServerErrorException $e) {
 			\Log::error(__FILE__.':'.$e->getMessage());
 			//もう一回
@@ -118,11 +120,9 @@ class Controller_Image extends Controller_Uproda
 				\Response::redirect('/');
 				return;
 			}
-			else
-			{
-				//気持ち悪いけど・・・
-				throw new HttpServerErrorException('failed delete image');
-			}
+
+			//気持ち悪いけど・・・
+			throw new HttpServerErrorException('failed delete image');
 		} catch (\HttpServerErrorException $e) {
 			\Log::error(__FILE__.':'.$e->getMessage());
 			//もう一回

@@ -53,7 +53,6 @@ class Libs_Image
 		]);
 	}
 
-
 	public static function thumbnail($file)
 	{
 		try {
@@ -112,21 +111,6 @@ class Libs_Image
 		}
 	}
 
-	/**
-	 * ファイルの存在チェック
-	 * @param $image_path string
-	 * @return string success file_path, fail null
-	 **/
-	public static function exists($basename, $ext)
-	{
-		self::build_real_image_path($basename, $ext);
-		if (\File::exists($real_path))
-		{
-			return $path;
-		}
-
-		return null;
-	}
 
 	public static function upload()
 	{
@@ -225,6 +209,25 @@ class Libs_Image
 		}
 	}
 
+	public static function get_images_for_delete()
+	{
+		try {
+			$temp = Model_Image::find([
+				'order_by' => ['created_at' => 'desc'],
+				'limit'    => \Libs_Config::get('board.maxfiles'),
+				'offset'   => 0,
+			]);
+
+			$last = end($temp);
+			return Model_Image::find([
+				'where' => [['id', '<', $last->id]]
+			]);
+		} catch (\Exception $e) {
+			\Log::error(__FILE__.': '.$e);
+			return [];
+		}
+	}
+
 	public static function get_images($offset, $limit )
 	{
 		try {
@@ -238,44 +241,56 @@ class Libs_Image
 			return $images;
 		} catch (\Exception $e) {
 			\Log::error(__FILE__.': '.$e);
-			return null;
+			return [];
 		}
 	}
 
-	public static function delete_by_image($image)
+	/**
+	 * 画像を削除する
+	 * 処理は全部失敗してもいい
+	 */
+	public static function delete_by_images($images)
 	{
-		try {
-			//サムネイル削除
-			$thumb_path = self::build_real_thumbnail_path($image->basename);
-			\File::delete($thumb_path);
-		} catch (\Exception $e) {
-			\Log::warning($e);
-		}
-
-		try {
-			//本体削除
-			$image_path = self::build_real_image_path($image->basename, $image->ext);
-			\File::delete($image_path);
-		} catch (\Exception $e) {
-			\Log::warning($e);
-		}
-
-		//ディレクトリ掃除
-		try {
-			$thumbnail_dir = self::build_real_thumbnail_dir($image->basename);
-			if ( ! ($contents = \File::read_dir($thumbnail_dir, 1, ['!^\.'])))
-			{
-				$image_dir = self::build_real_image_dir($image->basename);
-				\File::delete_dir($image_dir, true, true);
-			}
-		} catch (\Exception $e) {
-			\Log::warning($e);
-		}
-
-
-		if ( ! $image->delete() )
+		if (empty($images))
 		{
-			return false;
+			return true;
+		}
+
+		foreach ($images as $image)
+		{
+			try {
+				//サムネイル削除
+				$thumb_path = self::build_real_thumbnail_path($image->basename);
+				\File::delete($thumb_path);
+			} catch (\Exception $e) {
+				\Log::warning($e->getMessage());
+			}
+
+			try {
+				//本体削除
+				$image_path = self::build_real_image_path($image->basename, $image->ext);
+				\File::delete($image_path);
+			} catch (\Exception $e) {
+				\Log::warning($e->getMessage());
+			}
+
+			//ディレクトリ掃除
+			try {
+				$thumbnail_dir = self::build_real_thumbnail_dir($image->basename);
+				if ( ! ($contents = \File::read_dir($thumbnail_dir, 1, ['!^\.'])))
+				{
+					$image_dir = self::build_real_image_dir($image->basename);
+					\File::delete_dir($image_dir, true, true);
+				}
+			} catch (\Exception $e) {
+				\Log::warning($e->getMessage());
+			}
+
+			if ( ! $image->delete() )
+			{
+				\Log::warning('fail delete image. id: '.$image->id);
+			}
+
 		}
 
 		return true;
@@ -311,10 +326,26 @@ class Libs_Image
 				return true;
 			}
 
-			return self::delete_by_image($image);
+			return self::delete_by_images($images);
 		} catch (\Exception $e) {
 			\Log::error(__FILE__.'('.__FUNCTION__.'): '.$e->getMessage());
 			return false;
 		}
+	}
+
+	/**
+	 * ファイルの存在チェック
+	 * @param $image_path string
+	 * @return string success file_path, fail null
+	 **/
+	public static function exists($basename, $ext)
+	{
+		$real_path = self::build_real_image_path($basename, $ext);
+		if (\File::exists($real_path))
+		{
+			return $real_path;
+		}
+
+		return null;
 	}
 }

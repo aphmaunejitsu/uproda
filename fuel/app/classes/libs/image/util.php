@@ -1,5 +1,5 @@
 <?php
-class Libs_Image_Util
+class Libs_Image_Util extends Libs_Image
 {
 	public static function exif($filename)
 	{
