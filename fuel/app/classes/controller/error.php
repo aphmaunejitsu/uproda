@@ -1,5 +1,5 @@
 <?php
-class Controller_Error extends Controller
+class Controller_Error extends \Controller
 {
 	public function before()
 	{
@@ -10,6 +10,7 @@ class Controller_Error extends Controller
 
 		$this->theme = \Theme::instance();
 		$this->theme->active('skeleton');
+		$this->theme->asset->add_path('assets/global', ['css', 'js', 'img']);
 
 		try {
 			//テンプレートがセットされてくることがある

@@ -3,7 +3,7 @@ class Presenter_Uproda_Content_Pager extends \Presenter
 {
 	public function view()
 	{
-		$count = Libs_Image::count_all();
+		$count = Libs_Image::count();
 		$config = [
 		    'pagination_url' => '/',
 		    'uri_segment' => 1,

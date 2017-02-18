@@ -11,6 +11,8 @@ board:
   mosaic: 1                 # 保存ディレクトリ・縦・横はサムネイル共通
   pagination:
     per_page: 100           # 1ページあたりの数(デフォルト)
+  key: desushiosushi        # ハッシュ用(変更すること)
+  del: qwer					# デフォルト削除パス(変更すること) 削除キーがないものは全てこれで削除できる
 admin:
   id: admin        #変更すること
   uass: qwer       #変更すること

@@ -6,9 +6,9 @@
 		<?php echo \Form::label($filelabel, 'upfile'); ?>
 		<?php echo \Form::file('upfile', ['class' => 'u-full-width button-primary']); ?>
 		<?php echo \Form::label($dellabel, 'pass'); ?>
-		<?php echo \Form::input(['type' => 'text', 'name' => 'pass'], null, ['class' => 'u-full-width', 'maxlength' => 8]); ?>
+		<?php echo \Form::input(['type' => 'text', 'name' => 'pass', 'maxlength' => 8], null, ['class' => 'u-full-width']); ?>
 		<?php echo \Form::label($commentlabel, 'comment'); ?>
-		<?php echo \Form::input(['type' => 'text', 'name' => 'comment'], null, ['class' => 'u-full-width']); ?>
+		<?php echo \Form::input(['type' => 'text', 'name' => 'comment', 'maxlength' => 140], null, ['class' => 'u-full-width']); ?>
       </div>
       <?php echo Form::submit('submit', $buttonlabel, ['class' => 'button-primary']);?>
     <?php echo Form::close(); ?>

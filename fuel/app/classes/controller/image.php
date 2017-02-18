@@ -79,17 +79,49 @@ class Controller_Image extends Controller_Uproda
 				//サムネイル作成
 				Libs_Image::thumbnail($file);
 
-
-				//アップロード成功
-				$name = explode('.', $file['saved_as']);
 				//画像ビューへリダイレクト
-				\Response::redirect('image/'.reset($name));
+				\Response::redirect('image/'.\Arr::get($file, 'basename'));
 				return;
 			}
 			else
 			{
 				//気持ち悪いけど・・・
 				throw new HttpServerErrorException('failed up image');
+			}
+		} catch (\HttpServerErrorException $e) {
+			\Log::error(__FILE__.':'.$e->getMessage());
+			//もう一回
+			throw new HttpServerErrorException();
+		} catch (\Exception $e) {
+			\Log::error(__FILE__.':'.$e->getMessage());
+			throw new HttpNotFoundException();
+		}
+	}
+
+	public function post_delete()
+	{
+		try {
+			if (\Input::method() !== 'POST')
+			{
+				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
+			}
+
+			//check token
+			if ( ! \Security::check_token())
+			{
+				throw new \Exception('invalid access [token error]: '.\Input::real_ip());
+			}
+
+			if ( Libs_Image::delete_by_hash(\Input::post('file'), \Input::post('pass')))
+			{
+				//トップへリダイレクト
+				\Response::redirect('/');
+				return;
+			}
+			else
+			{
+				//気持ち悪いけど・・・
+				throw new HttpServerErrorException('failed delete image');
 			}
 		} catch (\HttpServerErrorException $e) {
 			\Log::error(__FILE__.':'.$e->getMessage());
