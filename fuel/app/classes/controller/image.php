@@ -66,6 +66,11 @@ class Controller_Image extends Controller_Uproda
 				throw new \Exception('invalid access [token error]: '.\Input::real_ip());
 			}
 
+			if ( ! Captcha::forge('simplecaptcha')->check())
+			{
+				throw new \Exception('invalid access [captcha error]: '.\Input::real_ip());
+			}
+
 			if ((\Input::method() !== 'POST') or ( ! \Input::is_ajax()))
 			{
 				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
