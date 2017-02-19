@@ -9,6 +9,7 @@
 			<?php echo Libs_Form::input(['type' => 'text', 'name' => 'pass', 'maxlength' => 8, 'class' => 'u-full-width'], null); ?>
 			<?php echo Libs_Form::label($commentlabel, 'comment'); ?>
 			<?php echo Libs_Form::input(['type' => 'text', 'name' => 'comment', 'maxlength' => 140, 'class' => 'u-full-width'], null); ?>
+			<?php echo Libs_Form::captcha(); ?>
     </div>
 		<div class="row">
     <?php echo Form::submit('submit', $buttonlabel, ['class' => 'button-primary']);?>

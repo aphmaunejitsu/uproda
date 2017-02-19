@@ -14,7 +14,15 @@
   <script type="text/javascript">
   $(function(){
 	  $('.warecoli').stickMe({topOffset:100, shadow:true});
-	  $('.open-popup-form').magnificPopup({ type:'inline', midClick: true});
+	  $('.open-popup-form').magnificPopup({
+			type:'inline', midClick: true,
+			callbacks: {
+				open: function() {},
+				close: function() {
+					$('.uproda-captcha').attr('src','/captcha/image?' + Math.random());
+				}
+			}
+		});
   });
   </script>
 	</div>
