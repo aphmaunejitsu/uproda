@@ -57,21 +57,18 @@ class Controller_Image extends Controller_Uproda
 		}
 	}
 
-	/**
-	 *
-	 **/
 	public function post_upload()
 	{
 		try {
-			if (\Input::method() !== 'POST')
-			{
-				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
-			}
-
-			//check token
-			if ( ! \Security::check_token())
+			$this->default_format = 'json';
+			if ( ! Libs_Csrf::check_token())
 			{
 				throw new \Exception('invalid access [token error]: '.\Input::real_ip());
+			}
+
+			if ((\Input::method() !== 'POST') or ( ! \Input::is_ajax()))
+			{
+				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
 			}
 
 			if (($file = Libs_Image::upload()) !== null)
@@ -82,14 +79,16 @@ class Controller_Image extends Controller_Uproda
 				//ファイル数がｔぽｋ
 				$delete_images = Libs_Image::get_images_for_delete();
 				Libs_Image::delete_by_images($delete_images);
-
-				//画像ビューへリダイレクト
-				\Response::redirect('image/'.\Arr::get($file, 'basename'));
-				return;
+				return $this->response([
+					'status' => 200,
+					'image'  => \Uri::create('image/'.\Arr::get($file, 'basename'))
+				], 200);
 			}
-
-			//気持ち悪いけど・・・
-			throw new HttpServerErrorException('failed up image');
+			else
+			{
+				//気持ち悪いけど・・・
+				throw new HttpServerErrorException('failed up image');
+			}
 		} catch (\HttpServerErrorException $e) {
 			\Log::error(__FILE__.':'.$e->getMessage());
 			//もう一回
@@ -103,15 +102,15 @@ class Controller_Image extends Controller_Uproda
 	public function post_delete()
 	{
 		try {
+			//check token
+			if ( ! Libs_Csrf::check_token())
+			{
+				throw new \Exception('invalid access [token error]: '.\Input::real_ip());
+			}
+
 			if (\Input::method() !== 'POST')
 			{
 				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
-			}
-
-			//check token
-			if ( ! \Security::check_token())
-			{
-				throw new \Exception('invalid access [token error]: '.\Input::real_ip());
 			}
 
 			if ( Libs_Image::delete_by_hash(\Input::post('file'), \Input::post('pass')))

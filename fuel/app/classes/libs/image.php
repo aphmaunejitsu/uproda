@@ -12,7 +12,7 @@ class Libs_Image_Exception extends \Exception
 	}
 }
 
-class Libs_Image
+class Libs_Image extends \Image
 {
 	public static function get_two_char_from_basename($basename)
 	{
@@ -53,6 +53,83 @@ class Libs_Image
 		]);
 	}
 
+	public static function exif($filename)
+	{
+		try {
+			return exif_read_data($filename);
+		} catch (\Exception $e) {
+			\Log::error($e->getMessage());
+			return FALSE;
+		}
+	}
+
+	/**
+	 * exif情報を元に、画像の上下左右を修正する
+	 *
+	 **/
+	public static function fixed($filename)
+	{
+		try {
+			if (($exif = self::exif($filename)) === FALSE)
+			{
+				return;
+			}
+
+			if (($orientation = \Arr::get($exif, 'Orientation', null)) === null)
+			{
+				return;
+			}
+
+			$image = \Image::load($filename);
+			switch ($orientation)
+			{
+				case 0:
+				case 1:
+					return;
+				break;
+
+				case 2: //水平方向に反転
+					$image->flip('horizontal');
+				break;
+
+				case 3:
+					$image->rotate(180);
+				break;
+
+				case 4:
+					$image->flip('vertical');
+				break;
+
+				case 5:
+					$image->rotate(-90);
+					$image->flip('vertical');
+				break;
+
+				case 6:
+					$image->rotate(90);
+				break;
+
+				case 7:
+					$image->rotate(90);
+					$image->flip('vertical');
+				break;
+
+				case 8:
+					$image->rotate(-90);
+				break;
+
+				default:
+					return;
+				break;
+			}
+
+			$image->save($filename);
+		} catch (\Exception $e) {
+			\Log::warning($e);
+			return;
+		}
+	}
+
 	public static function thumbnail($file)
 	{
 		try {
@@ -70,7 +147,7 @@ class Libs_Image
 
 			$image_path = self::build_real_image_path($basename, \Arr::get($file, 'ext'));
 
-			$image = \Image::load($image_path)->crop_resize(Libs_Config::get('board.thumbnail.width'), Libs_Config::get('board.thumbnail.height'));
+			$image = self::load($image_path)->crop_resize(Libs_Config::get('board.thumbnail.width'), Libs_Config::get('board.thumbnail.height'));
 			$save_path = self::build_real_thumbnail_path($basename);
 			$image->save($save_path);
 
@@ -111,7 +188,6 @@ class Libs_Image
 		}
 	}
 
-
 	public static function upload()
 	{
 		try {
@@ -127,7 +203,7 @@ class Libs_Image
 			});
 
 			\Upload::register('after', function(&$file) {
-				Libs_Image_Util::fixed($file->path.$file->saved_as);
+				Libs_Image::fixed($file->path.$file->saved_as);
 			});
 
 			umask(0);
@@ -218,6 +294,11 @@ class Libs_Image
 				'offset'   => 0,
 			]);
 
+			if (count($temp) < intval(\Libs_Config::get('board.maxfiles')))
+			{
+				return [];
+			}
+
 			$last = end($temp);
 			return Model_Image::find([
 				'where' => [['id', '<', $last->id]]
@@ -304,7 +385,6 @@ class Libs_Image
 			$v->add_field('hash', 'hash', 'required|valid_string[alpha,numeric]');
 			if ( ! $v->run(['hash' => $h], true))
 			{
-				//\Log::debug(print_r($v->error(),1));
 				throw new Libs_Image_Exception('validate error: '.$h);
 			}
 

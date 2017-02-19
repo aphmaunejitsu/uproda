@@ -115,9 +115,9 @@ return array(
 	'security' => array(
 		'csrf_autoload'            => false,
 		'csrf_autoload_methods'    => ['post', 'put', 'delete'],
-		'csrf_bad_request_on_fail' => true,
+		'csrf_bad_request_on_fail' => false,
 		'csrf_auto_token'          => false,
-		'csrf_token_key'           => 'uproda_token',
+		'csrf_token_key'           => 'uproda_osusume',
 		'csrf_expiration'          => 86400,
 
 		/**
@@ -131,7 +131,7 @@ return array(
 		 * Examples of these are HTTP_X_FORWARDED_FOR and HTTP_X_FORWARDED_PROTO, which
 		 * can be faked which could have security implications
 		 */
-		// 'allow_x_headers'       => false,
+		 //'allow_x_headers'       => true,
 
 		/**
 		 * This input filter can be any normal PHP function as well as 'xss_clean'
