@@ -16,12 +16,12 @@
 			</li>
 			<li>
 			</li>
-    			<?php echo \Form::open(['action' => 'image/delete', 'name' => 'image-delete']); ?>
-  				<?php echo \Form::csrf(); ?>
-				<?php echo \Form::hidden('file', $hash(\Arr::get($image, 'id'))); ?>
-				<?php echo \Form::input(['type' => 'text', 'name' => 'pass', 'maxlength' => 8, 'class' => 'u-full-width'], null); ?>
-				<?php echo \Form::submit('delete', 'delete', ['class' => 'button u-full-width']);?>
-				<?php echo \Form::close();?>
+    		<?php echo Libs_Form::open(['action' => 'image/delete', 'name' => 'image-delete']); ?>
+  			<?php echo Libs_Form::csrf(); ?>
+				<?php echo Libs_Form::hidden('file', $hash(\Arr::get($image, 'id'))); ?>
+				<?php echo Libs_Form::input(['type' => 'text', 'name' => 'pass', 'maxlength' => 8, 'class' => 'u-full-width'], null); ?>
+				<?php echo Libs_Form::submit('delete', 'delete', ['class' => 'button u-full-width']);?>
+				<?php echo Libs_Form::close();?>
 			</ul>
 		</div>
 	</div>

@@ -4,11 +4,9 @@ class Controller_Uproda extends Controller_Rest
 	protected $default_format = 'json';
 	protected $ignore_http_accept = true;
 
-
 	public function before()
 	{
 		parent::before();
-
 
 		Libs_Config::load();
 		Libs_Lang::load();
@@ -31,6 +29,7 @@ class Controller_Uproda extends Controller_Rest
 	{
 		try {
 			$this->theme->asset->js(['jquery.lazyload.min.js','list.image.js'], [], 'jquery-list-loading', false);
+			Libs_Csrf::flash();
 
 			//画像取得
 			$this->theme->set_partial('content', 'uproda/content')->set([
