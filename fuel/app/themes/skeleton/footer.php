@@ -17,10 +17,10 @@
 	  $('.open-popup-form').magnificPopup({
 			type:'inline', midClick: true,
 			callbacks: {
-				open: function() {},
-				close: function() {
+				open: function() {
 					$('.uproda-captcha').attr('src','/captcha/image?' + Math.random());
-				}
+				},
+				close: function() {}
 			}
 		});
   });
