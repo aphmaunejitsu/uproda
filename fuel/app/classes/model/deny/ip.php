@@ -1,4 +1,8 @@
 <?php
+/**
+ * TORの出口ノード拒否用
+ *
+ */
 class Model_Deny_Ip extends Model_Base
 {
 	protected static $_table_name = 'deny_ips';

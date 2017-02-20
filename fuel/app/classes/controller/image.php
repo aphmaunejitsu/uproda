@@ -81,6 +81,14 @@ class Controller_Image extends Controller_Uproda
 				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
 			}
 
+			$v = \Validation::forge();
+			$v->add_callable('Libs_Deny_Word');
+			$v->add('words', 'deny words')->add_rule('not_contain');
+			if ( ! $v->run(['words' => \Input::post('comment')], true))
+			{
+				throw new \Exception('invalid access [Ng Word]: '.\Input::post('comment'));
+			}
+
 			if (($file = Libs_Image::upload()) !== null)
 			{
 				//サムネイル作成
