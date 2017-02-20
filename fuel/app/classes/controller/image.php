@@ -61,6 +61,11 @@ class Controller_Image extends Controller_Uproda
 	{
 		try {
 			$this->default_format = 'json';
+			if (Libs_Deny_Ip::check(\Input::real_ip()))
+			{
+				throw new \Exception('invalid access [deny access]: '.\Input::real_ip());
+			}
+
 			if ( ! Libs_Csrf::check_token())
 			{
 				throw new \Exception('invalid access [token error]: '.\Input::real_ip());
@@ -107,6 +112,11 @@ class Controller_Image extends Controller_Uproda
 	public function post_delete()
 	{
 		try {
+			if (Libs_Deny_Ip::check(\Input::real_ip()) )
+			{
+				throw new \Exception('invalid access [deny access]: '.\Input::real_ip());
+			}
+
 			//check token
 			if ( ! Libs_Csrf::check_token())
 			{

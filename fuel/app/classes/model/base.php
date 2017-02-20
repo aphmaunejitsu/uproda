@@ -9,6 +9,9 @@
 // grant alter,create,drop,index,select,insert,update,delete on uproda.* to maintenance@'localhost'
 abstract class Model_Base extends Model_Crud
 {
+	protected static $_connection = 'uproda-slave';
+	protected static $_write_connection = 'uproda-master';
+
 	protected static function pre_find(&$query)
 	{
         Log::debug($query);

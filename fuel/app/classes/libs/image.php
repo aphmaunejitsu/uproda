@@ -80,7 +80,7 @@ class Libs_Image extends \Image
 				return;
 			}
 
-			$image = \Image::load($filename);
+			$image = self::load($filename);
 			switch ($orientation)
 			{
 				case 0:

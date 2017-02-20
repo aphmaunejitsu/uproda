@@ -19,8 +19,6 @@
 class Model_Image extends Model_Base
 {
 	protected static $_table_name = 'images';
-	protected static $_connection = 'uproda-slave';
-	protected static $_write_connection = 'uproda-master';
 
 	protected static $_properties = [
 		'basename',
