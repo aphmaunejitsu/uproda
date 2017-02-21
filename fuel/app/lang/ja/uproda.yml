@@ -10,6 +10,8 @@ imgform:
   dellabel: DELKEY
   commentlabel: COMMENT
   buttonlabel: Upload
+settings:
+  listmode: サムネイル表示
 500:
   エラーが起きちゃいましたし
   はー？れじれじ・・・
