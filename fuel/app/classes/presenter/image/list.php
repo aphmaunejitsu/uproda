@@ -26,5 +26,9 @@ class Presenter_Image_List extends Presenter_Image
 			return \Num::format_bytes($bytes);
 		});
 
+		$this->set_safe('format_date', function($date) {
+			return \Date::forge(strtotime($date))->format('%Y/%m/%d %H:%M');
+		});
+
 	}
 }
