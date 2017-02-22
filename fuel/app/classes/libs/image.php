@@ -227,10 +227,10 @@ class Libs_Image extends \Image
 					'basename'   => $file['basename'],
 					'ext'        => $file['extension'],
 					'original'   => $file['name'],
-					'delkey'     => htmlspecialchars(\Input::post('pass')),
+					'delkey'     => \Security::clean(\Input::post('pass'), ['strip_tags', 'htmlentities']),
 					'mimetype'   => $file['mimetype'],
 					'size'       => $file['size'],
-					'comment'    => htmlspecialchars(\Input::post('comment')),
+					'comment'    => \Security::clean(\Input::post('comment'), ['strip_tags', 'htmlentities']),
 					'ip'         => \Input::real_ip(),
 					'ng'         => 0,
 				];
