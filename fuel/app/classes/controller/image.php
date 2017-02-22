@@ -43,8 +43,8 @@ class Controller_Image extends Controller_Uproda
 				throw new \Exception('invalid access [bad page]: '.\Input::real_ip());
 			}
 
-			$this->deafult_format = 'html';
-			$view = $this->theme->presenter('image/list')->set('param', ['page' => $page]);
+			$mode = \Libs_Settings::get_listmode()?'image/listview':'image/thumbnailview';
+			$view = $this->theme->presenter('image/list', 'view', null, $mode)->set('param', ['page' => $page]);
 
 			return $this->response($view->render());
 		} catch (\HttpServerErrorException $e) {

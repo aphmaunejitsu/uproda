@@ -2,7 +2,7 @@
 		<div class="row">
 			<div class="u-pull-right">
 				<a class='button' href="https://github.com/aphmaunejitsu/uproda">aphmau</a>
-				<a class='button' href="#">Settings</a>
+				<a class='button' href="/settings">Settings</a>
 			</div>
 		</div>
   </div>
@@ -11,18 +11,5 @@
   <?php echo Theme::instance()->asset->js(['sticky-header.js', 'jquery.magnific-popup.min.js', 'upload.js']); ?>
   <?php echo Theme::instance()->asset->render('jquery-list-loading'); ?>
   <?php echo Theme::instance()->asset->render('clipboard'); ?>
-  <script type="text/javascript">
-  $(function(){
-	  $('.warecoli').stickMe({topOffset:100, shadow:true});
-	  $('.open-popup-form').magnificPopup({
-			type:'inline', midClick: true,
-			callbacks: {
-				open: function() {
-					$('.uproda-captcha').attr('src','/captcha/image?' + Math.random());
-				},
-				close: function() {}
-			}
-		});
-  });
-  </script>
+  <?php echo Theme::instance()->asset->render('settings'); ?>
 	</div>

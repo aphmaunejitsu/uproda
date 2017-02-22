@@ -38,4 +38,15 @@ $(function() {
 		});
 		return false;
 	});
+
+	$('.warecoli').stickMe({topOffset:100, shadow:true});
+	$('.open-popup-form').magnificPopup({
+		type:'inline', midClick: true,
+		callbacks: {
+			open: function() {
+				$('.uproda-captcha').attr('src','/captcha/image?' + Math.random());
+			},
+			close: function() {}
+		}
+	});
 })

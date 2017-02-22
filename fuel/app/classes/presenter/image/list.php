@@ -20,7 +20,11 @@ class Presenter_Image_List extends Presenter_Image
 		//imageパス作成
 		$this->set_safe('build_image_url', function($basename) {
 			return $this->build_image_url($basename);
-	   	});
+	  });
+
+		$this->set_safe('format_bytes', function($bytes) {
+			return \Num::format_bytes($bytes);
+		});
 
 	}
 }
