@@ -1,8 +1,8 @@
 $(function() {
-	$('input[name="listmode"]').on('change', function() {
-		var checked = 0;
-		if (!$(this).prop('checked')) checked = 1;
-		$.cookie('binjou', checked, {expire: 30});
+	$('#list-mode').on('click', function() {
+		var mode = $.cookie('binjou') == 0?1:0;
+		$(this).toggleClass('button-primary');
+		$.cookie('binjou', mode, {expire: 30});
 	});
 })
 
