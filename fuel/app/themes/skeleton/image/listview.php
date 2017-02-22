@@ -9,7 +9,7 @@
 	<li><?php echo $image->mimetype ?></li>
 	<li><?php echo $format_bytes($image->size); ?></li>
 	<li><?php echo $image->original; ?></li>
-	<li><?php echo $image->created_at; ?></li>
+	<li><?php echo $format_date($image->created_at); ?></li>
 	</ul>
 	</div>
 	</a>
