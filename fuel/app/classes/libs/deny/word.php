@@ -13,7 +13,7 @@ class Libs_Deny_Word extends Libs_Deny
 
 		foreach ($words as $word)
 		{
-			if ( strpos($input, $word))
+			if (strpos($input, $word) !== false)
 			{
 				return false;
 			}
