@@ -16,8 +16,6 @@ class Tor
 
 			$body_lines = explode("\n", $curl->response()->body());
 			$count = 0;
-			$input_ips = null;
-			$ips = null;
 			foreach ($body_lines as $body_line)
 			{
 				if (strpos($body_line, 'ExitAddress') !== false)
