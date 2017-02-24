@@ -244,6 +244,8 @@ class Libs_Image extends \Image
 					throw new \Exception('faild save data');
 				}
 
+				self::session_delete();
+
 				return $image_info;
 			}
 			else
@@ -411,6 +413,13 @@ class Libs_Image extends \Image
 			\Log::error(__FILE__.'('.__FUNCTION__.'): '.$e->getMessage());
 			return false;
 		}
+	}
+
+	protected static function session_delete()
+	{
+		//\Config::load('simplecaptcha');
+		$skn = \Config::get('simplecaptcha.session_key_name');
+		\Session::delete($skn);
 	}
 
 	/**
