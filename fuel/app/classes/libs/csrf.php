@@ -42,7 +42,9 @@ class Libs_Csrf
 			return true;
 		}
 
-		return false;
+		self::flash();
+		throw new Libs_Csrf_Exception('csrf token error');
 	}
-
 }
+
+class Libs_Csrf_Exception extends \Exception {}

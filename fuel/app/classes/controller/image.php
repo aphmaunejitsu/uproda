@@ -19,7 +19,7 @@ class Controller_Image extends Controller_Uproda
 				'image' =>  $this->theme->presenter('image/content/image')->set('param', ['id' => $page, 'image' => $image])
 			]);
 		} catch ( \Exception $e ) {
-			\Log::error(__FILE__.':'.$e->getMessage());
+			\Log::error($e->getMessage());
 			throw new HttpNotFoundException();
 		}
 	}
@@ -27,21 +27,12 @@ class Controller_Image extends Controller_Uproda
 	public function get_list($page)
 	{
 		try {
-			if (! is_numeric($page))
-			{
-				throw new \Exception('invalid access [bad page]: '.\Input::real_ip());
-			}
-
 			$mode = \Libs_Settings::get_listmode()?'image/listview':'image/thumbnailview';
 			$view = $this->theme->presenter('image/list', 'view', null, $mode)->set('param', ['page' => $page]);
 
 			return $this->response($view->render());
-		} catch (\HttpServerErrorException $e) {
-			\Log::error(__FILE__.':'.$e->getMessage());
-			//もう一回
-			throw new HttpServerErrorException();
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.':'.$e->getMessage());
+			\Log::error($e);
 			throw new HttpNotFoundException();
 		}
 	}
@@ -49,31 +40,10 @@ class Controller_Image extends Controller_Uproda
 	public function post_upload()
 	{
 		try {
-			$this->default_format = 'json';
-			if (Libs_Deny_Ip::check(\Input::real_ip()))
-			{
-				throw new \Exception('invalid access [deny access]: '.\Input::real_ip());
-			}
-
-			if ( ! Libs_Csrf::check_token())
-			{
-				throw new \Exception('invalid access [token error]: '.\Input::real_ip());
-			}
-
-			if ( ! Captcha::forge('simplecaptcha')->check())
-			{
-				throw new \Exception('invalid access [captcha error]: '.\Input::real_ip());
-			}
-
-			if ( ! Libs_Deny_Ip::enable_post())
-			{
-				throw new \Exception('invalid access [連投規制]: '.\Input::real_ip());
-			}
-
-			if ((\Input::method() !== 'POST') or ( ! \Input::is_ajax()))
-			{
-				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
-			}
+			Libs_Deny_Ip::check(\Input::real_ip());
+			Libs_Csrf::check_token();
+			Libs_Captcha::check();
+			Libs_Deny_Ip::enable_post();
 
 			$v = \Validation::forge();
 			$v->add_callable('Libs_Deny_Word');
@@ -96,64 +66,32 @@ class Controller_Image extends Controller_Uproda
 					'image'  => \Uri::create('image/'.\Arr::get($file, 'basename'))
 				], 200);
 			}
-			else
-			{
-				//気持ち悪いけど・・・
-				throw new HttpServerErrorException('failed up image');
-			}
-		} catch (\HttpServerErrorException $e) {
-			\Log::error(__FILE__.':'.$e->getMessage());
-			//もう一回
-			throw new HttpServerErrorException();
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.':'.$e->getMessage());
-			throw new HttpNotFoundException();
+			\Log::error($e);
+			throw new HttpNoAccessException();
 		}
 	}
 
 	public function post_delete()
 	{
 		try {
-			if (Libs_Deny_Ip::check(\Input::real_ip()) )
-			{
-				throw new \Exception('invalid access [deny access]: '.\Input::real_ip());
-			}
+			Libs_Deny_Ip::check(\Input::real_ip());
+			Libs_Csrf::check_token();
 
-			//check token
-			if ( ! Libs_Csrf::check_token())
-			{
-				throw new \Exception('invalid access [token error]: '.\Input::real_ip());
-			}
-
-			if (\Input::method() !== 'POST')
-			{
-				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
-			}
-
-			$h = \Security::clean(\Input::post('file'), ['strip_tags', 'htmlentities']);
+			$hash = \Security::clean(\Input::post('file'), ['strip_tags', 'htmlentities']);
 			$v = \Validation::forge();
 			$v->add_field('hash', 'hash', 'required|valid_string[alpha,numeric]');
-			if ( ! $v->run(['hash' => $h], true))
+			if ( ! $v->run(['hash' => $hash], true))
 			{
-				throw new \Exception('validate error: '.$h);
+				throw new \Exception('validate error: '.$hash);
 			}
 
-			if ( Libs_Image::delete_by_hash($hash, \Input::post('pass')))
-			{
-				//トップへリダイレクト
-				\Response::redirect('/');
-				return;
-			}
-
-			//気持ち悪いけど・・・
-			throw new HttpServerErrorException('failed delete image');
-		} catch (\HttpServerErrorException $e) {
-			\Log::error(__FILE__.':'.$e->getMessage());
-			//もう一回
-			throw new HttpServerErrorException();
+			Libs_Image::delete_by_hash($hash, \Input::post('pass'));
+			//失敗は無視してトップへリダイレクト
+			\Response::redirect('/');
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.':'.$e->getMessage());
-			throw new HttpNotFoundException();
+			\Log::error($e);
+			throw new HttpNoAccessException();
 		}
 	}
 }

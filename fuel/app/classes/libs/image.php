@@ -200,77 +200,82 @@ class Libs_Image extends \Image
 		}
 	}
 
+	/**
+	 * 画像をアップロードする
+	 *
+	 * @return array アップロードした画像情報
+	 * @throws Libs_Image_Exception アップロードに失敗した場合
+	 **/
 	public static function upload()
 	{
-		try {
-			\Upload::register('validate', function(&$file) {
-				$file['basename'] = \Str::random('alnum', 8);
-			});
-			\Upload::register('before', function(&$file) {
-				$file['path'] = $file['path'].self::get_two_char_from_basename($file['basename']).'/';
-				//保存する拡張子は全て小文字変換
-				$file['extension'] = \Str::lower($file['extension']);
-				$file['saved_as']  = $file['basename'].'.'.$file['extension'];
-				$file['filename']  = $file['saved_as'];
-			});
+		self::delete_captcha_session();
+		\Upload::register('validate', function(&$file) {
+			$file['basename'] = \Str::random('alnum', 8);
+		});
+		\Upload::register('before', function(&$file) {
+			$file['path'] = $file['path'].self::get_two_char_from_basename($file['basename']).'/';
+			//保存する拡張子は全て小文字変換
+			$file['extension'] = \Str::lower($file['extension']);
+			$file['saved_as']  = $file['basename'].'.'.$file['extension'];
+			$file['filename']  = $file['saved_as'];
+		});
 
-			\Upload::register('after', function(&$file) {
-				Libs_Image::fixed($file->path.$file->saved_as);
-			});
+		\Upload::register('after', function(&$file) {
+			Libs_Image::fixed($file->path.$file->saved_as);
+		});
 
-			umask(0);
-			\Upload::process([
-				'auto_process'   => false,
-				'path'           => DOCROOT.Libs_Config::get('board.dir'),
-				'ext_whitelist'  => explode(',', Libs_Config::get('board.ext')),
-				'type_whitelist' => explode(',', Libs_Config::get('board.type')),
-				'max_size'       => Libs_Config::get('board.maxsize') * 1024 * 1024, //バイトに変換
-				'path_chmod'     => 0777,
-				'file_chmod'     => 0666,
-			]);
+		umask(0);
+		\Upload::process([
+			'auto_process'   => false,
+			'path'           => DOCROOT.Libs_Config::get('board.dir'),
+			'ext_whitelist'  => explode(',', Libs_Config::get('board.ext')),
+			'type_whitelist' => explode(',', Libs_Config::get('board.type')),
+			'max_size'       => Libs_Config::get('board.maxsize') * 1024 * 1024, //バイトに変換
+			'path_chmod'     => 0777,
+			'file_chmod'     => 0666,
+		]);
 
-			if (\Upload::is_valid())
+		if (\Upload::is_valid())
+		{
+			\Upload::save();
+			$files = \Upload::get_files();
+			$file = reset($files);
+
+			$image_info = [
+				'basename'   => $file['basename'],
+				'ext'        => $file['extension'],
+				'original'   => $file['name'],
+				'delkey'     => \Security::clean(\Input::post('pass'), ['strip_tags', 'htmlentities']),
+				'mimetype'   => $file['mimetype'],
+				'size'       => $file['size'],
+				'comment'    => \Security::clean(\Input::post('comment'), ['strip_tags', 'htmlentities']),
+				'ip'         => \Input::real_ip(),
+				'ng'         => 0,
+			];
+			$image = Model_Image::forge()->set($image_info);
+
+			//保存失敗
+			if ( ! ($result = $image->save()))
 			{
-				\Upload::save();
-				$files = \Upload::get_files();
-				$file = reset($files);
-
-				$image_info = [
-					'basename'   => $file['basename'],
-					'ext'        => $file['extension'],
-					'original'   => $file['name'],
-					'delkey'     => \Security::clean(\Input::post('pass'), ['strip_tags', 'htmlentities']),
-					'mimetype'   => $file['mimetype'],
-					'size'       => $file['size'],
-					'comment'    => \Security::clean(\Input::post('comment'), ['strip_tags', 'htmlentities']),
-					'ip'         => \Input::real_ip(),
-					'ng'         => 0,
-				];
-				$image = Model_Image::forge()->set($image_info);
-
-				//保存失敗
-				if ( ! ($result = $image->save()))
-				{
-					//ゴミ掃除
-					unlink(DOCROOT.Libs_Config::get('board.dir').'/'.$file['saved_as']);
-					$image_info = null;
-				}
-
-				self::session_delete();
-				return $image_info;
+				//ゴミ掃除
+				unlink(DOCROOT.Libs_Config::get('board.dir').'/'.$file['saved_as']);
+				throw new Libs_Image_Exception();
 			}
-			else
-			{
-				\Log::warning(print_r(\Upload::get_errors(),1));
-				return null;
-			}
-		} catch (\Exception $e) {
-			\Log::error(__FILE__.': '.$e);
-			return null;
+
+			return $image_info;
+		}
+		else
+		{
+			\Log::warning(print_r(\Upload::get_errors(),1));
+			throw new Libs_Image_Exception();
 		}
 	}
 
 
+	/**
+	 * 画像数を取得する
+	 * @return int 画像数
+	 **/
 	public static function count_all()
 	{
 		try {
@@ -284,6 +289,11 @@ class Libs_Image extends \Image
 		}
 	}
 
+	/**
+	 * 画像数を取得する
+	 * @param int $ng デフォルト:0
+	 * @return int 画像数
+	 **/
 	public static function count($ng = 0)
 	{
 		try {
@@ -298,6 +308,11 @@ class Libs_Image extends \Image
 		}
 	}
 
+	/**
+	 * 削除する画像を取得する
+	 *
+	 * @return array
+	 **/
 	public static function get_images_for_delete()
 	{
 		try {
@@ -322,6 +337,15 @@ class Libs_Image extends \Image
 		}
 	}
 
+	/**
+	 * 画像を取得する
+	 *
+	 * @param int $offset 取得するオフセット
+	 * @param int $limit 取得する数
+	 *
+	 * @return array
+	 *
+	 **/
 	public static function get_images($offset, $limit )
 	{
 		try {
@@ -390,10 +414,17 @@ class Libs_Image extends \Image
 		return true;
 	}
 
+  /**
+	 * 指定されたハッシュから画像を削除する
+	 *
+	 * @param string $hash ハッシュ
+	 * @param string $delkey 削除キー
+	 *
+	 **/
 	public static function delete_by_hash($hash, $delkey)
 	{
 		try {
-			if ( ! ($images = Model_Image::find(['where' => ['sha1(concat('."'".Libs_Config::get('board.key')."'".',id))' => $h]])))
+			if ( ! ($images = Model_Image::find(['where' => ['sha1(concat('."'".Libs_Config::get('board.key')."'".',id))' => $hash]])))
 			{
 				return false;
 			}
@@ -418,7 +449,10 @@ class Libs_Image extends \Image
 		}
 	}
 
-	protected static function session_delete()
+	/**
+	 * キャプチャのセッションを削除する
+	 **/
+	protected static function delete_captcha_session()
 	{
 		//\Config::load('simplecaptcha');
 		$skn = \Config::get('simplecaptcha.session_key_name');
