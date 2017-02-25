@@ -43,8 +43,14 @@ class Libs_Csrf
 		}
 
 		self::flash();
-		throw new Libs_Csrf_Exception('csrf token error');
+		throw new Libs_Csrf_Exception('csrf token error', __LINE__);
 	}
 }
 
-class Libs_Csrf_Exception extends \Exception {}
+class Libs_Csrf_Exception extends \Exception
+{
+	public function __toString()
+	{
+		return __CLASS__.' ['.$this->code.'] '.$this->message;
+	}
+}

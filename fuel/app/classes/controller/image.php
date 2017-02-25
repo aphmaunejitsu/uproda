@@ -19,7 +19,7 @@ class Controller_Image extends Controller_Uproda
 				'image' =>  $this->theme->presenter('image/content/image')->set('param', ['id' => $page, 'image' => $image])
 			]);
 		} catch ( \Exception $e ) {
-			\Log::error($e->getMessage());
+			\Log::error($e);
 			throw new HttpNotFoundException();
 		}
 	}
@@ -32,7 +32,7 @@ class Controller_Image extends Controller_Uproda
 
 			return $this->response($view->render());
 		} catch (\Exception $e) {
-			\Log::error($e->getMessage());
+			\Log::error($e);
 			throw new HttpNotFoundException();
 		}
 	}
@@ -67,7 +67,7 @@ class Controller_Image extends Controller_Uproda
 				], 200);
 			}
 		} catch (\Exception $e) {
-			\Log::error($e->getMessage());
+			\Log::error($e);
 			throw new HttpNoAccessException();
 		}
 	}

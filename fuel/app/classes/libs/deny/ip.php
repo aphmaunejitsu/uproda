@@ -12,7 +12,7 @@ class Libs_Deny_Ip extends Libs_Deny
 	{
 		if (Model_Deny_Ip::find_one_by('ip', $ip))
 		{
-			throw new Libs_Deny_Ip_Exception('access deny: '.$ip);
+			throw new Libs_Deny_Ip_Exception('アクセス拒否IP: '.$ip, __LINE__);
 		}
 
 		return true;
@@ -38,12 +38,18 @@ class Libs_Deny_Ip extends Libs_Deny
 
 		if ((time() - strtotime(reset($images)->created_at)) < $post)
 		{
-			throw new Libs_Deny_Ip_Exception();
+			throw new Libs_Deny_Ip_Exception('連投規制: '.\Input::real_ip(), __LINE__);
 		}
 
 		return true;
 	}
 }
 
-class Libs_Deny_Ip_Exception extends \Exception {}
+class Libs_Deny_Ip_Exception extends \Exception
+{
+	public function __toString()
+	{
+		return __CLASS__.' ['.$this->code.'] '.$this->message;
+	}
+}
 

@@ -1,5 +1,11 @@
 <?php
-class Libs_Image_Exception extends \Exception {}
+class Libs_Image_Exception extends \Exception
+{
+	public function __toString()
+	{
+		return __CLASS__.' ['.$this->code.'] '.$this->message;
+	}
+}
 
 class Libs_Image extends \Image
 {
@@ -142,7 +148,7 @@ class Libs_Image extends \Image
 
 		} catch (\Exception $e) {
 			\Log::error($e->getMessage());
-			throw new Libs_Image_Exception();
+			throw new Libs_Image_Exception('fail create thumbnail', __LINE__);
 		}
 	}
 
@@ -160,7 +166,7 @@ class Libs_Image extends \Image
 		$v->add_field('image', 'image file', 'required|valid_string[alpha,numeric,dashes]');
 		if ( ! $v->run(['image' => $id], true))
 		{
-			throw new Libs_Image_Exception();
+			throw new Libs_Image_Exception('image not found', __LINE__);
 		}
 	}
 
@@ -176,7 +182,7 @@ class Libs_Image extends \Image
 		try {
 			$image = Model_Image::find_one_by('basename', $id);
 		} catch (\Exception $e) {
-			throw new Libs_Image_Exception();
+			throw new Libs_Image_Exception('image not found', __LINE__);
 		}
 
 		if ($image)
@@ -185,7 +191,7 @@ class Libs_Image extends \Image
 		}
 		else
 		{
-			throw new Libs_Image_Exception();
+			throw new Libs_Image_Exception('image not found', __LINE__);
 		}
 	}
 
@@ -248,7 +254,7 @@ class Libs_Image extends \Image
 			{
 				//ゴミ掃除
 				unlink(DOCROOT.Libs_Config::get('board.dir').'/'.$file['saved_as']);
-				throw new Libs_Image_Exception();
+				throw new Libs_Image_Exception('fail upload image', __LINE__);
 			}
 
 			return $image_info;
@@ -256,7 +262,7 @@ class Libs_Image extends \Image
 		else
 		{
 			\Log::warning(print_r(\Upload::get_errors(),1));
-			throw new Libs_Image_Exception();
+			throw new Libs_Image_Exception('fail upload image', __LINE__);
 		}
 	}
 
