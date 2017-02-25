@@ -32,7 +32,7 @@ class Controller_Image extends Controller_Uproda
 
 			return $this->response($view->render());
 		} catch (\Exception $e) {
-			\Log::error($e);
+			\Log::error($e->getMessage());
 			throw new HttpNotFoundException();
 		}
 	}
@@ -67,7 +67,7 @@ class Controller_Image extends Controller_Uproda
 				], 200);
 			}
 		} catch (\Exception $e) {
-			\Log::error($e);
+			\Log::error($e->getMessage());
 			throw new HttpNoAccessException();
 		}
 	}
