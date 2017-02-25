@@ -1,6 +1,18 @@
 <?php
 class Libs_Image_Exception extends \Exception
 {
+	const ERROR_FAILD_UPLOAD     = 1;
+	const ERROR_CREATE_THUMBNAIL = 2;
+	const ERROR_INVAILD_ID       = 3;
+	const ERROR_IMAGE_NOT_FOUND  = 4;
+	private $mes = [
+		self::ERROR_FAILD_UPLOAD     => '画像保存失敗',
+		self::ERROR_INVALID_ACCESS   => 'アクセス不正',
+		self::ERROR_CREATE_THUMBNAIL => 'サムネイル作成エラー',
+		self::ERROR_INVAILD_ID       => '不正なID',
+		self::ERROR_IMAGE_NOT_FOUND  => '画像なし',
+	];
+
 	public function  __construct($message, $code = 0, Exception $previous = null)
 	{
 		parent::__construct($message, $code, $previous);
@@ -8,7 +20,7 @@ class Libs_Image_Exception extends \Exception
 
 	public function __toString()
 	{
-		return __CLASS__.': '.$this->message.' ('.$this->code.')';
+		return __CLASS__.': '.$this->mes[$this->code].' ('.$this->code.')';
 	}
 }
 
@@ -58,7 +70,7 @@ class Libs_Image extends \Image
 		try {
 			return exif_read_data($filename);
 		} catch (\Exception $e) {
-			\Log::error($e->getMessage());
+			\Log::warning($e->getMessage());
 			return FALSE;
 		}
 	}
@@ -152,8 +164,8 @@ class Libs_Image extends \Image
 			$image->save($save_path);
 
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.'('.__LINE__.'): '.$e->getMessage());
-			throw new Libs_Image_Exception('fail create thumbnail');
+			\Log::error($e);
+			throw new Libs_Image_Exception(null, Libs_Image_Exception::ERROR_CREATE_THUMBNAIL);
 		}
 	}
 
@@ -164,7 +176,7 @@ class Libs_Image extends \Image
 		$v->add_field('image', 'image file', 'required|valid_string[alpha,numeric,dashes]');
 		if ( ! $v->run(['image' => $id], true))
 		{
-			throw new Libs_Image_Exception('validate error: '.$id);
+			throw new Libs_Image_Exception(null, Libs_Image_Exception::ERROR_INVAILD_ID);
 		}
 	}
 
@@ -175,15 +187,14 @@ class Libs_Image extends \Image
 
 			if ( ! ($image = Model_Image::find_one_by('basename', $id)))
 			{
-				throw new Libs_Image_Exception('image not fond: '.$id);
+				throw new Libs_Image_Exception(null, self::ERROR_IMAGE_NOT_FOUND);
 			}
 
 			return $image;
 		} catch (Libs_Image_Exception $e) {
-			\Log::error($e);
 			return null;
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.'('.__FUNCTION__.'): '.$e->getMessage());
+			\Log::error($e);
 			return null;
 		}
 	}
@@ -241,7 +252,7 @@ class Libs_Image extends \Image
 				{
 					//ゴミ掃除
 					unlink(DOCROOT.Libs_Config::get('board.dir').'/'.$file['saved_as']);
-					throw new \Exception('faild save data');
+					throw new Libs_Image_Exception(null, Libs_Image_Exception::ERROR_FAILD_UPLOAD);
 				}
 
 				return $image_info;
@@ -380,14 +391,6 @@ class Libs_Image extends \Image
 	public static function delete_by_hash($hash, $delkey)
 	{
 		try {
-			$h = htmlspecialchars($hash);
-			$v = \Validation::forge();
-			$v->add_field('hash', 'hash', 'required|valid_string[alpha,numeric]');
-			if ( ! $v->run(['hash' => $h], true))
-			{
-				throw new Libs_Image_Exception('validate error: '.$h);
-			}
-
 			if ( ! ($images = Model_Image::find(['where' => ['sha1(concat('."'".Libs_Config::get('board.key')."'".',id))' => $h]])))
 			{
 				return false;
@@ -408,7 +411,7 @@ class Libs_Image extends \Image
 
 			return self::delete_by_images($images);
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.'('.__FUNCTION__.'): '.$e->getMessage());
+			\Log::error($e);
 			return false;
 		}
 	}
@@ -428,5 +431,4 @@ class Libs_Image extends \Image
 
 		return null;
 	}
-
 }

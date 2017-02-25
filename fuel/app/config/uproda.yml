@@ -12,7 +12,8 @@ board:
   pagination:
     per_page: 100           # 1ページあたりの数(デフォルト)
   key: desushiosushi        # ハッシュ用(変更すること)
-  del: qwer					# デフォルト削除パス(変更すること) 削除キーがないものは全てこれで削除できる
+  del: qwer					        # デフォルト削除パス(変更すること) 削除キーがないものは全てこれで削除できる
+	post: 60                  # 次のポストができるまでの間隔 default:60秒
 admin:
   id: admin        #変更すること
   uass: qwer       #変更すること
