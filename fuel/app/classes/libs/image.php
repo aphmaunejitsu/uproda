@@ -125,7 +125,7 @@ class Libs_Image extends \Image
 
 			$image->save($filename);
 		} catch (\Exception $e) {
-			\Log::warning($e);
+			\Log::warning($e->getMessage());
 			return;
 		}
 	}
@@ -152,7 +152,7 @@ class Libs_Image extends \Image
 			$image->save($save_path);
 
 		} catch (\Exception $e) {
-			\Log::error($e);
+			\Log::error($e->getMessage());
 			throw new Libs_Image_Exception();
 		}
 	}
@@ -284,7 +284,7 @@ class Libs_Image extends \Image
 				false
 			);
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.': '.$e);
+			\Log::error($e->getMessage());
 			return 0;
 		}
 	}
@@ -303,7 +303,7 @@ class Libs_Image extends \Image
 				[['ng', '=', $ng]]
 			);
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.': '.$e);
+			\Log::error($e->getMessage());
 			return 0;
 		}
 	}
@@ -332,7 +332,7 @@ class Libs_Image extends \Image
 				'where' => [['id', '<', $last->id]]
 			]);
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.': '.$e);
+			\Log::error($e->getMessage());
 			return [];
 		}
 	}
@@ -358,7 +358,7 @@ class Libs_Image extends \Image
 
 			return $images;
 		} catch (\Exception $e) {
-			\Log::error($e);
+			\Log::error($e->getMessage());
 			return [];
 		}
 	}
@@ -444,7 +444,7 @@ class Libs_Image extends \Image
 
 			return self::delete_by_images($images);
 		} catch (\Exception $e) {
-			\Log::error($e);
+			\Log::error($e->getMessage());
 			return false;
 		}
 	}

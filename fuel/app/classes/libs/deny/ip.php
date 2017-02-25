@@ -12,7 +12,7 @@ class Libs_Deny_Ip extends Libs_Deny
 	{
 		if (Model_Deny_Ip::find_one_by('ip', $ip))
 		{
-			throw new Libs_Deny_Ip_Exception();
+			throw new Libs_Deny_Ip_Exception('access deny: '.$ip);
 		}
 
 		return true;
