@@ -9,15 +9,9 @@ class Controller_Image extends Controller_Uproda
 	public function action_index($page = null)
 	{
 		try {
-			if ($page === null)
-			{
-				throw new \Exception('image not found: param is null');
-			}
+			Libs_Image::check_id($page);
 
-			if (($image = Libs_Image::get($page)) === null)
-			{
-				throw new \Exception('image not found');
-			}
+			$image = Libs_Image::get($page);
 
 			$this->theme->asset->js(['clipboard.min.js', 'cp.js'], [], 'clipboard', false);
 
@@ -33,11 +27,6 @@ class Controller_Image extends Controller_Uproda
 	public function get_list($page)
 	{
 		try {
-			if (\Input::method() !== 'GET')
-			{
-				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
-			}
-
 			if (! is_numeric($page))
 			{
 				throw new \Exception('invalid access [bad page]: '.\Input::real_ip());

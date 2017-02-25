@@ -1,26 +1,14 @@
 <?php
 class Libs_Image_Exception extends \Exception
 {
-	const ERROR_FAILD_UPLOAD     = 1;
-	const ERROR_CREATE_THUMBNAIL = 2;
-	const ERROR_INVAILD_ID       = 3;
-	const ERROR_IMAGE_NOT_FOUND  = 4;
-	private $mes = [
-		self::ERROR_FAILD_UPLOAD     => '画像保存失敗',
-		self::ERROR_INVALID_ACCESS   => 'アクセス不正',
-		self::ERROR_CREATE_THUMBNAIL => 'サムネイル作成エラー',
-		self::ERROR_INVAILD_ID       => '不正なID',
-		self::ERROR_IMAGE_NOT_FOUND  => '画像なし',
-	];
-
-	public function  __construct($message, $code = 0, Exception $previous = null)
+	public function  __construct($message = null, $code = 0, Exception $previous = null)
 	{
 		parent::__construct($message, $code, $previous);
 	}
 
 	public function __toString()
 	{
-		return __CLASS__.': '.$this->mes[$this->code].' ('.$this->code.')';
+		return __CLASS__.': '.$this->message.' ('.$this->code.')';
 	}
 }
 
@@ -165,37 +153,50 @@ class Libs_Image extends \Image
 
 		} catch (\Exception $e) {
 			\Log::error($e);
-			throw new Libs_Image_Exception(null, Libs_Image_Exception::ERROR_CREATE_THUMBNAIL);
+			throw new Libs_Image_Exception();
 		}
 	}
 
+	/**
+	 * 画像IDのフォーマットチェック
+	 *
+	 * @param string $id 画像ID
+	 * @throws Libs_Image_Exception 画像IDが形式と合わない場合
+	 *
+	 **/
 	public static function check_id($id)
 	{
-		$id = htmlspecialchars($id);
+		$id = \Security::clean($id, ['strip_tags', 'htmlentities']);
 		$v = \Validation::forge();
 		$v->add_field('image', 'image file', 'required|valid_string[alpha,numeric,dashes]');
 		if ( ! $v->run(['image' => $id], true))
 		{
-			throw new Libs_Image_Exception(null, Libs_Image_Exception::ERROR_INVAILD_ID);
+			throw new Libs_Image_Exception();
 		}
 	}
 
+  /**
+	 * 画像の情報を取得
+	 *
+	 * @param string $id 画像ID
+	 * @return Model_Image 画像モデルのオブジェクト
+	 * @throws Libs_Image_Exception 画像が見つからない場合
+	 **/
 	public static function get($id)
 	{
 		try {
-			self::check_id($id);
-
-			if ( ! ($image = Model_Image::find_one_by('basename', $id)))
-			{
-				throw new Libs_Image_Exception(null, self::ERROR_IMAGE_NOT_FOUND);
-			}
-
-			return $image;
-		} catch (Libs_Image_Exception $e) {
-			return null;
+			$image = Model_Image::find_one_by('basename', $id);
 		} catch (\Exception $e) {
-			\Log::error($e);
-			return null;
+			throw new Libs_Image_Exception();
+		}
+
+		if ($image)
+		{
+			return $image;
+		}
+		else
+		{
+			throw new Libs_Image_Exception();
 		}
 	}
 
@@ -252,11 +253,10 @@ class Libs_Image extends \Image
 				{
 					//ゴミ掃除
 					unlink(DOCROOT.Libs_Config::get('board.dir').'/'.$file['saved_as']);
-					throw new Libs_Image_Exception(null, Libs_Image_Exception::ERROR_FAILD_UPLOAD);
+					$image_info = null;
 				}
 
 				self::session_delete();
-
 				return $image_info;
 			}
 			else
@@ -334,7 +334,7 @@ class Libs_Image extends \Image
 
 			return $images;
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.': '.$e);
+			\Log::error($e);
 			return [];
 		}
 	}
