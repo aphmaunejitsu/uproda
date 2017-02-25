@@ -76,6 +76,11 @@ class Controller_Image extends Controller_Uproda
 				throw new \Exception('invalid access [captcha error]: '.\Input::real_ip());
 			}
 
+			if ( ! Libs_Deny_Ip::enable_post())
+			{
+				throw new \Exception('invalid access [連投規制]: '.\Input::real_ip());
+			}
+
 			if ((\Input::method() !== 'POST') or ( ! \Input::is_ajax()))
 			{
 				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
@@ -136,7 +141,15 @@ class Controller_Image extends Controller_Uproda
 				throw new \Exception('invalid access [bad method]: '.\Input::real_ip());
 			}
 
-			if ( Libs_Image::delete_by_hash(\Input::post('file'), \Input::post('pass')))
+			$h = \Security::clean(\Input::post('file'), ['strip_tags', 'htmlentities']);
+			$v = \Validation::forge();
+			$v->add_field('hash', 'hash', 'required|valid_string[alpha,numeric]');
+			if ( ! $v->run(['hash' => $h], true))
+			{
+				throw new \Exception('validate error: '.$h);
+			}
+
+			if ( Libs_Image::delete_by_hash($hash, \Input::post('pass')))
 			{
 				//トップへリダイレクト
 				\Response::redirect('/');
