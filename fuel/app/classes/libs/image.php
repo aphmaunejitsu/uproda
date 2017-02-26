@@ -1,11 +1,5 @@
 <?php
-class Libs_Image_Exception extends \Exception
-{
-	public function __toString()
-	{
-		return __CLASS__.' ['.$this->code.'] '.$this->message;
-	}
-}
+class Libs_Image_Exception extends Libs_Exception {}
 
 class Libs_Image extends \Image
 {

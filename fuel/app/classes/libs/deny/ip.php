@@ -45,11 +45,5 @@ class Libs_Deny_Ip extends Libs_Deny
 	}
 }
 
-class Libs_Deny_Ip_Exception extends \Exception
-{
-	public function __toString()
-	{
-		return __CLASS__.' ['.$this->code.'] '.$this->message;
-	}
-}
+class Libs_Deny_Ip_Exception extends Libs_Exception {}
 

@@ -10,10 +10,4 @@ class Libs_Captcha
 	}
 }
 
-class Libs_Captcha_Exception extends \Exception
-{
-	public function __toString()
-	{
-		return __CLASS__.' ['.$this->code.'] '.$this->message;
-	}
-}
+class Libs_Captcha_Exception extends Libs_Exception {}

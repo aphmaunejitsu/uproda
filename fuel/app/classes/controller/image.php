@@ -44,14 +44,7 @@ class Controller_Image extends Controller_Uproda
 			Libs_Csrf::check_token();
 			Libs_Captcha::check();
 			Libs_Deny_Ip::enable_post();
-
-			$v = \Validation::forge();
-			$v->add_callable('Libs_Deny_Word');
-			$v->add('words', 'deny words')->add_rule('not_contain');
-			if ( ! $v->run(['words' => \Input::post('comment')], true))
-			{
-				throw new \Exception('invalid access [Ng Word]: '.\Input::post('comment'));
-			}
+			Libs_Deny_Word::check(\Input::post('comment'));
 
 			if (($file = Libs_Image::upload()) !== null)
 			{

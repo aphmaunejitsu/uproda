@@ -17,7 +17,7 @@ class Controller_Settings extends Controller_Uproda
 			]);
 
 		} catch (\Exception $e) {
-			\Log::debug($e->getMessage());
+			\Log::error($e);
 			throw new HttpNotFoundException();
 		}
 	}

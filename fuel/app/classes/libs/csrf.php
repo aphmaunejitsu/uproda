@@ -47,10 +47,4 @@ class Libs_Csrf
 	}
 }
 
-class Libs_Csrf_Exception extends \Exception
-{
-	public function __toString()
-	{
-		return __CLASS__.' ['.$this->code.'] '.$this->message;
-	}
-}
+class Libs_Csrf_Exception extends Libs_Exception {}
