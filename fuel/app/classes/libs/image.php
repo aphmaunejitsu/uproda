@@ -48,7 +48,7 @@ class Libs_Image extends \Image
 			return exif_read_data($filename);
 		} catch (\Exception $e) {
 			\Log::warning($e->getMessage());
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -59,7 +59,7 @@ class Libs_Image extends \Image
 	public static function fixed($filename)
 	{
 		try {
-			if (($exif = self::exif($filename)) === FALSE)
+			if (($exif = self::exif($filename)) === false)
 			{
 				return;
 			}
@@ -72,77 +72,48 @@ class Libs_Image extends \Image
 			$image = self::load($filename);
 			switch ($orientation)
 			{
-				case 0:
-				case 1:
-					return;
-				break;
+			    case 0:
+			    case 1:
+			    return;
 
-				case 2: //水平方向に反転
-					$image->flip('horizontal');
-				break;
+			    case 2:
+			        $image->flip('horizontal');
+			    break;
 
-				case 3:
-					$image->rotate(180);
-				break;
+			    case 3:
+		      	$image->rotate(180);
+			    break;
 
-				case 4:
-					$image->flip('vertical');
-				break;
+			    case 4:
+		      	$image->flip('vertical');
+			    break;
 
-				case 5:
-					$image->rotate(-90);
-					$image->flip('vertical');
-				break;
+			    case 5:
+		      	$image->rotate(-90);
+		      	$image->flip('vertical');
+			    break;
 
-				case 6:
-					$image->rotate(90);
-				break;
+			    case 6:
+		      	$image->rotate(90);
+			    break;
 
-				case 7:
-					$image->rotate(90);
-					$image->flip('vertical');
-				break;
+			    case 7:
+		      	$image->rotate(90);
+		      	$image->flip('vertical');
+			    break;
 
-				case 8:
-					$image->rotate(-90);
-				break;
+			    case 8:
+		          $image->rotate(-90);
+			    break;
 
-				default:
-					return;
-				break;
+			    default:
+			    return;
 			}
 
 			$image->save($filename);
 		} catch (\Exception $e) {
 			\Log::warning($e->getMessage());
 			return;
-		}
-	}
-
-	public static function thumbnail($file)
-	{
-		try {
-			$basename = \Arr::get($file, 'basename');
-			$image_dir = self::build_real_image_dir($basename);
-			$thumbnail_dir = self::build_real_thumbnail_dir($basename);
-
-			try {
-				\File::read_dir($thumbnail_dir);
-			} catch (\Exception $e) {
-				\Log::info($e->getMessage());
-				$thumbnail = Libs_Config::get('board.thumbnail.dir');
-				\File::create_dir($image_dir, $thumbnail, 0777);
-			}
-
-			$image_path = self::build_real_image_path($basename, \Arr::get($file, 'ext'));
-
-			$image = self::load($image_path)->crop_resize(Libs_Config::get('board.thumbnail.width'), Libs_Config::get('board.thumbnail.height'));
-			$save_path = self::build_real_thumbnail_path($basename);
-			$image->save($save_path);
-
-		} catch (\Exception $e) {
-			\Log::error($e->getMessage());
-			throw new Libs_Image_Exception('fail create thumbnail', __LINE__);
 		}
 	}
 
@@ -164,7 +135,7 @@ class Libs_Image extends \Image
 		}
 	}
 
-  /**
+	/**
 	 * 画像の情報を取得
 	 *
 	 * @param string $id 画像ID
@@ -200,7 +171,9 @@ class Libs_Image extends \Image
 		self::delete_captcha_session();
 		\Upload::register('validate', function(&$file) {
 			$file['basename'] = \Str::random('alnum', 8);
+			$file['hash'] = hash_file('sha256', $file['tmp_name']);
 		});
+
 		\Upload::register('before', function(&$file) {
 			$file['path'] = $file['path'].self::get_two_char_from_basename($file['basename']).'/';
 			//保存する拡張子は全て小文字変換
@@ -229,17 +202,33 @@ class Libs_Image extends \Image
 			\Upload::save();
 			$files = \Upload::get_files();
 			$file = reset($files);
+			$image_path = self::build_real_image_path($file['basename'], $file['extension']);
+
+			//ハッシュ値が登録されているか
+			$hash = $file['hash'];
+			if (($image_hash = self::get_image_hash($hash)) === null)
+			{
+				if ( ! ($image_id = self::save_image_hash($hash)))
+				{
+					unlink($image_path);
+					throw new Libs_Image_Exception('fail upload image [hash]', __LINE__);
+				}
+			}
+			else
+			{
+				$image_id = $image_hash->id;
+			}
 
 			$image_info = [
-				'basename'   => $file['basename'],
-				'ext'        => $file['extension'],
-				'original'   => $file['name'],
-				'delkey'     => \Security::clean(\Input::post('pass'), ['strip_tags', 'htmlentities']),
-				'mimetype'   => $file['mimetype'],
-				'size'       => $file['size'],
-				'comment'    => \Security::clean(\Input::post('comment'), ['strip_tags', 'htmlentities']),
-				'ip'         => \Input::real_ip(),
-				'ng'         => 0,
+				'basename'      => $file['basename'],
+				'ext'           => $file['extension'],
+				'original'      => $file['name'],
+				'delkey'        => \Security::clean(\Input::post('pass'), ['strip_tags', 'htmlentities']),
+				'mimetype'      => $file['mimetype'],
+				'size'          => $file['size'],
+				'comment'       => \Security::clean(\Input::post('comment'), ['strip_tags', 'htmlentities']),
+				'ip'            => \Input::real_ip(),
+				'image_hash_id' => $image_id,
 			];
 			$image = Model_Image::forge()->set($image_info);
 
@@ -247,7 +236,7 @@ class Libs_Image extends \Image
 			if ( ! ($result = $image->save()))
 			{
 				//ゴミ掃除
-				unlink(DOCROOT.Libs_Config::get('board.dir').'/'.$file['saved_as']);
+				unlink($image_path);
 				throw new Libs_Image_Exception('fail upload image', __LINE__);
 			}
 
@@ -262,7 +251,7 @@ class Libs_Image extends \Image
 
 
 	/**
-	 * 画像数を取得する
+	 * 画像数を取得(全て)する
 	 * @return int 画像数
 	 **/
 	public static function count_all()
@@ -279,17 +268,20 @@ class Libs_Image extends \Image
 	}
 
 	/**
-	 * 画像数を取得する
-	 * @param int $ng デフォルト:0
+	 * 画像数を取得(ngなし)する
 	 * @return int 画像数
 	 **/
-	public static function count($ng = 0)
+	public static function count()
 	{
 		try {
 			return Model_Image::count(
 				'id',
 				false,
-				[['ng', '=', $ng]]
+				function ($query) {
+					$query->join('image_hash')
+								->on('images.id', '=', 'image_hash.id')
+								->where('image_hash.ng', 0);
+				}
 			);
 		} catch (\Exception $e) {
 			\Log::error($e->getMessage());
@@ -339,16 +331,20 @@ class Libs_Image extends \Image
 	{
 		try {
 			$images = Model_Image::find([
-				'where'    => ['ng' => 0],
+				'where'    => function($query) {
+					$query->join('image_hash')
+					      ->on('images.id', '=', 'image_hash.id')
+					      ->where('image_hash.ng', 0);
+				},
 				'order_by' => ['created_at' => 'desc'],
 				'limit'    => $limit,
-				'offset'   => $offset,
+				'offset'   => $offset
 			]);
 
 			return $images;
 		} catch (\Exception $e) {
 			\Log::error($e->getMessage());
-			return [];
+			return null;
 		}
 	}
 
@@ -393,17 +389,16 @@ class Libs_Image extends \Image
 				\Log::warning($e->getMessage());
 			}
 
-			if ( ! $image->delete() )
+			if ( ! $image->delete())
 			{
 				\Log::warning('fail delete image. id: '.$image->id);
 			}
-
 		}
 
 		return true;
 	}
 
-  /**
+	/**
 	 * 指定されたハッシュから画像を削除する
 	 *
 	 * @param string $hash ハッシュ
@@ -426,7 +421,7 @@ class Libs_Image extends \Image
 				$pass = Libs_Config::get('board.del');
 			}
 
-			if ( $pass !== $delkey )
+			if ($pass !== $delkey)
 			{
 				return true;
 			}
@@ -462,5 +457,30 @@ class Libs_Image extends \Image
 		}
 
 		return null;
+	}
+
+	public static function get_image_hash($hash)
+	{
+		try {
+			return Model_Image_Hash::find_one_by_hash($hash);
+		} catch (\Exception $e) {
+			\Log::error($e);
+			return null;
+		}
+	}
+
+	public static function save_image_hash($hash, $ng = 0, $comment = null)
+	{
+		try {
+			if (($result = Model_Image_Hash::forge()->set(['hash' => $hash, 'ng' => $ng, 'comment' => $comment])->save()))
+			{
+				return reset($result);
+			}
+
+			return null;
+		} catch (\Exception $e) {
+			\Log::error($e);
+			throw new Libs_Image_Hash_Exception('fail create Hash', __LINE__);
+		}
 	}
 }

@@ -49,7 +49,12 @@ class Controller_Image extends Controller_Uproda
 			if (($file = Libs_Image::upload()) !== null)
 			{
 				//サムネイル作成
-				Libs_Image::thumbnail($file);
+				try {
+					Libs_Image_Thumbnail::create($file);
+				} catch (\Libs_Image_Thumbnail_Exception $e) {
+					//サムネイル作成はエラーが出ても無視
+					\Log::warning($e);
+				}
 
 				//ファイル数がｔぽｋ
 				$delete_images = Libs_Image::get_images_for_delete();

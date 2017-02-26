@@ -45,6 +45,7 @@ $(function() {
 		callbacks: {
 			open: function() {
 				$('.uproda-captcha').attr('src','/captcha/image?' + Math.random());
+				$('#form_simplecaptcha').val('');
 			},
 			close: function() {}
 		}
