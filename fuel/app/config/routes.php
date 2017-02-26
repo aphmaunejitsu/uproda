@@ -8,5 +8,5 @@ return array(
 
 	'(:num)'            => [['get', new Route('uproda/index/$1')]],
 	'image/list/(:num)' => 'image/list/$1',
-	'image/(:alnum)'    => [['get', new Route('image/index/$1')]],
+	'image/(:any)'      => [['get', new Route('image/index/$1')]],
 );

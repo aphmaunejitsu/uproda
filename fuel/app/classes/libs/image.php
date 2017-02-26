@@ -1,28 +1,5 @@
 <?php
-class Libs_Image_Exception extends \Exception
-{
-	const ERROR_FAILD_UPLOAD     = 1;
-	const ERROR_CREATE_THUMBNAIL = 2;
-	const ERROR_INVAILD_ID       = 3;
-	const ERROR_IMAGE_NOT_FOUND  = 4;
-	private $mes = [
-		self::ERROR_FAILD_UPLOAD     => '画像保存失敗',
-		self::ERROR_INVALID_ACCESS   => 'アクセス不正',
-		self::ERROR_CREATE_THUMBNAIL => 'サムネイル作成エラー',
-		self::ERROR_INVAILD_ID       => '不正なID',
-		self::ERROR_IMAGE_NOT_FOUND  => '画像なし',
-	];
-
-	public function  __construct($message, $code = 0, Exception $previous = null)
-	{
-		parent::__construct($message, $code, $previous);
-	}
-
-	public function __toString()
-	{
-		return __CLASS__.': '.$this->mes[$this->code].' ('.$this->code.')';
-	}
-}
+class Libs_Image_Exception extends Libs_Exception {}
 
 class Libs_Image extends \Image
 {
@@ -137,7 +114,7 @@ class Libs_Image extends \Image
 
 			$image->save($filename);
 		} catch (\Exception $e) {
-			\Log::warning($e);
+			\Log::warning($e->getMessage());
 			return;
 		}
 	}
@@ -164,113 +141,130 @@ class Libs_Image extends \Image
 			$image->save($save_path);
 
 		} catch (\Exception $e) {
-			\Log::error($e);
-			throw new Libs_Image_Exception(null, Libs_Image_Exception::ERROR_CREATE_THUMBNAIL);
+			\Log::error($e->getMessage());
+			throw new Libs_Image_Exception('fail create thumbnail', __LINE__);
 		}
 	}
 
+	/**
+	 * 画像IDのフォーマットチェック
+	 *
+	 * @param string $id 画像ID
+	 * @throws Libs_Image_Exception 画像IDが形式と合わない場合
+	 *
+	 **/
 	public static function check_id($id)
 	{
-		$id = htmlspecialchars($id);
+		$id = \Security::clean($id, ['strip_tags', 'htmlentities']);
 		$v = \Validation::forge();
 		$v->add_field('image', 'image file', 'required|valid_string[alpha,numeric,dashes]');
 		if ( ! $v->run(['image' => $id], true))
 		{
-			throw new Libs_Image_Exception(null, Libs_Image_Exception::ERROR_INVAILD_ID);
+			throw new Libs_Image_Exception('image not found', __LINE__);
 		}
 	}
 
+  /**
+	 * 画像の情報を取得
+	 *
+	 * @param string $id 画像ID
+	 * @return Model_Image 画像モデルのオブジェクト
+	 * @throws Libs_Image_Exception 画像が見つからない場合
+	 **/
 	public static function get($id)
 	{
 		try {
-			self::check_id($id);
-
-			if ( ! ($image = Model_Image::find_one_by('basename', $id)))
-			{
-				throw new Libs_Image_Exception(null, self::ERROR_IMAGE_NOT_FOUND);
-			}
-
-			return $image;
-		} catch (Libs_Image_Exception $e) {
-			return null;
+			$image = Model_Image::find_one_by('basename', $id);
 		} catch (\Exception $e) {
-			\Log::error($e);
-			return null;
+			throw new Libs_Image_Exception('image not found', __LINE__);
+		}
+
+		if ($image)
+		{
+			return $image;
+		}
+		else
+		{
+			throw new Libs_Image_Exception('image not found', __LINE__);
 		}
 	}
 
+	/**
+	 * 画像をアップロードする
+	 *
+	 * @return array アップロードした画像情報
+	 * @throws Libs_Image_Exception アップロードに失敗した場合
+	 **/
 	public static function upload()
 	{
-		try {
-			\Upload::register('validate', function(&$file) {
-				$file['basename'] = \Str::random('alnum', 8);
-			});
-			\Upload::register('before', function(&$file) {
-				$file['path'] = $file['path'].self::get_two_char_from_basename($file['basename']).'/';
-				//保存する拡張子は全て小文字変換
-				$file['extension'] = \Str::lower($file['extension']);
-				$file['saved_as']  = $file['basename'].'.'.$file['extension'];
-				$file['filename']  = $file['saved_as'];
-			});
+		self::delete_captcha_session();
+		\Upload::register('validate', function(&$file) {
+			$file['basename'] = \Str::random('alnum', 8);
+		});
+		\Upload::register('before', function(&$file) {
+			$file['path'] = $file['path'].self::get_two_char_from_basename($file['basename']).'/';
+			//保存する拡張子は全て小文字変換
+			$file['extension'] = \Str::lower($file['extension']);
+			$file['saved_as']  = $file['basename'].'.'.$file['extension'];
+			$file['filename']  = $file['saved_as'];
+		});
 
-			\Upload::register('after', function(&$file) {
-				Libs_Image::fixed($file->path.$file->saved_as);
-			});
+		\Upload::register('after', function(&$file) {
+			Libs_Image::fixed($file->path.$file->saved_as);
+		});
 
-			umask(0);
-			\Upload::process([
-				'auto_process'   => false,
-				'path'           => DOCROOT.Libs_Config::get('board.dir'),
-				'ext_whitelist'  => explode(',', Libs_Config::get('board.ext')),
-				'type_whitelist' => explode(',', Libs_Config::get('board.type')),
-				'max_size'       => Libs_Config::get('board.maxsize') * 1024 * 1024, //バイトに変換
-				'path_chmod'     => 0777,
-				'file_chmod'     => 0666,
-			]);
+		umask(0);
+		\Upload::process([
+			'auto_process'   => false,
+			'path'           => DOCROOT.Libs_Config::get('board.dir'),
+			'ext_whitelist'  => explode(',', Libs_Config::get('board.ext')),
+			'type_whitelist' => explode(',', Libs_Config::get('board.type')),
+			'max_size'       => Libs_Config::get('board.maxsize') * 1024 * 1024, //バイトに変換
+			'path_chmod'     => 0777,
+			'file_chmod'     => 0666,
+		]);
 
-			if (\Upload::is_valid())
+		if (\Upload::is_valid())
+		{
+			\Upload::save();
+			$files = \Upload::get_files();
+			$file = reset($files);
+
+			$image_info = [
+				'basename'   => $file['basename'],
+				'ext'        => $file['extension'],
+				'original'   => $file['name'],
+				'delkey'     => \Security::clean(\Input::post('pass'), ['strip_tags', 'htmlentities']),
+				'mimetype'   => $file['mimetype'],
+				'size'       => $file['size'],
+				'comment'    => \Security::clean(\Input::post('comment'), ['strip_tags', 'htmlentities']),
+				'ip'         => \Input::real_ip(),
+				'ng'         => 0,
+			];
+			$image = Model_Image::forge()->set($image_info);
+
+			//保存失敗
+			if ( ! ($result = $image->save()))
 			{
-				\Upload::save();
-				$files = \Upload::get_files();
-				$file = reset($files);
-
-				$image_info = [
-					'basename'   => $file['basename'],
-					'ext'        => $file['extension'],
-					'original'   => $file['name'],
-					'delkey'     => \Security::clean(\Input::post('pass'), ['strip_tags', 'htmlentities']),
-					'mimetype'   => $file['mimetype'],
-					'size'       => $file['size'],
-					'comment'    => \Security::clean(\Input::post('comment'), ['strip_tags', 'htmlentities']),
-					'ip'         => \Input::real_ip(),
-					'ng'         => 0,
-				];
-				$image = Model_Image::forge()->set($image_info);
-
-				//保存失敗
-				if ( ! ($result = $image->save()))
-				{
-					//ゴミ掃除
-					unlink(DOCROOT.Libs_Config::get('board.dir').'/'.$file['saved_as']);
-					throw new Libs_Image_Exception(null, Libs_Image_Exception::ERROR_FAILD_UPLOAD);
-				}
-
-				self::session_delete();
-
-				return $image_info;
+				//ゴミ掃除
+				unlink(DOCROOT.Libs_Config::get('board.dir').'/'.$file['saved_as']);
+				throw new Libs_Image_Exception('fail upload image', __LINE__);
 			}
-			else
-			{
-				\Log::warning(print_r(\Upload::get_errors(),1));
-				return null;
-			}
-		} catch (\Exception $e) {
-			\Log::error(__FILE__.': '.$e);
-			return null;
+
+			return $image_info;
+		}
+		else
+		{
+			\Log::warning(print_r(\Upload::get_errors(),1));
+			throw new Libs_Image_Exception('fail upload image', __LINE__);
 		}
 	}
 
 
+	/**
+	 * 画像数を取得する
+	 * @return int 画像数
+	 **/
 	public static function count_all()
 	{
 		try {
@@ -279,11 +273,16 @@ class Libs_Image extends \Image
 				false
 			);
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.': '.$e);
+			\Log::error($e->getMessage());
 			return 0;
 		}
 	}
 
+	/**
+	 * 画像数を取得する
+	 * @param int $ng デフォルト:0
+	 * @return int 画像数
+	 **/
 	public static function count($ng = 0)
 	{
 		try {
@@ -293,11 +292,16 @@ class Libs_Image extends \Image
 				[['ng', '=', $ng]]
 			);
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.': '.$e);
+			\Log::error($e->getMessage());
 			return 0;
 		}
 	}
 
+	/**
+	 * 削除する画像を取得する
+	 *
+	 * @return array
+	 **/
 	public static function get_images_for_delete()
 	{
 		try {
@@ -317,11 +321,20 @@ class Libs_Image extends \Image
 				'where' => [['id', '<', $last->id]]
 			]);
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.': '.$e);
+			\Log::error($e->getMessage());
 			return [];
 		}
 	}
 
+	/**
+	 * 画像を取得する
+	 *
+	 * @param int $offset 取得するオフセット
+	 * @param int $limit 取得する数
+	 *
+	 * @return array
+	 *
+	 **/
 	public static function get_images($offset, $limit )
 	{
 		try {
@@ -334,7 +347,7 @@ class Libs_Image extends \Image
 
 			return $images;
 		} catch (\Exception $e) {
-			\Log::error(__FILE__.': '.$e);
+			\Log::error($e->getMessage());
 			return [];
 		}
 	}
@@ -390,10 +403,17 @@ class Libs_Image extends \Image
 		return true;
 	}
 
+  /**
+	 * 指定されたハッシュから画像を削除する
+	 *
+	 * @param string $hash ハッシュ
+	 * @param string $delkey 削除キー
+	 *
+	 **/
 	public static function delete_by_hash($hash, $delkey)
 	{
 		try {
-			if ( ! ($images = Model_Image::find(['where' => ['sha1(concat('."'".Libs_Config::get('board.key')."'".',id))' => $h]])))
+			if ( ! ($images = Model_Image::find(['where' => ['sha1(concat('."'".Libs_Config::get('board.key')."'".',id))' => $hash]])))
 			{
 				return false;
 			}
@@ -413,12 +433,15 @@ class Libs_Image extends \Image
 
 			return self::delete_by_images($images);
 		} catch (\Exception $e) {
-			\Log::error($e);
+			\Log::error($e->getMessage());
 			return false;
 		}
 	}
 
-	protected static function session_delete()
+	/**
+	 * キャプチャのセッションを削除する
+	 **/
+	protected static function delete_captcha_session()
 	{
 		//\Config::load('simplecaptcha');
 		$skn = \Config::get('simplecaptcha.session_key_name');
