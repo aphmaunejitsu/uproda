@@ -27,9 +27,25 @@
 	#RewriteRule ^(.*)$ http://www.%1/$1 [R=301,L]
 
 	# Remove index.php from URL
-	#RewriteCond %{HTTP:X-Requested-With}	!^XMLHttpRequest$
-	#RewriteCond %{THE_REQUEST}				^[^/]*/index\.php [NC]
-	#RewriteRule ^index\.php(.*)$			$1 [R=301,NS,L]
+	RewriteCond %{HTTP:X-Requested-With}	!^XMLHttpRequest$
+	RewriteCond %{THE_REQUEST}				^[^/]*/index\.php [NC]
+	RewriteRule ^index\.php(.*)$			$1 [R=301,NS,L]
+
+  # 画像ファイルが存在する場合(超良いサーバーなら有効)
+	#RewriteCond %{REQUEST_FILENAME} -f
+	#RewriteCond %{REQUEST_FILENAME} (.*)/up/([0-9a-zA-Z]){1}/([0-9a-zA-Z]{8})\.(.*)$
+	#RewriteRule ^up/[0-9a-zA-Z]{1}/([0-9a-zA-Z]{8})\..*$ /detail/$1 [L]
+
+	# サムネイル画像が存在する場合(超良いサーバーなら有効)
+	#RewriteCond %{REQUEST_FILENAME} -f
+	#RewriteCond %{REQUEST_FILENAME} (.*)/up/([0-9a-zA-Z]){1}/thumbnail/([0-9a-zA-Z]{8})\.(.*)$
+	#RewriteRule ^up/[0-9a-zA-Z]{1}/thumbnail/([0-9a-zA-Z]{8})\..*$ /detail/thumbnail/$1 [L]
+
+	# 画像ファイルの404対応
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} (.*)/up/(.*)
+	RewriteRule ^.*$ /assets/global/img/404.jpg [L]
+
 
     # make HTTP Basic Authentication work on php-fcgi installs
     <IfModule mod_fcgid.c>
