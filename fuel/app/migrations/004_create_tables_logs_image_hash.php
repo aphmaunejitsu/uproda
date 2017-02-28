@@ -14,6 +14,7 @@ class create_tables_logs_image_hash
 	 * `id` bigint(20) NOT NULL AUTO_INCREMENT,
 	 * `ip` varchar(40) DEFAULT NULL,
 	 * `action` varchar(40) DEFAULT NULL,
+	 * `image_id` bigint(20) NOT NULL,
 	 * `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	 * PRIMARY KEY (`id`),
 	 * KEY `idx_basename` (`ip`)
@@ -40,6 +41,7 @@ class create_tables_logs_image_hash
 	 * CREATE TABLE `image_hash` (
 	 * `id` bigint(20) NOT NULL AUTO_INCREMENT,
 	 * `hash` varchar(256) DEFAULT NULL,
+	 * `comment` text DEFAULT NULL,
 	 * `ng'   tinyint(1) DEFAULT 0,
 	 * `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	 * PRIMARY KEY (`id`),
