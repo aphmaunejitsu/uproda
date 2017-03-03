@@ -171,7 +171,7 @@ class Libs_Image extends \Image
 		self::delete_captcha_session();
 		\Upload::register('validate', function(&$file) {
 			$file['basename'] = \Str::random('alnum', 8);
-			$file['hash'] = hash_file('sha256', $file['tmp_name']);
+			$file['hash'] = Libs_Image_Hash::create_by_file($file['tmp_name']);
 		});
 
 		\Upload::register('before', function(&$file) {
@@ -480,7 +480,7 @@ class Libs_Image extends \Image
 			return null;
 		} catch (\Exception $e) {
 			\Log::error($e);
-			throw new Libs_Image_Hash_Exception('fail create Hash', __LINE__);
+			throw new Libs_Image_Exception('fail create Hash', __LINE__);
 		}
 	}
 }
