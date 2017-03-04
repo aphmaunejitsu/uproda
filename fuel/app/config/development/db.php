@@ -20,5 +20,5 @@ return [
 		'connection'  => [
 			'password'   => '9Ol.,ki8'
 		],
-	]
+	],
 ];
