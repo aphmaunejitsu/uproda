@@ -7,7 +7,7 @@
 
 return [
 	//意味はないけど、将来大規模になったらM/S構成に
-	'active' => 'uproda-maintenance',
+	'active' => 'uproda-slave',
 	'uproda-master' => [
 		'type' => 'pdo',
 		'connection'  => [
@@ -15,9 +15,9 @@ return [
 			'username'   => 'updater',
 			'password'   => 'tekitou'
 		],
-		'identifier'     => '',
-	    'table_prefix'   => '',
-	    'charset'        => 'utf8',
+		'identifier'     => '`',
+	  'table_prefix'   => '',
+	  'charset'        => 'utf8',
 		'profiling'      => false,
 		'readonly' => ['uproda-slave'],
 	],
@@ -28,9 +28,9 @@ return [
 			'username'   => 'reader',
 			'password'   => 'tekitou'
 		],
-		'identifier'     => '',
-	    'table_prefix'   => '',
-	    'charset'        => 'utf8',
+		'identifier'     => '`',
+	  'table_prefix'   => '',
+	  'charset'        => 'utf8',
 		'profiling'      => false,
 	],
 	//マイグレーション用
@@ -42,47 +42,8 @@ return [
 			'password'   => 'tekitou'
 		],
 		'identifier'     => '`',
-	    'table_prefix'   => '',
-	    'charset'        => 'utf8',
-		'profiling'      => false,
-	],
-	//ユーザ管理
-	'admin-master' => [
-		'type' => 'pdo',
-		'connection'  => [
-			'dsn'        => 'mysql:host=127.0.0.1;dbname=uproda_admin',
-			'username'   => 'admin_updater',
-			'password'   => 'tekitou'
-		],
-		'identifier'     => '',
-	    'table_prefix'   => '',
-	    'charset'        => 'utf8',
-		'profiling'      => false,
-		'readonly' => ['admin-slave'],
-	],
-	'admin-slave' => [
-		'type' => 'pdo',
-		'connection'  => [
-			'dsn'        => 'mysql:host=127.0.0.1;dbname=uproda_admin',
-			'username'   => 'admin_reader',
-			'password'   => 'tekitou'
-		],
-		'identifier'     => '',
-	    'table_prefix'   => '',
-	    'charset'        => 'utf8',
-		'profiling'      => false,
-	],
-	//マイグレーション用
-	'admin-maintenance' => [
-		'type' => 'pdo',
-		'connection'  => [
-			'dsn'        => 'mysql:host=127.0.0.1;dbname=uproda_admin',
-			'username'   => 'admin_maintenance',
-			'password'   => 'tekitou'
-		],
-		'identifier'     => '`',
-	    'table_prefix'   => '',
-	    'charset'        => 'utf8',
+	  'table_prefix'   => '',
+	  'charset'        => 'utf8',
 		'profiling'      => false,
 	],
 ];

@@ -21,66 +21,18 @@
  * This will allow you to upgrade fuel without losing your custom config.
  */
 
-return array(
-
-	/**
-	 * DB connection, leave null to use default
-	 */
-	'db_connection' => null,
-
-	/**
-	 * DB write connection, leave null to use same value as db_connection
-	 */
-	'db_write_connection' => null,
-
-	/**
-	 * DB table name for the user table
-	 */
+return [
+	'db_connection' => 'uproda-slave',
+	'db_write_connection' => 'uproda-master',
 	'table_name' => 'users',
-
-	/**
-	 * Array, choose which columns from the users table are selected.
-	 *  must include: username, password, email, last_login,
-	 * login_hash, group & profile_fields
-	 */
 	'table_columns' => null,
-
-	/**
-	 * This will allow you to use the group & acl driver for non-logged in users
-	 */
 	'guest_login' => false,
-
-	/**
-	 * This will allow the same user to be logged in multiple times.
-	 *
-	 * Note that this is less secure, as session hijacking countermeasures have to
-	 * be disabled for this to work!
-	 */
 	'multiple_logins' => false,
-
-	/**
-	 * Remember-me functionality
-	 */
 	'remember_me' => [
-		/**
-		 * Whether or not remember me functionality is enabled
-		 */
 		'enabled' => true,
-
-		/**
-		 * Name of the cookie used to record this functionality
-		 */
 		'cookie_name' => 'baajonnappu',
-
-		/**
-		 * Remember me expiration (default: 31 days)
-		 */
 		'expiration' => 86400 * 31,
 	],
-
-	/**
-	 * Groups as id => array(name => <string>, roles => <array>)
-	 */
 	'groups' => [
 		 -1   => ['name' => 'Banned',         'roles' => ['banned']],
 		 0    => ['name' => 'Guests',         'roles' => []],
@@ -88,10 +40,6 @@ return array(
 		 50   => ['name' => 'Moderators',     'roles' => ['user', 'moderator']],
 		 100  => ['name' => 'Administrators', 'roles' => ['user', 'moderator', 'admin']],
 	],
-
-	/**
-	 * Roles as name => array(location => rights)
-	 */
 	'roles' => array(
 		/**
 		 * Examples
@@ -112,19 +60,7 @@ return array(
 		 *   'super' => true,
 		 */
 	),
-
-	/**
-	 * Salt for the login hash
-	 */
 	'login_hash_salt' => 'sasuganinjakitanai',
-
-	/**
-	 * $_POST key for login username
-	 */
 	'username_post_key' => 'namae',
-
-	/**
-	 * $_POST key for login password
-	 */
 	'password_post_key' => 'pasuwaado',
-);
+];

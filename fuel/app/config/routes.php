@@ -7,8 +7,6 @@ return array(
 	'_500_'                   => 'error/500',     // the main 500 route
 
 	'(:num)'                  => [['get', new Route('uproda/index/$1')]],
-	#'detail/thumbnail/(:any)' => [['get', new Route('detail/thumbnail/$1')]],
-	#'detail/(:any)'           => [['get', new Route('detail/index/$1')]],
 	'image/list/(:num)'       => 'image/list/$1',
 	'image/(:any)'            => [['get', new Route('image/index/$1')]],
 );
