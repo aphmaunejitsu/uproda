@@ -3,12 +3,15 @@
 		<div class="login-wrapper">
 	        <div class="box">
 	            <div class="content-wrap">
+    							<?php echo \Form::open(['action' => '/nejitsu/auth', 'id' => 'login', 'method' => 'post']); ?>
+  								<?php echo \Form::csrf(); ?>
 	                <h6>Sign In</h6>
-	                <input class="form-control" type="text" placeholder="E-mail address">
-	                <input class="form-control" type="password" placeholder="Password">
+									<?php echo \Form::input('username', null,  ['class' => 'form-control', 'placeholder' => 'E-mail address']); ?>
+									<?php echo \Form::password('password', null, ['class' => 'form-control', 'placeholder' => 'Password']); ?>
 	                <div class="action">
-	                    <a class="btn btn-primary signup" href="index.html">Login</a>
+    							<?php echo \Form::submit('submit', 'Login', ['class' => 'signup btn button-primary']);?>
 	                </div>
+    							<?php echo \Form::close(); ?>
 	            </div>
 	        </div>
 	    </div>

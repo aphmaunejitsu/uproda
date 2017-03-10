@@ -29,7 +29,7 @@ return [
 	'guest_login' => false,
 	'multiple_logins' => false,
 	'remember_me' => [
-		'enabled' => true,
+		'enabled' => false,
 		'cookie_name' => 'baajonnappu',
 		'expiration' => 86400 * 31,
 	],
