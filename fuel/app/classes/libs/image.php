@@ -268,19 +268,19 @@ class Libs_Image extends \Image
 	}
 
 	/**
-	 * 画像数を取得(ngなし)する
+	 * 画像数を取得(デフォルトngなし)する
 	 * @return int 画像数
 	 **/
-	public static function count()
+	public static function count($ng = 0)
 	{
 		try {
 			return Model_Image::count(
 				'id',
 				false,
-				function ($query) {
+				function ($query) use($ng) {
 					$query->join('image_hash')
 								->on('images.id', '=', 'image_hash.id')
-								->where('image_hash.ng', 0);
+								->where('image_hash.ng', $ng);
 				}
 			);
 		} catch (\Exception $e) {
@@ -327,14 +327,14 @@ class Libs_Image extends \Image
 	 * @return array
 	 *
 	 **/
-	public static function get_images($offset, $limit )
+	public static function get_images($offset, $limit, $ng = 0)
 	{
 		try {
 			$images = Model_Image::find([
-				'where'    => function($query) {
+				'where'    => function($query) use($ng) {
 					$query->join('image_hash')
 					      ->on('images.id', '=', 'image_hash.id')
-					      ->where('image_hash.ng', 0);
+					      ->where('image_hash.ng', $ng);
 				},
 				'order_by' => ['created_at' => 'desc'],
 				'limit'    => $limit,
@@ -408,7 +408,11 @@ class Libs_Image extends \Image
 	public static function delete_by_hash($hash, $delkey)
 	{
 		try {
-			if ( ! ($images = Model_Image::find(['where' => ['sha1(concat('."'".Libs_Config::get('board.key')."'".',id))' => $hash]])))
+			$images = Model_Image::find(function (&$query) use ($hash) {
+					return $query->where(\DB::expr('sha1(concat('."'".Libs_Config::get('board.key')."'".',id))'), $hash);
+			});
+
+			if ( ! $images)
 			{
 				return false;
 			}
@@ -428,7 +432,7 @@ class Libs_Image extends \Image
 
 			return self::delete_by_images($images);
 		} catch (\Exception $e) {
-			\Log::error($e->getMessage());
+			\Log::error($e);
 			return false;
 		}
 	}

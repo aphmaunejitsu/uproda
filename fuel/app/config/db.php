@@ -7,7 +7,7 @@
 
 return [
 	//意味はないけど、将来大規模になったらM/S構成に
-	'active' => 'uproda-master',
+	'active' => 'uproda-slave',
 	'uproda-master' => [
 		'type' => 'pdo',
 		'connection'  => [
@@ -15,9 +15,9 @@ return [
 			'username'   => 'updater',
 			'password'   => 'tekitou'
 		],
-		'identifier'     => '',
-	    'table_prefix'   => '',
-	    'charset'        => 'utf8',
+		'identifier'     => '`',
+	  'table_prefix'   => '',
+	  'charset'        => 'utf8',
 		'profiling'      => false,
 		'readonly' => ['uproda-slave'],
 	],
@@ -28,9 +28,9 @@ return [
 			'username'   => 'reader',
 			'password'   => 'tekitou'
 		],
-		'identifier'     => '',
-	    'table_prefix'   => '',
-	    'charset'        => 'utf8',
+		'identifier'     => '`',
+	  'table_prefix'   => '',
+	  'charset'        => 'utf8',
 		'profiling'      => false,
 	],
 	//マイグレーション用
@@ -41,9 +41,9 @@ return [
 			'username'   => 'maintenance',
 			'password'   => 'tekitou'
 		],
-		'identifier'     => '',
-	    'table_prefix'   => '',
-	    'charset'        => 'utf8',
+		'identifier'     => '`',
+	  'table_prefix'   => '',
+	  'charset'        => 'utf8',
 		'profiling'      => false,
 	],
 ];
