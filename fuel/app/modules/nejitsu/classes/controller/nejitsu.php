@@ -24,7 +24,6 @@ class Controller_Nejitsu extends \Controller_Rest
 				\Response::redirect('nejitsu/login');
 				return;
 			}
-			\Log::debug(\Request::active()->uri->string());
 		}
 
 		$this->theme->asset->add_path('assets/global', ['css', 'js', 'img']);
