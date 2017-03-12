@@ -9,14 +9,11 @@ class Controller_Nejitsu extends \Controller_Rest
 {
 	protected $noauth = [
 		'nejitsu/login',
-		'nejitsu/logout',
 		'nejitsu/auth',
 	];
 
 	public function before()
 	{
-		$this->theme = \Theme::instance();
-		$this->theme->active('nejitsu');
 		if ( ! \Auth::check())
 		{
 			if ( ! in_arrayi(\Request::active()->uri->string(), $this->noauth))
@@ -26,10 +23,14 @@ class Controller_Nejitsu extends \Controller_Rest
 			}
 		}
 
-		$this->theme->asset->add_path('assets/global', ['css', 'js', 'img']);
-		if ( ! \Input::is_ajax())
+		\Libs_Config::load();
+		$this->theme = \Theme::instance();
+		$this->theme->active('nejitsu');
+
+		if ( ! \Input::is_ajax() or ! \Request::is_hmvc())
 		{
-			$template = $this->theme->set_template('index');
+			$this->theme->asset->add_path('assets/global', ['css', 'js', 'img']);
+			$this->theme->set_template('index');
 			$this->theme->set_partial('head', 'head')->set('title', 'nejitsu');
 			$this->theme->set_partial('header', 'header');
 			$this->theme->set_partial('footer', 'footer');
@@ -39,7 +40,10 @@ class Controller_Nejitsu extends \Controller_Rest
 
 	public function action_index()
 	{
-		$this->theme->set_partial('contents', 'contents')->set('sidebar', $this->theme->view('contents/sidebar'));
+		$this->theme->set_partial('contents', 'contents')->set([
+			'content' => $this->theme->presenter('dashboard/content'),
+			'sidebar' => $this->theme->presenter('sidebar')->set('param', ['active' => 'dashboard'])
+		]);
 	}
 
 	public function action_login()
@@ -49,12 +53,6 @@ class Controller_Nejitsu extends \Controller_Rest
 		$this->theme->set_partial('header', 'login/header', true);
 		$this->theme->set_partial('contents', 'login/contents', true);
 
-	}
-
-	public function action_logout()
-	{
-		\Auth::logout();
-		\Response::redirect('nejitsu/login');
 	}
 
 	public function post_auth()
@@ -81,16 +79,29 @@ class Controller_Nejitsu extends \Controller_Rest
 			$auth = \Auth::instance();
 			if ( ! $auth->login($post['username'], $post['password']))
 			{
-				\Log::debug(print_r($post, 1));
 				throw new \Exception('auth error');
 			}
 
 			\Response::redirect('nejitsu');
 		} catch (\Exception $e) {
-			\Log::error($e);
+			\Log::error($e->getMessage());
 			//何らかのエラーは全てログイン画面へリダイレクト
 			\Response::redirect('nejitsu/login');
 		}
+	}
+
+	public function post_delete()
+	{
+
+	}
+
+	public function action_images($page = 1)
+	{
+		$this->theme->set_partial('contents', 'contents')->set([
+			'content' => $this->theme->presenter('images/content')->set('param', ['page' => $page]),
+			'sidebar' => $this->theme->presenter('sidebar')->set('param', ['active' => 'images']),
+		]);
+
 	}
 
 	public function after($response)

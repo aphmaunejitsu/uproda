@@ -4,4 +4,5 @@
 		<?php echo \Theme::instance()->asset->css('bootstrap.min.css'); ?>
     <!-- styles -->
 		<?php echo \Theme::instance()->asset->css('styles.css'); ?>
+		<?php echo \Theme::instance()->asset->css('custom.css'); ?>
 
