@@ -84,7 +84,7 @@ class Controller_Image extends Controller_Uproda
 				throw new \Exception('validate error: '.$hash);
 			}
 
-			Libs_Image::delete_by_hash($hash, \Input::post('pass'));
+			\Libs_Image::delete_by_hash($hash, \Input::post('pass'));
 			//失敗は無視してトップへリダイレクト
 			\Response::redirect('/');
 		} catch (\Exception $e) {

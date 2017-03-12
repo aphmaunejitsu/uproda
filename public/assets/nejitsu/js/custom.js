@@ -1,20 +1,13 @@
 $(document).ready(function(){
+	$('span.image-delete').hover(function() {
+		$(this).css('cursor', 'pointer');
+	},
+	function() {
+		$(this).css('cursor', 'default');
+	});
 
-
-  $(".submenu > a").click(function(e) {
-    e.preventDefault();
-    var $li = $(this).parent("li");
-    var $ul = $(this).next("ul");
-
-    if($li.hasClass("open")) {
-      $ul.slideUp(350);
-      $li.removeClass("open");
-    } else {
-      $(".nav > li > ul").slideUp(350);
-      $(".nav > li").removeClass("open");
-      $ul.slideDown(350);
-      $li.addClass("open");
-    }
-  });
-  
+	$('span.image-delete').on('click', function() {
+		if (!confirm("削除します")) return false;
+		$(this).children('form[name="image-delete"]').submit();
+	});
 });
