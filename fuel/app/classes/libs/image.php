@@ -289,11 +289,11 @@ class Libs_Image extends \Image
 	{
 		try {
 			return \Model_Image::count(
-				'id',
+				'images.id',
 				false,
 				function ($query) use($ng) {
 					$query->join('image_hash')
-								->on('images.id', '=', 'image_hash.id')
+								->on('images.image_hash_id', '=', 'image_hash.id')
 								->where('image_hash.ng', $ng);
 				}
 			);

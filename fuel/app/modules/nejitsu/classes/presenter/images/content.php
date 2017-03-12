@@ -10,6 +10,19 @@ class Presenter_Images_Content extends Presenter_Images
 		$images = \Libs_Image::get_all_images($offset, $per_page);
 		$this->set('images', $images);
 
+		//pager
+		$count = \Libs_Image::count_all();
+		$config = [
+		    'pagination_url' => 'nejitsu/images',
+		    'uri_segment' => 3,
+		    'per_page'    => \Libs_Config::get('board.pagination.per_page', 100),
+				'num_links'   => 10,
+		    'total_items' => $count,
+				'name'        => 'bootstrap3',
+		];
+		$this->set_safe('pagination', \Pagination::forge('bootstrap3', $config));
+		$this->set('total', $count);
+
 		//imageパス作成
 		$this->set_safe('build_image_url', function($basename) {
 			return \Libs_Image::build_image_url($basename);
