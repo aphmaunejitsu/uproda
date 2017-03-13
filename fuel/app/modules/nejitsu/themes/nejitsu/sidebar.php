@@ -3,8 +3,9 @@
     <li class="<?php echo $is_active('dashboard'); ?>"><a href="/nejitsu"><i class="glyphicon glyphicon-home"></i> Dashboard</a></li>
     <li class="<?php echo $is_active('images'); ?>"><a href="/nejitsu/images"><i class="glyphicon glyphicon-list"></i> Images</a></li>
     <li class="<?php echo $is_active('hash'); ?>"><a href="#"><i class="glyphicon glyphicon-list"></i> NG Hash</a></li>
-    <li class="<?php echo $is_active('ips'); ?>"><a href="#"><i class="glyphicon glyphicon-list"></i> Deny Ips</a></li>
+    <li class="<?php echo $is_active('ips'); ?>"><a href="#"><i class="glyphicon glyphicon-list"></i> NG Ips</a></li>
     <li class="<?php echo $is_active('words'); ?>"><a href="#"><i class="glyphicon glyphicon-list"></i> NG Words</a></li>
+    <li class="<?php echo $is_active('users'); ?>"><a href="#"><i class="glyphicon glyphicon-list"></i> Users</a></li>
     <li "><a href="/nejitsu/login"><i class="glyphicon glyphicon-record"></i> Logout</a></li>
 </ul>
 
