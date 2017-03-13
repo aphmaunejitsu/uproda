@@ -12,7 +12,7 @@ class Libs_Image extends \Image
 		return sha1($mc.$id);
 	}
 
-	public static function get_two_char_from_basename($basename)
+	public static function get_one_char_from_basename($basename)
 	{
 		//フラグメントが起こりうだから、1文字
 		return \Str::lower(\Str::sub($basename, 0, 1));
@@ -25,9 +25,9 @@ class Libs_Image extends \Image
 
 	public static function build_real_image_dir($basename)
 	{
-		return \Str::tr(DOCROOT.':savedir/:twochardir/', [
+		return \Str::tr(DOCROOT.':savedir/:onechardir/', [
 			'savedir'    => Libs_Config::get('board.dir'),
-			'twochardir' => self::get_two_char_from_basename($basename),
+			'onechardir' => self::get_one_char_from_basename($basename),
 		]);
 	}
 
@@ -189,7 +189,7 @@ class Libs_Image extends \Image
 		});
 
 		\Upload::register('before', function(&$file) {
-			$file['path'] = $file['path'].self::get_two_char_from_basename($file['basename']).'/';
+			$file['path'] = $file['path'].self::get_one_char_from_basename($file['basename']).'/';
 			//保存する拡張子は全て小文字変換
 			$file['extension'] = \Str::lower($file['extension']);
 			$file['saved_as']  = $file['basename'].'.'.$file['extension'];
