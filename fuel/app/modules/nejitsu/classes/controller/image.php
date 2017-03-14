@@ -1,10 +1,5 @@
 <?php
 namespace Nejitsu;
-/**
- * 管理サイト基底クラス
- *
- *
- **/
 class Controller_Image extends Controller_Nejitsu
 {
 	public function before()

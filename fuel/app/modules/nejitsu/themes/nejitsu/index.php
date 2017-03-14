@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang='ja'>
   <head><?php echo $partials['head']; ?></head>
   <body>
   	<div class="header"><?php echo $partials['header']; ?></div>
