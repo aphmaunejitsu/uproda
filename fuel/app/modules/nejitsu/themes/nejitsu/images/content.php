@@ -4,7 +4,7 @@
 	</div>
  	<div class="panel-body">
 		<div class="table-responsive">
-  		<table class="table">
+  		<table class="table table-hover list">
 				<thead>
 				  <tr><th>#</th><th>filename</th><th>hash</th><th>size</th><th>ip</th><th>ng</th><th>date</th><th>Action</th></tr>
 				</thead>
@@ -12,14 +12,14 @@
 				<?php if ( ! empty($images)): ?>
 				<?php foreach ($images as $index => $image): ?>
 				<tr>
-					<td><?php echo $image->id ?></td>
+					<td class='number'><?php echo $image->id ?></td>
 					<td><a href="<?php echo $build_image_url($image->basename); ?>" target='_blank'><?php echo $image->basename; ?></a></td>
-					<td><?php echo $image->hash; ?></td>
-					<td><?php echo $format_bytes($image->size); ?></td>
-					<td><?php echo $image->ip; ?></td>
-					<td><span class="glyphicon <?php echo $ng2str($image->ng); ?>"></span></td>
-					<td><?php echo $format_date($image->created_at); ?></td>
-					<td>
+					<td class='hash'><?php echo $image->hash; ?></td>
+					<td class='number'><?php echo $format_bytes($image->size); ?></td>
+					<td class='ip'><?php echo $image->ip; ?></td>
+					<td class='ng'><span class="glyphicon <?php echo $ng2str($image->ng); ?>"></span></td>
+					<td class='date'><?php echo $format_date($image->created_at); ?></td>
+					<td class='action'>
 						<span class="glyphicon glyphicon-trash image-delete">
     				<?php echo \Form::open(['action' => 'nejitsu/image/delete', 'name' => 'image-delete']); ?>
   					<?php echo \Form::csrf(); ?>

@@ -37,6 +37,20 @@ class Libs_Image_Hash
 		return $hash;
 	}
 
+	public static function get_all($limit, $offset)
+	{
+		$hash = \Model_Image_Hash::find(function($query) use($limit, $offset) {
+			return $query->select('image_hash.id', 'image_hash.hash', 'image_hash.ng', 'image_hash.comment', [\DB::expr('count(images.id)'), 'image_count'])
+						->join('images', 'left')
+						->on('image_hash.id', '=', 'images.image_hash_id')
+						->group_by('image_hash.id', 'image_hash.hash', 'image_hash.ng', 'image_hash.comment')
+						->limit($limit)
+						->offset($offset);
+		});
+
+		return $hash;
+	}
+
 	public static function get($basename, $ext)
 	{
 		return self::get_by_hash(self::create($basename, $ext));

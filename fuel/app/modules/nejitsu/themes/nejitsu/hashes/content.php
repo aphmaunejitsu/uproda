@@ -1,23 +1,30 @@
 <div class="content-box-large">
 	<div class="panel-heading">
-		<div class="panel-title">Hash List</div>
+		<div class="panel-title">Hash List
+		</div>
 	</div>
  	<div class="panel-body">
 		<div class="table-responsive">
-  		<table class="table">
+  		<table class="table table-hover list">
 				<thead>
-				  <tr><th>#</th><th>hash</th><th>ng</th><th>comment</th><th>date</th><th>Action</th></tr>
+				  <tr><th>#</th><th>hash</th><th>ng</th><th>count</th><th>comment</th><th>Action</th></tr>
 				</thead>
 				<tbody>
 				<?php if ( ! empty($hashes)): ?>
 				<?php foreach ($hashes as $index => $hash): ?>
 				<tr>
-					<td><?php echo $hash->id ?></td>
-					<td><?php echo $hash->hash; ?></td>
-					<td><span class="glyphicon <?php echo $ng2str($hash->ng); ?>"></span></td>
-					<td><?php echo $hash->comment; ?></td>
-					<td><?php echo $format_date($hash->created_at); ?></td>
+					<td class='number'><?php echo $hash->id ?></td>
+					<td class='hash'><?php echo $hash->hash; ?></td>
+					<td class='ng'><span class="glyphicon <?php echo $ng2str($hash->ng); ?>"></span></td>
+					<td class='number'><?php echo $hash->image_count; ?></td>
+					<td class='comment'><?php echo $hash->comment; ?></td>
 					<td>
+						<span class="glyphicon glyphicon-pencil">
+    				<?php echo \Form::open(['action' => 'nejitsu/hash/delete', 'name' => 'hash-edit']); ?>
+  					<?php echo \Form::csrf(); ?>
+						<?php echo \Form::hidden('file', $id2hash($hash->id)); ?>
+						<?php echo \Form::close();?>
+						</span>
 						<span class="glyphicon glyphicon-trash hash-delete">
     				<?php echo \Form::open(['action' => 'nejitsu/hash/delete', 'name' => 'hash-delete']); ?>
   					<?php echo \Form::csrf(); ?>
