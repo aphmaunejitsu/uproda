@@ -11,8 +11,7 @@ uproda.confとでもして、apacheが読むところにおいちゃう
 - pathtossldirは、crt,keyを保管するディレクトリをフルパス指定
 - SSLオンリーでも80は作っておく（80 -> 443リダイレクト用)
 
-```
-<VirtualHost *:80>
+```<VirtualHost *:80>
   ServerAdmin Admin@server.com
     DocumentRoot "/PathToDocrootdir"
     ServerName xxxx.com
@@ -51,5 +50,3 @@ uproda.confとでもして、apacheが読むところにおいちゃう
         Require all granted
     </Directory>
 </VirtualHost>```
-
-
