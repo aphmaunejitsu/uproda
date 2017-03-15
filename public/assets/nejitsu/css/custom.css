@@ -12,7 +12,8 @@ pre, code, var, samp, kbd, .mono, .list td {
 
 table.list td.hash { width:30em}
 table.list td.comment { width:50em}
-table.list td.number { width:5em; text-align:right;padding-left:1em; padding-right:1em}
+table.list td.number td.size { width:5em; text-align:right;padding-left:1em; padding-right:1em}
+table.list td.size { width:10em}
 table.list td.ng { width:2em;text-align:center}
 
 

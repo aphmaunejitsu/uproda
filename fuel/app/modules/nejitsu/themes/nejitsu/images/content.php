@@ -15,7 +15,7 @@
 					<td class='number'><?php echo $image->id ?></td>
 					<td><a href="<?php echo $build_image_url($image->basename); ?>" target='_blank'><?php echo $image->basename; ?></a></td>
 					<td class='hash'><?php echo $image->hash; ?></td>
-					<td class='number'><?php echo $format_bytes($image->size); ?></td>
+					<td class='size'><?php echo $format_bytes($image->size); ?></td>
 					<td class='ip'><?php echo $image->ip; ?></td>
 					<td class='ng'><span class="glyphicon <?php echo $ng2str($image->ng); ?>"></span></td>
 					<td class='date'><?php echo $format_date($image->created_at); ?></td>

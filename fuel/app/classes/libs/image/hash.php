@@ -45,7 +45,8 @@ class Libs_Image_Hash
 						->on('image_hash.id', '=', 'images.image_hash_id')
 						->group_by('image_hash.id', 'image_hash.hash', 'image_hash.ng', 'image_hash.comment')
 						->limit($limit)
-						->offset($offset);
+						->offset($offset)
+						->order_by(\DB::expr('count(images.id)'), 'desc');
 		});
 
 		return $hash;

@@ -46,6 +46,9 @@
 	RewriteCond %{REQUEST_FILENAME} (.*)/up/(.*)
 	RewriteRule ^.*$ /assets/global/img/404.jpg [L]
 
+	# http -> https
+	RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)?$ https://%{HTTP_HOST}$1 [R=301,L]
 
     # make HTTP Basic Authentication work on php-fcgi installs
     <IfModule mod_fcgid.c>

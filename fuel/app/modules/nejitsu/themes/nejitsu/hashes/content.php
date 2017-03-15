@@ -7,13 +7,12 @@
 		<div class="table-responsive">
   		<table class="table table-hover list">
 				<thead>
-				  <tr><th>#</th><th>hash</th><th>ng</th><th>count</th><th>comment</th><th>Action</th></tr>
+				  <tr><th>hash</th><th>ng</th><th>count</th><th>comment</th><th>Action</th></tr>
 				</thead>
 				<tbody>
 				<?php if ( ! empty($hashes)): ?>
 				<?php foreach ($hashes as $index => $hash): ?>
 				<tr>
-					<td class='number'><?php echo $hash->id ?></td>
 					<td class='hash'><?php echo $hash->hash; ?></td>
 					<td class='ng'><span class="glyphicon <?php echo $ng2str($hash->ng); ?>"></span></td>
 					<td class='number'><?php echo $hash->image_count; ?></td>
