@@ -105,6 +105,28 @@ class Controller_Nejitsu extends \Controller_Rest
 		]);
 	}
 
+	public function action_hash($hash, $page = 1)
+	{
+		if (empty($hash))
+		{
+			throw new \HttpNotFoundException();
+		}
+
+		$hash = \Security::clean($hash, ['strip_tags', 'htmlentities']);
+		$v = \Validation::forge();
+		$v->add_field('hash', 'hash', 'required|valid_string[alpha,numeric]');
+		if ( ! $v->run(['hash' => $hash], true))
+		{
+			throw new \HttpNotFoundException();
+		}
+
+		$this->theme->set_partial('contents', 'hash')->set([
+			'content' => $this->theme->presenter('hash/content')->set('param', ['hash' => $hash, 'page' => $page]),
+			'content' => $this->theme->presenter('hash/thumbnail')->set('param', ['hash' => $hash]),
+			'sidebar' => $this->theme->presenter('sidebar')->set('param', ['active' => 'hashes']),
+		]);
+	}
+
 	public function after($response)
 	{
 		if (empty($response) or ! $response instanceof Response)
