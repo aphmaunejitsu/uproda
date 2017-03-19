@@ -26,8 +26,7 @@
 		<button type="button" data-loading-text="Saving..." class="form-control btn btn-primary btn-block hash_event" autocomplete="off" name="save" data-action="/nejitsu/hash/save">Save</button>
 		</div>
 	</li>
-	<li class='list-group-item'><button type="button" data-loading-text="Hash Deleting..." class="btn btn-primary btn-block hash_event" autocomplete="off" name="delete_hash" data-action="/nejitsu/hash/delete.json">Delete Hash &amp; Images</button></li>
-	<li class="list-group-item"><button type="button" data-loading-text="Image Deleting..." class="btn btn-primary btn-block hash_event" autocomplete="off" name="delete_image" data-action="/nejitsu/hash/delete_images.json">Delete Images</button></li>
+	<li class="list-group-item"><button type="button" data-loading-text="Image Deleting..." class="btn btn-primary btn-block hash_event" autocomplete="off" name="delete" data-action="/nejitsu/hash/delete.json">Delete Images</button></li>
 	</ul>
 	<?php echo \Libs_Form::close();?>
 	</div>

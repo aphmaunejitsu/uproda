@@ -57,7 +57,7 @@ class Controller_Hash extends Controller_Nejitsu
 				throw new \HttpNotFoundException();
 			}
 
-			if (($result = \Libs_Image_Hash::save_by_hash($hash, $ng, $comment)) === null)
+			if (($result = \Libs_Image_Hash::update_by_hash($hash, $ng, $comment)) === null)
 			{
 				throw new \HttpNotFoundException();
 			}
@@ -83,18 +83,5 @@ class Controller_Hash extends Controller_Nejitsu
 		} catch (\Exception $e) {
 			throw new \HttpNotFoundException();
 		}
-	}
-
-	public function action_delete_images()
-	{
-		throw new \HttpNotFoundException();
-	}
-
-	public function post_delete_images()
-	{
-		return $this->response([
-			'status' => 200,
-			'image'  => 'delete_images'
-		], 200);
 	}
 }
