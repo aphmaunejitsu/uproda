@@ -3,4 +3,3 @@
 		<?php echo \Theme::instance()->asset->css('bootstrap.min.css'); ?>
 		<?php echo \Theme::instance()->asset->css('styles.css'); ?>
 		<?php echo \Theme::instance()->asset->css('custom.css'); ?>
-		<?php echo \Theme::instance()->asset->render('toggle-switch-css'); ?>

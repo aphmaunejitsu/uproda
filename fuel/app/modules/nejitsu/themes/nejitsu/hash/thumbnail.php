@@ -18,8 +18,9 @@
 		<label>comment</label>
 		<input type="text" name="comment" value="<?php echo $image->comment ?>" class="form-control">
 		</div>
-		<div class="form-group">
-		<label>NG</label> <input type="checkbox" name="image-ng" <?php echo $write_ng_state($image->ng); ?>>
+		<div class="checkbox">
+		<input type="hidden" name="image-ng" value="">
+		<label>NG <input type="checkbox" name="image-ng" <?php echo $write_ng_state($image->ng); ?>></label>
 		</div>
 		<div class="form-group">
 		<button type="button" data-loading-text="Saving..." class="form-control btn btn-primary btn-block hash_event" autocomplete="off" name="save" data-action="/nejitsu/hash/save">Save</button>

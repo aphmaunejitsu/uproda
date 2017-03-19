@@ -92,12 +92,28 @@ class Libs_Image_Hash
 		return self::save_by_hash(self::create($basename, $ext));
 	}
 
-	public static function save_by_hash($hash)
+	public static function save_by_hash($hash, $ng = 0, $comment = null)
 	{
 		try {
-			if (($result = Model_Image_Hash::forge()->set(['hash' => $hash, 'ng' => 0, 'comment' => null])->save()))
+			if (($hash = \Model_Image_Hash::find_one_by('hash', $hash)) === null)
 			{
-				return reset($result);
+				if (($result = \Model_Image_Hash::forge()->set(['hash' => $hash, 'ng' => 0, 'comment' => null])->save()))
+				{
+					\Log::debug(print_r($result,1));
+					return reset($result);
+				}
+			}
+			else
+			{
+				$hash->set([
+					'ng' => $ng,
+					'comment' => $comment,
+				]);
+				if (($result = $hash->save()))
+				{
+					\Log::debug(print_r($result,1));
+					return $result;
+				}
 			}
 
 			return null;
