@@ -7,7 +7,7 @@ class Controller_Image extends Controller_Nejitsu
 		parent::before();
 	}
 
-	public function action_index($hash = null, $page = 1)
+	public function action_index()
 	{
 		throw new \HttpNotFoundException();
 	}

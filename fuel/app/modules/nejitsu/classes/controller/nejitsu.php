@@ -14,6 +14,8 @@ class Controller_Nejitsu extends \Controller_Rest
 
 	public function before()
 	{
+		parent::before();
+
 		if ( ! \Auth::check())
 		{
 			if ( ! in_arrayi(\Request::active()->uri->string(), $this->noauth))
@@ -27,7 +29,7 @@ class Controller_Nejitsu extends \Controller_Rest
 		$this->theme = \Theme::instance();
 		$this->theme->active('nejitsu');
 
-		if ( ! \Input::is_ajax() or ! \Request::is_hmvc())
+		if ( ! \Input::is_ajax())
 		{
 			$this->theme->asset->add_path('assets/global', ['css', 'js', 'img']);
 			$this->theme->set_template('index');
@@ -107,16 +109,16 @@ class Controller_Nejitsu extends \Controller_Rest
 
 	public function after($response)
 	{
-		try {
+		if ( ! \Input::is_ajax())
+		{
 			if (empty($response) or ! $response instanceof Response)
 			{
 				$response = \Response::forge($this->theme->render());
 			}
 
 			$response->set_status($this->response_status);
-			return parent::after($response);
-		} catch (\Exception $e) {
-			throw new \HttpNotFoundException();
 		}
+
+		return parent::after($response);
 	}
 }

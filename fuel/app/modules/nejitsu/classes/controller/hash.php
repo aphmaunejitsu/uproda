@@ -3,12 +3,14 @@ namespace Nejitsu;
 class Controller_Hash extends Controller_Nejitsu
 {
 	protected $default_format = 'json';
+	protected $ignore_http_accept = true;
+
 	public function before()
 	{
 		parent::before();
 	}
 
-	public function action_index($hash = null, $page = 1)
+	public function action_index()
 	{
 		throw new \HttpNotFoundException();
 	}
@@ -38,20 +40,32 @@ class Controller_Hash extends Controller_Nejitsu
 		]);
 	}
 
+	public function get_save()
+	{
+		throw new \HttpNotFoundException();
+	}
+
 	public function post_save()
 	{
-		return $this->response([
-			'status' => 200,
-			'image'  => 'AAAAAAAAAAA'
-		], 200);
+		return $this->response(['status' => 200, 'message'  => '保存しました'], 200);
+	}
+
+	public function action_delete()
+	{
+		throw new \HttpNotFoundException();
 	}
 
 	public function post_delete()
 	{
 		return $this->response([
 			'status' => 200,
-			'image'  => 'DDDDDDDDDD'
+			'image'  => '削除しました'
 		], 200);
+	}
+
+	public function action_delete_images()
+	{
+		throw new \HttpNotFoundException();
 	}
 
 	public function post_delete_images()
