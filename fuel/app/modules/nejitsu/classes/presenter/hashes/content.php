@@ -7,7 +7,6 @@ class Presenter_Hashes_Content extends Presenter_Nejitsu
 		parent::view();
 		$per_page = \Libs_Config::get('board.pagination.per_page', 100);
 		$offset = (\Arr::get($this->param, 'page', 1) - 1) * $per_page;
-		//$hash = \Model_Image_Hash::find_all($per_page, $offset);
 		$hash = \Libs_Image_Hash::get_all($per_page, $offset);
 		$this->set('hashes', $hash);
 

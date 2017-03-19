@@ -537,7 +537,6 @@ class Libs_Image extends \Image
 					->limit($limit)
 					->offset($offset);
 		});
-		\Log::debug(print_r($images,1));
 
 		return $images;
 	}

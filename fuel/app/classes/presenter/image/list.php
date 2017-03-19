@@ -14,8 +14,8 @@ class Presenter_Image_List extends Presenter_Image
 		$this->set('height', $length);
 
 		//thumbnailパス作成
-		$this->set_safe('build_thumbnail_url', function($image_dir, $thumbnail_dir, $basename) {
-			return $this->build_thumbnail_url($image_dir, $thumbnail_dir, $basename);
+		$this->set_safe('build_thumbnail_url', function($basename) {
+			return $this->build_thumbnail_url($basename);
 		});
 
 		//imageパス作成

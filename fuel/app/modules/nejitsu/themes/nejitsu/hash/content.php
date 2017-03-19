@@ -1,7 +1,4 @@
 <div class="content-box-large">
-	<div class="panel-heading">
-		<div class="panel-title">Image List</div>
-	</div>
  	<div class="panel-body">
 		<div class="table-responsive">
   		<table class="table table-hover list">

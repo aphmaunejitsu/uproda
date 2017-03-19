@@ -24,9 +24,8 @@ class Presenter_Hash_Content extends Presenter_Hash
 		];
 		$this->set_safe('pagination', \Pagination::forge('bootstrap3', $config));
 		$this->set('total', $count);
-		$this->set('image', reset($images));
+//		$this->set('image', reset($images));
 
-		//imageパス作成
 		$this->set_safe('build_image_url', function($basename) {
 			return \Libs_Image::build_image_url($basename);
 	  });

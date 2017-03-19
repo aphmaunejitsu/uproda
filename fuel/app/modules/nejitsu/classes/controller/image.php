@@ -7,7 +7,7 @@ class Controller_Image extends Controller_Nejitsu
 		parent::before();
 	}
 
-	public function action_index()
+	public function action_index($hash = null, $page = 1)
 	{
 		throw new \HttpNotFoundException();
 	}
@@ -33,7 +33,6 @@ class Controller_Image extends Controller_Nejitsu
 			//失敗は無視して管理の画像一覧へリダイレクト
 			\Response::redirect('nejitsu/images');
 		} catch (\Exception $e) {
-			\Log::debug($e->getMessage());
 			//例外は無視してログインページへ飛ばす
 			\Response::redirect('nejitsu/login');
 		}

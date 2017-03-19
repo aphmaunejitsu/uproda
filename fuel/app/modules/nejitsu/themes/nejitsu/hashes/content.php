@@ -13,7 +13,7 @@
 				<?php if ( ! empty($hashes)): ?>
 				<?php foreach ($hashes as $index => $hash): ?>
 				<tr>
-					<td class='hash'><?php echo $hash->hash; ?></td>
+					<td class='hash'><a href="<?php echo '/nejitsu/hash/detail/'.$hash->hash;?>"><?php echo $hash->hash; ?></a></td>
 					<td class='ng'><span class="glyphicon <?php echo $ng2str($hash->ng); ?>"></span></td>
 					<td class='number'><?php echo $hash->image_count; ?></td>
 					<td class='comment'><?php echo $hash->comment; ?></td>
