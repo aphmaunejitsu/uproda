@@ -14,6 +14,8 @@ class Controller_Nejitsu extends \Controller_Rest
 
 	public function before()
 	{
+		parent::before();
+
 		if ( ! \Auth::check())
 		{
 			if ( ! in_arrayi(\Request::active()->uri->string(), $this->noauth))
@@ -27,7 +29,7 @@ class Controller_Nejitsu extends \Controller_Rest
 		$this->theme = \Theme::instance();
 		$this->theme->active('nejitsu');
 
-		if ( ! \Input::is_ajax() or ! \Request::is_hmvc())
+		if ( ! \Input::is_ajax())
 		{
 			$this->theme->asset->add_path('assets/global', ['css', 'js', 'img']);
 			$this->theme->set_template('index');
@@ -49,10 +51,9 @@ class Controller_Nejitsu extends \Controller_Rest
 	public function action_login()
 	{
 		\Auth::logout();
-		$this->theme->set_template('login');
+		$this->theme->set_template('login/index');
 		$this->theme->set_partial('header', 'login/header', true);
 		$this->theme->set_partial('contents', 'login/contents', true);
-
 	}
 
 	public function post_auth()
@@ -90,28 +91,34 @@ class Controller_Nejitsu extends \Controller_Rest
 		}
 	}
 
-	public function post_delete()
-	{
-
-	}
-
 	public function action_images($page = 1)
 	{
 		$this->theme->set_partial('contents', 'contents')->set([
 			'content' => $this->theme->presenter('images/content')->set('param', ['page' => $page]),
 			'sidebar' => $this->theme->presenter('sidebar')->set('param', ['active' => 'images']),
 		]);
+	}
 
+	public function action_hashes($page = 1)
+	{
+		$this->theme->set_partial('contents', 'contents')->set([
+			'content' => $this->theme->presenter('hashes/content')->set('param', ['page' => $page]),
+			'sidebar' => $this->theme->presenter('sidebar')->set('param', ['active' => 'hashes']),
+		]);
 	}
 
 	public function after($response)
 	{
-		if (empty($response) or ! $response instanceof Response)
+		if ( ! \Input::is_ajax())
 		{
-			$response = \Response::forge($this->theme->render());
+			if (empty($response) or ! $response instanceof Response)
+			{
+				$response = \Response::forge($this->theme->render());
+			}
+
+			$response->set_status($this->response_status);
 		}
 
-		$response->set_status($this->response_status);
 		return parent::after($response);
 	}
 }

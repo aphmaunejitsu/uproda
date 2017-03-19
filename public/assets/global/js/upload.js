@@ -28,7 +28,6 @@ $(function() {
 			contentType: false,
 			timeout: 30000,
 			loadingHide: function(xhr) {
-				console.log(xhr);
 				location.href = xhr.image;
 			},
 			loadingError: function(xhr) {

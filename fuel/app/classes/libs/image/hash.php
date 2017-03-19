@@ -37,6 +37,21 @@ class Libs_Image_Hash
 		return $hash;
 	}
 
+	public static function get_all($limit, $offset)
+	{
+		$hash = \Model_Image_Hash::find(function($query) use($limit, $offset) {
+			return $query->select('image_hash.id', 'image_hash.hash', 'image_hash.ng', 'image_hash.comment', [\DB::expr('count(images.id)'), 'image_count'])
+						->join('images', 'left')
+						->on('image_hash.id', '=', 'images.image_hash_id')
+						->group_by('image_hash.id', 'image_hash.hash', 'image_hash.ng', 'image_hash.comment')
+						->limit($limit)
+						->offset($offset)
+						->order_by(\DB::expr('count(images.id)'), 'desc');
+		});
+
+		return $hash;
+	}
+
 	public static function get($basename, $ext)
 	{
 		return self::get_by_hash(self::create($basename, $ext));
@@ -52,23 +67,59 @@ class Libs_Image_Hash
 		}
 	}
 
+	public static function get_with_image_by_hash($hash)
+	{
+		$image = \Model_Image_Hash::find(function($query) use($hash) {
+			return $query->select('image_hash.id', 'image_hash.hash', 'image_hash.ng', 'image_hash.comment', 'images.basename', 'images.ext')
+				->join('images', 'left')
+				->on('image_hash.id', '=', 'images.image_hash_id')
+				->where('image_hash.hash', $hash)
+				->limit(1)->offset(0);
+		});
+
+		if (empty($image))
+		{
+			return null;
+		}
+		else
+		{
+			return reset($image);
+		}
+	}
+
 	public static function save($basename, $ext)
 	{
 		return self::save_by_hash(self::create($basename, $ext));
 	}
 
-	public static function save_by_hash($hash)
+	public static function save_by_hash($hash, $ng = 0, $comment = null)
 	{
 		try {
-			if (($result = Model_Image_Hash::forge()->set(['hash' => $hash, 'ng' => 0, 'comment' => null])->save()))
+			if (($hash = \Model_Image_Hash::find_one_by('hash', $hash)) === null)
 			{
-				return reset($result);
+				if (($result = \Model_Image_Hash::forge()->set(['hash' => $hash, 'ng' => 0, 'comment' => null])->save()))
+				{
+					\Log::debug(print_r($result,1));
+					return reset($result);
+				}
+			}
+			else
+			{
+				$hash->set([
+					'ng' => $ng,
+					'comment' => $comment,
+				]);
+				if (($result = $hash->save()))
+				{
+					\Log::debug(print_r($result,1));
+					return $result;
+				}
 			}
 
 			return null;
 		} catch (\Exception $e) {
 			\Log::error($e);
-			throw new Libs_Image_Hash_Exception('fail create Hash', __LINE__);
+			throw new \Libs_Image_Hash_Exception('fail create Hash', __LINE__);
 		}
 	}
 }

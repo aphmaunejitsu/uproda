@@ -1,6 +1,16 @@
 <?php
 class Libs_Image_Thumbnail extends Libs_Image
 {
+	public static function build_url($basename)
+	{
+		return \Uri::create('/:image_dir/:sub_dir/:thumbnail_dir/:image.jpg',[
+			'image_dir'     => \Libs_Config::get('board.dir'),
+			'sub_dir'       => self::get_one_char_from_basename($basename),
+			'thumbnail_dir' => \Libs_Config::get('board.thumbnail.dir'),
+			'image'         => $basename,
+		]);
+	}
+
 	public static function create($file)
 	{
 		try {
@@ -11,7 +21,7 @@ class Libs_Image_Thumbnail extends Libs_Image
 			try {
 				\File::read_dir($thumbnail_dir);
 			} catch (\Exception $e) {
-				$thumbnail = Libs_Config::get('board.thumbnail.dir');
+				$thumbnail = \Libs_Config::get('board.thumbnail.dir');
 				\File::create_dir($image_dir, $thumbnail, 0777);
 			}
 

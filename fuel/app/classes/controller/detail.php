@@ -18,7 +18,6 @@ class Controller_Detail extends Controller
 		try {
 			Libs_Image::check_id($basename);
 			$image_data = Libs_Image::get($basename);
-			//TODO 画像アクセスのロギング
 			\Image::load(Libs_Image::build_real_image_path($image_data->basename, $image_data->ext))->output();
 		} catch (\Exception $e) {
 			\Log::error($e);
@@ -31,7 +30,6 @@ class Controller_Detail extends Controller
 		try {
 			Libs_Image::check_id($basename);
 			$image_data = Libs_Image::get($basename);
-			//TODO 画像アクセスのロギング
 			\Image::load(Libs_Image::build_real_thumbnail_path($image_data->basename))->output();
 		} catch (\Exception $e) {
 			\Log::error($e);

@@ -1,10 +1,5 @@
 <?php
 namespace Nejitsu;
-/**
- * 管理サイト基底クラス
- *
- *
- **/
 class Controller_Image extends Controller_Nejitsu
 {
 	public function before()
@@ -38,7 +33,6 @@ class Controller_Image extends Controller_Nejitsu
 			//失敗は無視して管理の画像一覧へリダイレクト
 			\Response::redirect('nejitsu/images');
 		} catch (\Exception $e) {
-			\Log::debug($e->getMessage());
 			//例外は無視してログインページへ飛ばす
 			\Response::redirect('nejitsu/login');
 		}

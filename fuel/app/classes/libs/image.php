@@ -526,4 +526,18 @@ class Libs_Image extends \Image
 			throw new \Libs_Image_Exception('fail create Hash', __LINE__);
 		}
 	}
+
+	public static function get_images_by_image_hash($image_hash, $limit, $offset)
+	{
+		$images = \Model_Image::find(function($query) use($image_hash, $limit, $offset) {
+			$query->select('images.*')
+					->join('image_hash')
+					->on('images.image_hash_id', '=', 'image_hash.id')
+					->where('image_hash.hash', '=', $image_hash)
+					->limit($limit)
+					->offset($offset);
+		});
+
+		return $images;
+	}
 }

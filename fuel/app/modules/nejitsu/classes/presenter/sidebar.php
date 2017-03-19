@@ -6,6 +6,7 @@ class Presenter_Sidebar extends Presenter_Nejitsu
 	private $active = [
 		'dashboard' => 1,
 		'images'    => 0,
+		'hashes'    => 0,
 	];
 
 	public function view()
