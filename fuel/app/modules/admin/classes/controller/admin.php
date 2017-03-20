@@ -1,35 +1,38 @@
 <?php
-namespace Nejitsu;
+namespace Admin;
 /**
  * 管理サイト基底クラス
  *
  *
  **/
-class Controller_Nejitsu extends \Controller_Rest
+class Controller_Admin extends \Controller_Rest
 {
 	protected $noauth = [
-		'nejitsu/login',
-		'nejitsu/logout',
-		'nejitsu/auth',
+		'admin/login',
+		'admin/auth',
 	];
 
 	public function before()
 	{
-		$this->theme = \Theme::instance();
-		$this->theme->active('nejitsu');
+		parent::before();
+
 		if ( ! \Auth::check())
 		{
 			if ( ! in_arrayi(\Request::active()->uri->string(), $this->noauth))
 			{
-				\Response::redirect('nejitsu/login');
+				\Response::redirect('admin/login');
 				return;
 			}
 		}
 
-		$this->theme->asset->add_path('assets/global', ['css', 'js', 'img']);
+		\Libs_Config::load();
+		$this->theme = \Theme::instance();
+		$this->theme->active('nejitsu');
+
 		if ( ! \Input::is_ajax())
 		{
-			$template = $this->theme->set_template('index');
+			$this->theme->asset->add_path('assets/global', ['css', 'js', 'img']);
+			$this->theme->set_template('index');
 			$this->theme->set_partial('head', 'head')->set('title', 'nejitsu');
 			$this->theme->set_partial('header', 'header');
 			$this->theme->set_partial('footer', 'footer');
@@ -39,22 +42,18 @@ class Controller_Nejitsu extends \Controller_Rest
 
 	public function action_index()
 	{
-		$this->theme->set_partial('contents', 'contents')->set('sidebar', $this->theme->view('contents/sidebar'));
+		$this->theme->set_partial('contents', 'contents')->set([
+			'content' => $this->theme->presenter('dashboard/content'),
+			'sidebar' => $this->theme->presenter('sidebar')->set('param', ['active' => 'dashboard'])
+		]);
 	}
 
 	public function action_login()
 	{
 		\Auth::logout();
-		$this->theme->set_template('login');
+		$this->theme->set_template('login/index');
 		$this->theme->set_partial('header', 'login/header', true);
 		$this->theme->set_partial('contents', 'login/contents', true);
-
-	}
-
-	public function action_logout()
-	{
-		\Auth::logout();
-		\Response::redirect('nejitsu/login');
 	}
 
 	public function post_auth()
@@ -81,26 +80,45 @@ class Controller_Nejitsu extends \Controller_Rest
 			$auth = \Auth::instance();
 			if ( ! $auth->login($post['username'], $post['password']))
 			{
-				\Log::debug(print_r($post, 1));
 				throw new \Exception('auth error');
 			}
 
-			\Response::redirect('nejitsu');
+			\Response::redirect('admin');
 		} catch (\Exception $e) {
-			\Log::error($e);
+			\Log::error($e->getMessage());
 			//何らかのエラーは全てログイン画面へリダイレクト
-			\Response::redirect('nejitsu/login');
+			\Response::redirect('admin/login');
 		}
+	}
+
+	public function action_images($page = 1)
+	{
+		$this->theme->set_partial('contents', 'contents')->set([
+			'content' => $this->theme->presenter('images/content')->set('param', ['page' => $page]),
+			'sidebar' => $this->theme->presenter('sidebar')->set('param', ['active' => 'images']),
+		]);
+	}
+
+	public function action_hashes($page = 1)
+	{
+		$this->theme->set_partial('contents', 'contents')->set([
+			'content' => $this->theme->presenter('hashes/content')->set('param', ['page' => $page]),
+			'sidebar' => $this->theme->presenter('sidebar')->set('param', ['active' => 'hashes']),
+		]);
 	}
 
 	public function after($response)
 	{
-		if (empty($response) or ! $response instanceof Response)
+		if ( ! \Input::is_ajax())
 		{
-			$response = \Response::forge($this->theme->render());
+			if (empty($response) or ! $response instanceof Response)
+			{
+				$response = \Response::forge($this->theme->render());
+			}
+
+			$response->set_status($this->response_status);
 		}
 
-		$response->set_status($this->response_status);
 		return parent::after($response);
 	}
 }

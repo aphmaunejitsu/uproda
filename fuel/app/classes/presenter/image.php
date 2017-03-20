@@ -1,21 +1,15 @@
 <?php
 class Presenter_Image extends Presenter_Uproda
 {
-	const MAGICCODE = 'desushiosushi';
-	protected function build_thumbnail_url($image_dir, $thumbnail_dir, $basename)
+	protected function build_thumbnail_url($basename)
 	{
-		if ($image_dir === null or $thumbnail_dir === null or $basename === null)
+		if ($basename === null)
 		{
 			return \Theme::instanse()->asset->get_file('dummy.jpg', 'img');
 		}
 		else
 		{
-			return \Uri::create('/:image_dir/:image_short_dir/:thumbnail_dir/:basename.jpg', [
-				'image_dir'       => $image_dir,
-				'image_short_dir' => Libs_Image::get_two_char_from_basename($basename),
-				'thumbnail_dir'   => $thumbnail_dir,
-				'basename'        => $basename,
-			]);
+			return \Libs_Image_Thumbnail::build_url($basename);
 		}
 	}
 
@@ -42,7 +36,7 @@ class Presenter_Image extends Presenter_Uproda
 		{
 			return \Uri::create('/:image_dir/:image_short_dir/:basename.:ext', [
 				'image_dir'       => Libs_Config::get('board.dir'),
-				'image_short_dir' => Libs_Image::get_two_char_from_basename($basename),
+				'image_short_dir' => Libs_Image::get_one_char_from_basename($basename),
 				'basename'        => $basename,
 				'ext'             => $ext,
 			]);
@@ -51,8 +45,7 @@ class Presenter_Image extends Presenter_Uproda
 
 	protected function hash($id)
 	{
-		$mc = Libs_Config::get('board.key', self::MAGICCODE);
-		return sha1($mc.$id);
+		return \Libs_Image::hash($id);
 	}
 
 }

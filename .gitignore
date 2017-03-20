@@ -18,6 +18,7 @@
 # dynamically generated files
 /fuel/app/logs/*/*/*
 /fuel/app/cache/*/*
+/fuel/app/cache/*
 /fuel/app/tmp/*/*
 /public/up/*/*
 /fuel/app/config/crypt.php

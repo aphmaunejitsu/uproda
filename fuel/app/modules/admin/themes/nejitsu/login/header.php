@@ -3,7 +3,7 @@
       <div class="col-md-12">
          <!-- Logo -->
          <div class="logo">
-            <h1><a href="/nejitsu/">uproda admin</a></h1>
+            <h1><a href="/admin">uproda admin</a></h1>
          </div>
       </div>
    </div>

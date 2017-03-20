@@ -3,7 +3,7 @@
 		<div class="login-wrapper">
 	        <div class="box">
 	            <div class="content-wrap">
-    							<?php echo \Form::open(['action' => '/nejitsu/auth', 'id' => 'login', 'method' => 'post']); ?>
+    							<?php echo \Form::open(['action' => '/admin/auth', 'id' => 'login', 'method' => 'post']); ?>
   								<?php echo \Form::csrf(); ?>
 	                <h6>Sign In</h6>
 									<?php echo \Form::input('username', null,  ['class' => 'form-control', 'placeholder' => 'E-mail address']); ?>

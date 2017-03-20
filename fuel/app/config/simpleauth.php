@@ -29,8 +29,8 @@ return [
 	'guest_login' => false,
 	'multiple_logins' => false,
 	'remember_me' => [
-		'enabled' => false,
-		'cookie_name' => 'baajonnappu',
+		'enabled' => true,
+		'cookie_name' => 'osusume',
 		'expiration' => 86400 * 31,
 	],
 	'groups' => [

@@ -6,8 +6,8 @@ class Controller_Error extends \Controller_Rest
 	public function before()
 	{
 		parent::before();
-		Libs_Config::load();
-		Libs_Lang::load();
+		\Libs_Config::load();
+		\Libs_Lang::load();
 
 		if (! \Input::is_ajax()) {
 			$this->theme = \Theme::instance();

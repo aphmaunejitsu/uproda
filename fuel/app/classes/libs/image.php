@@ -1,19 +1,33 @@
 <?php
-class Libs_Image_Exception extends Libs_Exception {}
+class Libs_Image_Exception extends \Libs_Exception {}
 
 class Libs_Image extends \Image
 {
-	public static function get_two_char_from_basename($basename)
+	const MAGICCODE = 'desushiosushi';
+	const IMAGE_NOT_FOUND = 0;
+
+	public static function hash($id)
+	{
+		$mc = Libs_Config::get('board.key', self::MAGICCODE);
+		return sha1($mc.$id);
+	}
+
+	public static function get_one_char_from_basename($basename)
 	{
 		//フラグメントが起こりうだから、1文字
 		return \Str::lower(\Str::sub($basename, 0, 1));
 	}
 
+	public static function build_image_url($basename)
+	{
+		return \Uri::create('image/:basename', ['basename' => $basename]);
+	}
+
 	public static function build_real_image_dir($basename)
 	{
-		return \Str::tr(DOCROOT.':savedir/:twochardir/', [
+		return \Str::tr(DOCROOT.':savedir/:onechardir/', [
 			'savedir'    => Libs_Config::get('board.dir'),
-			'twochardir' => self::get_two_char_from_basename($basename),
+			'onechardir' => self::get_one_char_from_basename($basename),
 		]);
 	}
 
@@ -131,7 +145,7 @@ class Libs_Image extends \Image
 		$v->add_field('image', 'image file', 'required|valid_string[alpha,numeric,dashes]');
 		if ( ! $v->run(['image' => $id], true))
 		{
-			throw new Libs_Image_Exception('image not found', __LINE__);
+			throw new \Libs_Image_Exception('image not found: '.__LINE__, self::IMAGE_NOT_FOUND);
 		}
 	}
 
@@ -145,9 +159,9 @@ class Libs_Image extends \Image
 	public static function get($id)
 	{
 		try {
-			$image = Model_Image::find_one_by('basename', $id);
+			$image = \Model_Image::find_one_by('basename', $id);
 		} catch (\Exception $e) {
-			throw new Libs_Image_Exception('image not found', __LINE__);
+			throw new \Libs_Image_Exception('image not found: '.__LINE__, self::IMAGE_NOT_FOUND);
 		}
 
 		if ($image)
@@ -156,7 +170,7 @@ class Libs_Image extends \Image
 		}
 		else
 		{
-			throw new Libs_Image_Exception('image not found', __LINE__);
+			throw new \Libs_Image_Exception('image not found: '.__LINE__, self::IMAGE_NOT_FOUND);
 		}
 	}
 
@@ -171,19 +185,18 @@ class Libs_Image extends \Image
 		self::delete_captcha_session();
 		\Upload::register('validate', function(&$file) {
 			$file['basename'] = \Str::random('alnum', 8);
-			$file['hash'] = Libs_Image_Hash::create_by_file($file['tmp_name']);
+			$file['hash'] = \Libs_Image_Hash::create_by_file($file['tmp_name']);
 		});
 
 		\Upload::register('before', function(&$file) {
-			$file['path'] = $file['path'].self::get_two_char_from_basename($file['basename']).'/';
-			//保存する拡張子は全て小文字変換
+			$file['path'] = $file['path'].self::get_one_char_from_basename($file['basename']).'/';
 			$file['extension'] = \Str::lower($file['extension']);
 			$file['saved_as']  = $file['basename'].'.'.$file['extension'];
 			$file['filename']  = $file['saved_as'];
 		});
 
 		\Upload::register('after', function(&$file) {
-			Libs_Image::fixed($file->path.$file->saved_as);
+			\Libs_Image::fixed($file->path.$file->saved_as);
 		});
 
 		umask(0);
@@ -192,7 +205,7 @@ class Libs_Image extends \Image
 			'path'           => DOCROOT.Libs_Config::get('board.dir'),
 			'ext_whitelist'  => explode(',', Libs_Config::get('board.ext')),
 			'type_whitelist' => explode(',', Libs_Config::get('board.type')),
-			'max_size'       => Libs_Config::get('board.maxsize') * 1024 * 1024, //バイトに変換
+			'max_size'       => \Libs_Config::get('board.maxsize') * 1024 * 1024, //バイトに変換
 			'path_chmod'     => 0777,
 			'file_chmod'     => 0666,
 		]);
@@ -204,19 +217,12 @@ class Libs_Image extends \Image
 			$file = reset($files);
 			$image_path = self::build_real_image_path($file['basename'], $file['extension']);
 
-			//ハッシュ値が登録されているか
-			$hash = $file['hash'];
-			if (($image_hash = self::get_image_hash($hash)) === null)
-			{
-				if ( ! ($image_id = self::save_image_hash($hash)))
-				{
-					unlink($image_path);
-					throw new Libs_Image_Exception('fail upload image [hash]', __LINE__);
-				}
-			}
-			else
-			{
-				$image_id = $image_hash->id;
+			//ハッシュ値の保存
+			try {
+				$image_id = \Libs_Image_Hash::save($file['basename'], $file['extension']);
+			} catch (\Exception $e) {
+				unlink($image_path);
+				throw new \Libs_Image_Exception('fail upload image [hash]', __LINE__);
 			}
 
 			$image_info = [
@@ -230,14 +236,14 @@ class Libs_Image extends \Image
 				'ip'            => \Input::real_ip(),
 				'image_hash_id' => $image_id,
 			];
-			$image = Model_Image::forge()->set($image_info);
+			$image = \Model_Image::forge()->set($image_info);
 
 			//保存失敗
 			if ( ! ($result = $image->save()))
 			{
 				//ゴミ掃除
 				unlink($image_path);
-				throw new Libs_Image_Exception('fail upload image', __LINE__);
+				throw new \Libs_Image_Exception('fail upload image', __LINE__);
 			}
 
 			return $image_info;
@@ -245,7 +251,7 @@ class Libs_Image extends \Image
 		else
 		{
 			\Log::warning(print_r(\Upload::get_errors(),1));
-			throw new Libs_Image_Exception('fail upload image', __LINE__);
+			throw new \Libs_Image_Exception('fail upload image', __LINE__);
 		}
 	}
 
@@ -257,7 +263,7 @@ class Libs_Image extends \Image
 	public static function count_all()
 	{
 		try {
-			return Model_Image::count(
+			return \Model_Image::count(
 				'id',
 				false
 			);
@@ -274,12 +280,12 @@ class Libs_Image extends \Image
 	public static function count($ng = 0)
 	{
 		try {
-			return Model_Image::count(
-				'id',
+			return \Model_Image::count(
+				'images.id',
 				false,
 				function ($query) use($ng) {
 					$query->join('image_hash')
-								->on('images.id', '=', 'image_hash.id')
+								->on('images.image_hash_id', '=', 'image_hash.id')
 								->where('image_hash.ng', $ng);
 				}
 			);
@@ -297,7 +303,7 @@ class Libs_Image extends \Image
 	public static function get_images_for_delete()
 	{
 		try {
-			$temp = Model_Image::find([
+			$temp = \Model_Image::find([
 				'order_by' => ['created_at' => 'desc'],
 				'limit'    => \Libs_Config::get('board.maxfiles'),
 				'offset'   => 0,
@@ -330,10 +336,10 @@ class Libs_Image extends \Image
 	public static function get_images($offset, $limit, $ng = 0)
 	{
 		try {
-			$images = Model_Image::find([
+			$images = \Model_Image::find([
 				'where'    => function($query) use($ng) {
 					$query->join('image_hash')
-					      ->on('images.id', '=', 'image_hash.id')
+					      ->on('images.image_hash_id', '=', 'image_hash.id')
 					      ->where('image_hash.ng', $ng);
 				},
 				'order_by' => ['created_at' => 'desc'],
@@ -348,6 +354,26 @@ class Libs_Image extends \Image
 		}
 	}
 
+	public static function get_all_images($offset, $limit)
+	{
+		try {
+			$images = \Model_Image::find(function($query) use($offset, $limit) {
+				$query->select('images.*', 'image_hash.hash', 'image_hash.ng')
+						->join('image_hash')
+			      ->on('images.image_hash_id', '=', 'image_hash.id')
+						->order_by('images.created_at', 'desc')
+						->limit($limit)
+						->offset($offset);
+			});
+
+			return $images;
+		} catch (\Exception $e) {
+			\Log::error($e->getMessage());
+			return null;
+		}
+
+	}
+
 	/**
 	 * 画像を削除する
 	 * 処理は全部失敗してもいい
@@ -359,25 +385,43 @@ class Libs_Image extends \Image
 			return true;
 		}
 
+		$fail_data = [];
+		$delete_flg = true;
+
 		foreach ($images as $image)
 		{
+			$error = new stdclass();
+			$error->is_error = false;
+			$error->thumbnail = true;
+			$error->image = true;
+			$error->data = true;
+
 			try {
 				//サムネイル削除
 				$thumb_path = self::build_real_thumbnail_path($image->basename);
 				\File::delete($thumb_path);
 			} catch (\Exception $e) {
-				\Log::warning($e->getMessage());
+				$error->is_error = true;
+				$error->thumbnail = false;
+				$delete_flg = false;
+				\Log::warningj($e->getMessage());
 			}
 
 			try {
-				//本体削除
-				$image_path = self::build_real_image_path($image->basename, $image->ext);
-				\File::delete($image_path);
+				//本体削除(サムネイルが削除されていたら)
+				if ($delete_flg)
+				{
+					$image_path = self::build_real_image_path($image->basename, $image->ext);
+					\File::delete($image_path);
+				}
 			} catch (\Exception $e) {
+				$error->is_error = true;
+				$error->image = false;
+				$delete_flg = false;
 				\Log::warning($e->getMessage());
 			}
 
-			//ディレクトリ掃除
+			//ディレクトリ掃除(ここは失敗しても無視)
 			try {
 				$thumbnail_dir = self::build_real_thumbnail_dir($image->basename);
 				if ( ! ($contents = \File::read_dir($thumbnail_dir, 1, ['!^\.'])))
@@ -389,13 +433,26 @@ class Libs_Image extends \Image
 				\Log::warning($e->getMessage());
 			}
 
-			if ( ! $image->delete())
+			//削除フラグがtrue(サムネイル、画像本体とも消えている)ならデータ削除
+			if ($delete_flg)
 			{
-				\Log::warning('fail delete image. id: '.$image->id);
+				if ( ! $image->delete())
+				{
+					\Log::warning('fail delete image. id: '.$image->id);
+					$delete_flg = false;
+					$error->is_error = false;
+					$error->data = false;
+				}
+			}
+
+			$delete_flg = true;
+			if ($error->is_error)
+			{
+				$fail_data[$image->id] = $error;
 			}
 		}
 
-		return true;
+		return $fail_data;
 	}
 
 	/**
@@ -405,11 +462,12 @@ class Libs_Image extends \Image
 	 * @param string $delkey 削除キー
 	 *
 	 **/
-	public static function delete_by_hash($hash, $delkey)
+	public static function delete_by_hash($hash, $delkey, $admin = false)
 	{
 		try {
-			$images = Model_Image::find(function (&$query) use ($hash) {
-					return $query->where(\DB::expr('sha1(concat('."'".Libs_Config::get('board.key')."'".',id))'), $hash);
+			$images = \Model_Image::find(function (&$query) use ($hash) {
+				$key = \Libs_Config::get('board.key');
+				return $query->where(\DB::expr('sha1(concat('."'".$key."'".',id))'), $hash);
 			});
 
 			if ( ! $images)
@@ -419,15 +477,19 @@ class Libs_Image extends \Image
 
 			$image = reset($images);
 
-			$pass = $image->delkey;
-			if (empty($pass))
+			//管理者以外はパスチェック
+			if ( ! $admin)
 			{
-				$pass = Libs_Config::get('board.del');
-			}
+				$pass = $image->delkey;
+				if (empty($pass))
+				{
+					$pass = \Libs_Config::get('board.del');
+				}
 
-			if ($pass !== $delkey)
-			{
-				return true;
+				if ($pass !== $delkey)
+				{
+					return true;
+				}
 			}
 
 			return self::delete_by_images($images);
@@ -466,7 +528,7 @@ class Libs_Image extends \Image
 	public static function get_image_hash($hash)
 	{
 		try {
-			return Model_Image_Hash::find_one_by_hash($hash);
+			return \Model_Image_Hash::find_one_by_hash($hash);
 		} catch (\Exception $e) {
 			\Log::error($e);
 			return null;
@@ -476,7 +538,7 @@ class Libs_Image extends \Image
 	public static function save_image_hash($hash, $ng = 0, $comment = null)
 	{
 		try {
-			if (($result = Model_Image_Hash::forge()->set(['hash' => $hash, 'ng' => $ng, 'comment' => $comment])->save()))
+			if (($result = \Model_Image_Hash::forge()->set(['hash' => $hash, 'ng' => $ng, 'comment' => $comment])->save()))
 			{
 				return reset($result);
 			}
@@ -484,7 +546,33 @@ class Libs_Image extends \Image
 			return null;
 		} catch (\Exception $e) {
 			\Log::error($e);
-			throw new Libs_Image_Exception('fail create Hash', __LINE__);
+			throw new \Libs_Image_Exception('fail create Hash', __LINE__);
 		}
+	}
+
+	public static function get_by_image_hash($image_hash)
+	{
+		$images = \Model_Image::find(function($query) use($image_hash) {
+			$query->select('images.*')
+					->join('image_hash')
+					->on('images.image_hash_id', '=', 'image_hash.id')
+					->where('image_hash.hash', '=', $image_hash);
+		});
+
+		return $images;
+	}
+
+	public static function get_images_by_image_hash($image_hash, $limit, $offset)
+	{
+		$images = \Model_Image::find(function($query) use($image_hash, $limit, $offset) {
+			$query->select('images.*')
+					->join('image_hash')
+					->on('images.image_hash_id', '=', 'image_hash.id')
+					->where('image_hash.hash', '=', $image_hash)
+					->limit($limit)
+					->offset($offset);
+		});
+
+		return $images;
 	}
 }

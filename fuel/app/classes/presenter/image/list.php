@@ -9,13 +9,13 @@ class Presenter_Image_List extends Presenter_Image
 		$this->set('images', Libs_Image::get_images($offset, $per_page));
 		$this->set('image_dir', Libs_Config::get('board.dir'));
 		$this->set('thumbnail_dir', Libs_Config::get('board.thumbnail.dir'));
-		$length = Libs_Config::get('board.thumbnail.width');
+		$length = Libs_Config::get('board.thumbnail.lentgh', 400);
 		$this->set('width', $length);
 		$this->set('height', $length);
 
 		//thumbnailパス作成
-		$this->set_safe('build_thumbnail_url', function($image_dir, $thumbnail_dir, $basename) {
-			return $this->build_thumbnail_url($image_dir, $thumbnail_dir, $basename);
+		$this->set_safe('build_thumbnail_url', function($basename) {
+			return $this->build_thumbnail_url($basename);
 		});
 
 		//imageパス作成
