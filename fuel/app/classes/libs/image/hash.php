@@ -3,7 +3,12 @@ class Libs_Image_Hash
 {
 	public static function create($basename, $ext)
 	{
-		return self::create_by_file(Libs_Image::build_real_image_path($basename, $extension));
+		try {
+			return self::create_by_file(\Libs_Image::build_real_image_path($basename, $ext));
+		} catch (\Exception $e) {
+			\Log::error($e);
+			return null;
+		}
 	}
 
 	public static function create_by_file($path)
@@ -87,9 +92,31 @@ class Libs_Image_Hash
 		}
 	}
 
-	public static function save($basename, $ext)
+	public static function save($basename, $ext, $ng = 0, $comment = null)
 	{
-		return self::save_by_hash(self::create($basename, $ext));
+		if (($hash_key = self::create($basename, $ext)) === null)
+		{
+			return null;
+		}
+
+		if (($hash = \Model_Image_Hash::find_one_by('hash', $hash_key)) === null)
+		{
+			//新規作成
+			return self::save_by_hash($hash_key, $ng, $comment);
+		}
+		else
+		{
+			//更新
+			$hash->set([
+				'ng'      => $ng,
+				'comment' => $comment,
+			]);
+			$hash->save();
+
+			return $hash->id;
+		}
+
+		return null;
 	}
 
 	public static function update_by_hash($hash, $ng = 0, $comment = null)

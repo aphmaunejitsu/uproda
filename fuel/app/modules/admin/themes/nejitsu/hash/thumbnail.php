@@ -23,10 +23,27 @@
 		<label>NG <input type="checkbox" name="image-ng" <?php echo $write_ng_state($image->ng); ?>></label>
 		</div>
 		<div class="form-group">
-		<button type="button" data-loading-text="Saving..." class="form-control btn btn-primary btn-block hash_event" autocomplete="off" name="save" data-action="/admin/hash/save">Save</button>
+			<button type="button"
+				data-alert-text="false"
+				data-loading-text="Saving..."
+				class="form-control btn btn-primary btn-block hash_event"
+				autocomplete="off"
+				name="save"
+				data-action="/admin/hash/save">Save
+			</button>
 		</div>
 	</li>
-	<li class="list-group-item"><button type="button" data-loading-text="Image Deleting..." class="btn btn-primary btn-block hash_event" autocomplete="off" name="delete" data-action="/admin/hash/delete.json">Delete Images</button></li>
+	<li class="list-group-item">
+		<button type="button"
+			data-alert-text="delete all images"
+			data-loading-text="Image Deleting..."
+			class="btn btn-primary btn-block hash_event"
+			autocomplete="off"
+			name="delete"
+			data-action="/admin/hash/delete.json">
+			Delete Images
+		</button>
+	</li>
 	</ul>
 	<?php echo \Libs_Form::close();?>
 	</div>

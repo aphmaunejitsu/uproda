@@ -46,7 +46,6 @@ class Controller_Hash extends Controller_Admin
 	{
 		try {
 			\Libs_Csrf::check_token();
-			//\Log::debug(print_r(\Input::post(),1));
 			$hash = \Security::clean(\Input::post('file'), ['strip_tags', 'htmlentities']);
 			$ng   = \Security::clean(\Input::post('image-ng'), ['strip_tags', 'htmlentities']) === 'on'?1:0;
 			$comment   = \Security::clean(\Input::post('comment'), ['strip_tags', 'htmlentities']);
@@ -62,9 +61,9 @@ class Controller_Hash extends Controller_Admin
 				throw new \HttpNotFoundException();
 			}
 
-			return $this->response(['status' => 200, 'message'  => '保存しました'], 200);
+			return $this->response(['status' => 200, 'message'  => 'success', 'reload' => false], 200);
 		} catch (\Exception $e) {
-			throw new \HttpNotFoundException();
+			return $this->response(['status' => 403, 'error' => 'forbbiden' , 'message'  => 'error', 'reload' => false], 403);
 		}
 	}
 
@@ -76,12 +75,40 @@ class Controller_Hash extends Controller_Admin
 	public function post_delete()
 	{
 		try {
+			\Libs_Csrf::check_token();
+			$hash = \Security::clean(\Input::post('file'), ['strip_tags', 'htmlentities']);
+			$v = \Validation::forge();
+			$v->add_field('hash', 'hash', 'required|exact_length[26]|valid_string[alpha,numeric]');
+			if ( ! $v->run(['hash' => $hash], true))
+			{
+				throw new \HttpNotFoundException();
+			}
+
+			$images = \Libs_Image::get_by_image_hash($hash);
+			if (($result = \Libs_Image::delete_by_images($images)))
+			{
+				//$B6uG[Ns$8$c$J$$$N$G%(%i!<(B
+				\Log::debug(print_r($result,1));
+				return $this->response([
+					'status'  => 200,
+					'error'   => 'error',
+					'message' => 'error',
+					'reload'  => true,
+				], 200);
+			}
+
 			return $this->response([
-				'status' => 200,
-				'image'  => '削除しました'
+				'status'   => 200,
+				'message'  => 'success',
+				'reload'   => true,
 			], 200);
 		} catch (\Exception $e) {
-			throw new \HttpNotFoundException();
+				return $this->response([
+					'status'  => 403,
+					'error'   => 'error',
+					'message' => 'error',
+					'reload'  => true,
+				], 403);
 		}
 	}
 }

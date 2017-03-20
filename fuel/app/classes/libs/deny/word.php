@@ -20,7 +20,11 @@ class Libs_Deny_Word extends Libs_Deny
 				return true;
 			}
 
-			$words = Model_Deny_Word::find(['select' => 'word']);
+			if (($words = Model_Deny_Word::find(['select' => 'word']) === null))
+			{
+				return true;
+			}
+
 			foreach ($words as $word)
 			{
 				if (strpos($input, $word->word) !== false)
@@ -31,7 +35,7 @@ class Libs_Deny_Word extends Libs_Deny
 
 			return true;
 		} catch (\Exception $e) {
-			\Log::warring($e);
+			\Log::warning($e);
 			return true;
 		}
 	}

@@ -11,7 +11,17 @@ $(document).ready(function(){
 		$(this).children('form[name="image-delete"]').submit();
 	});
 
+	$('form[name="change-hash-ng-state"]').submit(function() {
+		return false;
+	});
+
 	$(".hash_event").on('click', function() {
+		var $a = $(this).data('alert-text');
+		if ($a !== false)
+		{
+			if (!confirm($a)) return false;
+		}
+
 		var $b = $(this).button('loading');
 		$f = $('form[name="change-hash-ng-state"]');
 		$.ajax({
@@ -22,10 +32,15 @@ $(document).ready(function(){
 			dataType: 'json'
 		})
 		.done(function(data) {
+			alert(data.message);
 			console.log(data);
+			if (data.reload)
+			{
+				location.reload();
+			}
 		})
 		.fail(function(d) {
-			alert('処理に失敗しました。時間をおいて実行してください。');
+			alert('処理に失敗しました。リロードしてから実行してください');
 		})
 		.always(function(data) {
 			$b.button('reset');
