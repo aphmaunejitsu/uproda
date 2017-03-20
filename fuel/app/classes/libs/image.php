@@ -190,7 +190,6 @@ class Libs_Image extends \Image
 
 		\Upload::register('before', function(&$file) {
 			$file['path'] = $file['path'].self::get_one_char_from_basename($file['basename']).'/';
-			//保存する拡張子は全て小文字変換
 			$file['extension'] = \Str::lower($file['extension']);
 			$file['saved_as']  = $file['basename'].'.'.$file['extension'];
 			$file['filename']  = $file['saved_as'];
@@ -218,19 +217,12 @@ class Libs_Image extends \Image
 			$file = reset($files);
 			$image_path = self::build_real_image_path($file['basename'], $file['extension']);
 
-			//ハッシュ値が登録されているか
-			$hash = $file['hash'];
-			if (($image_hash = self::get_image_hash($hash)) === null)
-			{
-				if ( ! ($image_id = self::save_image_hash($hash)))
-				{
-					unlink($image_path);
-					throw new \Libs_Image_Exception('fail upload image [hash]', __LINE__);
-				}
-			}
-			else
-			{
-				$image_id = $image_hash->id;
+			//ハッシュ値の保存
+			try {
+				$image_id = \Libs_Image_Hash::save($file['basename'], $file['extension']);
+			} catch (\Exception $e) {
+				unlink($image_path);
+				throw new \Libs_Image_Exception('fail upload image [hash]', __LINE__);
 			}
 
 			$image_info = [
@@ -393,25 +385,43 @@ class Libs_Image extends \Image
 			return true;
 		}
 
+		$fail_data = [];
+		$delete_flg = true;
+
 		foreach ($images as $image)
 		{
+			$error = new stdclass();
+			$error->is_error = false;
+			$error->thumbnail = true;
+			$error->image = true;
+			$error->data = true;
+
 			try {
 				//サムネイル削除
 				$thumb_path = self::build_real_thumbnail_path($image->basename);
 				\File::delete($thumb_path);
 			} catch (\Exception $e) {
-				\Log::warning($e->getMessage());
+				$error->is_error = true;
+				$error->thumbnail = false;
+				$delete_flg = false;
+				\Log::warningj($e->getMessage());
 			}
 
 			try {
-				//本体削除
-				$image_path = self::build_real_image_path($image->basename, $image->ext);
-				\File::delete($image_path);
+				//本体削除(サムネイルが削除されていたら)
+				if ($delete_flg)
+				{
+					$image_path = self::build_real_image_path($image->basename, $image->ext);
+					\File::delete($image_path);
+				}
 			} catch (\Exception $e) {
+				$error->is_error = true;
+				$error->image = false;
+				$delete_flg = false;
 				\Log::warning($e->getMessage());
 			}
 
-			//ディレクトリ掃除
+			//ディレクトリ掃除(ここは失敗しても無視)
 			try {
 				$thumbnail_dir = self::build_real_thumbnail_dir($image->basename);
 				if ( ! ($contents = \File::read_dir($thumbnail_dir, 1, ['!^\.'])))
@@ -423,13 +433,26 @@ class Libs_Image extends \Image
 				\Log::warning($e->getMessage());
 			}
 
-			if ( ! $image->delete())
+			//削除フラグがtrue(サムネイル、画像本体とも消えている)ならデータ削除
+			if ($delete_flg)
 			{
-				\Log::warning('fail delete image. id: '.$image->id);
+				if ( ! $image->delete())
+				{
+					\Log::warning('fail delete image. id: '.$image->id);
+					$delete_flg = false;
+					$error->is_error = false;
+					$error->data = false;
+				}
+			}
+
+			$delete_flg = true;
+			if ($error->is_error)
+			{
+				$fail_data[$image->id] = $error;
 			}
 		}
 
-		return true;
+		return $fail_data;
 	}
 
 	/**
@@ -525,6 +548,18 @@ class Libs_Image extends \Image
 			\Log::error($e);
 			throw new \Libs_Image_Exception('fail create Hash', __LINE__);
 		}
+	}
+
+	public static function get_by_image_hash($image_hash)
+	{
+		$images = \Model_Image::find(function($query) use($image_hash) {
+			$query->select('images.*')
+					->join('image_hash')
+					->on('images.image_hash_id', '=', 'image_hash.id')
+					->where('image_hash.hash', '=', $image_hash);
+		});
+
+		return $images;
 	}
 
 	public static function get_images_by_image_hash($image_hash, $limit, $offset)

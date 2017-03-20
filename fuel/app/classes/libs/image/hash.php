@@ -3,7 +3,12 @@ class Libs_Image_Hash
 {
 	public static function create($basename, $ext)
 	{
-		return self::create_by_file(Libs_Image::build_real_image_path($basename, $extension));
+		try {
+			return self::create_by_file(\Libs_Image::build_real_image_path($basename, $ext));
+		} catch (\Exception $e) {
+			\Log::error($e);
+			return null;
+		}
 	}
 
 	public static function create_by_file($path)
@@ -87,23 +92,37 @@ class Libs_Image_Hash
 		}
 	}
 
-	public static function save($basename, $ext)
+	public static function save($basename, $ext, $ng = 0, $comment = null)
 	{
-		return self::save_by_hash(self::create($basename, $ext));
+		if (($hash_key = self::create($basename, $ext)) === null)
+		{
+			return null;
+		}
+
+		if (($hash = \Model_Image_Hash::find_one_by('hash', $hash_key)) === null)
+		{
+			//新規作成
+			return self::save_by_hash($hash_key, $ng, $comment);
+		}
+		else
+		{
+			//更新
+			$hash->set([
+				'ng'      => $ng,
+				'comment' => $comment,
+			]);
+			$hash->save();
+
+			return $hash->id;
+		}
+
+		return null;
 	}
 
-	public static function save_by_hash($hash, $ng = 0, $comment = null)
+	public static function update_by_hash($hash, $ng = 0, $comment = null)
 	{
 		try {
-			if (($hash = \Model_Image_Hash::find_one_by('hash', $hash)) === null)
-			{
-				if (($result = \Model_Image_Hash::forge()->set(['hash' => $hash, 'ng' => 0, 'comment' => null])->save()))
-				{
-					\Log::debug(print_r($result,1));
-					return reset($result);
-				}
-			}
-			else
+			if (($hash = \Model_Image_Hash::find_one_by('hash', $hash)) !== null)
 			{
 				$hash->set([
 					'ng' => $ng,
@@ -111,9 +130,23 @@ class Libs_Image_Hash
 				]);
 				if (($result = $hash->save()))
 				{
-					\Log::debug(print_r($result,1));
 					return $result;
 				}
+			}
+
+			return null;
+		} catch (\Exception $e) {
+			\Log::error($e);
+			throw new \Libs_Image_Hash_Exception('fail create Hash', __LINE__);
+		}
+	}
+
+	public static function save_by_hash($hash, $ng = 0, $comment = null)
+	{
+		try {
+			if (($result = \Model_Image_Hash::forge()->set(['hash' => $hash, 'ng' => 0, 'comment' => null])->save()))
+			{
+				return reset($result);
 			}
 
 			return null;
