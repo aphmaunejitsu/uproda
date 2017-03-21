@@ -87,7 +87,7 @@ class Controller_Hash extends Controller_Admin
 			$images = \Libs_Image::get_by_image_hash($hash);
 			if (($result = \Libs_Image::delete_by_images($images)))
 			{
-				//$B6uG[Ns$8$c$J$$$N$G%(%i!<(B
+				//空配列じゃないのでエラー
 				\Log::debug(print_r($result,1));
 				return $this->response([
 					'status'  => 200,

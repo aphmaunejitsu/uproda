@@ -3,13 +3,13 @@ class Libs_Config extends Config
 {
   protected static $file = 'uproda.yml';
 
-	//変更不可
+	//アップロードディレクトリ
 	protected static $upload_dir = 'up';
-	//変更不可
+	//サムネイルディレクトリ
 	protected static $thumbnail_dir = 'thumbnail';
 
 	/**
-	 * @see Fuel\Core\Classes\Config::load
+	 * @see Fuel¥Core¥Classes¥Config::load
 	 **/
 	public static function load($file = null, $group = null, $reload = false, $overwrite = false)
   {
@@ -22,7 +22,7 @@ class Libs_Config extends Config
   }
 
 	/**
-	 * @see Fuel\Core\Classes\Config::get
+	 * @see Fuel¥Core¥Classes¥Config::get
 	 **/
 	public static function get($item, $default = null)
 	{

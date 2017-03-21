@@ -8,6 +8,7 @@ $(document).on("ajaxSend", function(e,jqXHR,obj){
 			obj.loadingHide(data);
 		})
 		.fail(function(data) {
+			console.log(data);
 			$loading.addClass("is-hide");
 			obj.loadingError(data);
 		});
@@ -27,12 +28,14 @@ $(function() {
 			processData: false,
 			contentType: false,
 			timeout: 30000,
+			dataType: 'json',
 			loadingHide: function(xhr) {
 				location.href = xhr.image;
 			},
 			loadingError: function(xhr) {
+				console.log(xhr);
 				$('input[type="submit"]').prop('disabled', false);
-				alert('うｐに失敗');
+				alert(xhr.message);
 			}
 		});
 		return false;

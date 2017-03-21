@@ -4,7 +4,7 @@ class Libs_Settings
 	private static $listmode = [
 		'name'       => 'binjou',
 		'value'      => 0,
-		'expiration' => 2592000, //30$BF|(B
+		'expiration' => 2592000, //30日
 		'path'       => null,
 		'domain'     => null,
 		'secure'     => true,
@@ -12,7 +12,7 @@ class Libs_Settings
 	];
 
 	/**
-	 * $B%j%9%H%S%e!<(B
+	 * リストビュー
 	 * @return int 0: thumbnail view, 1: list view
 	 */
 	public static function get_listmode()

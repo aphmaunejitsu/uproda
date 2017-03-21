@@ -2,6 +2,7 @@
 class Controller_Error extends \Controller_Rest
 {
 	protected $default_format = 'json';
+	protected $ignore_http_accept = true;
 
 	public function before()
 	{
@@ -49,9 +50,19 @@ class Controller_Error extends \Controller_Rest
 		$this->response_status = 403;
 		if (\Input::is_ajax())
 		{
+			$ex = \Arr::get(\Request::active()->method_params, '1.0');
+			$message = null;
+			if (($exp = $ex->getPrevious()) !== null)
+			{
+				$class = get_class($exp);
+				\Libs_Lang::load('error');
+				$message = \Libs_Lang::get($class.'.'.$exp->getCode());
+			}
+
 			return $this->response([
-				'error'  => 'Access Forbidden',
-				'status' => 403,
+				'error'   => 'Access Forbidden',
+				'message' => $message,
+				'status'  => 403,
 			], 403);
 		}
 		else

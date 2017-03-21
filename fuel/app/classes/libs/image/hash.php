@@ -101,12 +101,12 @@ class Libs_Image_Hash
 
 		if (($hash = \Model_Image_Hash::find_one_by('hash', $hash_key)) === null)
 		{
-			//$B?75,:n@.(B
+			//新規作成
 			return self::save_by_hash($hash_key, $ng, $comment);
 		}
 		else
 		{
-			//$B99?7(B
+			//更新
 			$hash->set([
 				'ng'      => $ng,
 				'comment' => $comment,
