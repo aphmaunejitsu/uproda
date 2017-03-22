@@ -10,9 +10,9 @@ class Controller_Image extends Controller_Uproda
 	public function action_index($page = null)
 	{
 		try {
-			Libs_Image::check_id($page);
+			\Libs_Image::check_id($page);
 
-			$image = Libs_Image::get($page);
+			$image = \Libs_Image::get($page);
 
 			$this->theme->asset->js(['clipboard.min.js', 'cp.js'], [], 'clipboard', false);
 
@@ -22,63 +22,6 @@ class Controller_Image extends Controller_Uproda
 		} catch ( \Exception $e ) {
 			\Log::error($e);
 			throw new HttpNotFoundException();
-		}
-	}
-
-	public function post_upload()
-	{
-		try {
-			\Libs_Deny_Ip::check(\Input::real_ip());
-			\Libs_Csrf::check_token();
-			\Libs_Captcha::check();
-			\Libs_Deny_Ip::enable_post();
-			\Libs_Deny_Word::check(\Input::post('comment'));
-			\Libs_Captcha::delete_session();
-
-			if (($file = Libs_Image::upload()) !== null)
-			{
-				//サムネイル作成
-				try {
-					Libs_Image_Thumbnail::create($file);
-				} catch (\Libs_Image_Thumbnail_Exception $e) {
-					//サムネイル作成はエラーが出ても無視
-					\Log::warning($e);
-				}
-
-				//ファイル数がｔぽｋ
-				$delete_images = Libs_Image::get_images_for_delete();
-				Libs_Image::delete_by_images($delete_images);
-				return $this->response([
-					'status' => 200,
-					'image'  => \Uri::create('image/'.\Arr::get($file, 'basename'))
-				], 200);
-			}
-		} catch (\Exception $e) {
-			\Log::error($e);
-			throw new HttpNoAccessException('Failed Upload Image', 0, $e);
-		}
-	}
-
-	public function post_delete()
-	{
-		try {
-			Libs_Deny_Ip::check(\Input::real_ip());
-			Libs_Csrf::check_token();
-
-			$hash = \Security::clean(\Input::post('file'), ['strip_tags', 'htmlentities']);
-			$v = \Validation::forge();
-			$v->add_field('hash', 'hash', 'required|valid_string[alpha,numeric]');
-			if ( ! $v->run(['hash' => $hash], true))
-			{
-				throw new \Exception('validate error: '.$hash);
-			}
-
-			\Libs_Image::delete_by_hash($hash, \Input::post('pass'));
-			//失敗は無視してトップへリダイレクト
-			\Response::redirect('/');
-		} catch (\Exception $e) {
-			\Log::error($e);
-			throw new HttpNoAccessException();
 		}
 	}
 }

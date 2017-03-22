@@ -1,6 +1,6 @@
 <div class='section form white-popup mfp-hide' id='uproda-form'>
   <div class='container'>
-    <?php echo Libs_Form::open(['action' => 'image/upload.json', 'enctype' => 'multipart/form-data', 'id' => 'form-uproda']); ?>
+    <?php echo Libs_Form::open(['action' => 'api/v1/image/add.json', 'enctype' => 'multipart/form-data', 'id' => 'form-uproda']); ?>
   	<?php echo Libs_Form::csrf(); ?>
     <div class="row">
 			<?php echo Libs_Form::label($filelabel, 'upfile'); ?>

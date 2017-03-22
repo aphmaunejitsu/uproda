@@ -50,6 +50,7 @@ class Controller_Error extends \Controller_Rest
 		$this->response_status = 403;
 		if (\Input::is_ajax())
 		{
+			$this->default_format = 'json';
 			$ex = \Arr::get(\Request::active()->method_params, '1.0');
 			$message = null;
 			if (($exp = $ex->getPrevious()) !== null)

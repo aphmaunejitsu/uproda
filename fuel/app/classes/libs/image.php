@@ -207,9 +207,9 @@ class Libs_Image extends \Image
 		umask(0);
 		\Upload::process([
 			'auto_process'   => false,
-			'path'           => DOCROOT.Libs_Config::get('board.dir'),
-			'ext_whitelist'  => explode(',', Libs_Config::get('board.ext')),
-			'type_whitelist' => explode(',', Libs_Config::get('board.type')),
+			'path'           => DOCROOT.\Libs_Config::get('board.dir'),
+			'ext_whitelist'  => explode(',', \Libs_Config::get('board.ext')),
+			'type_whitelist' => explode(',', \Libs_Config::get('board.type')),
 			'max_size'       => \Libs_Config::get('board.maxsize') * 1024 * 1024, //バイトに変換
 			'path_chmod'     => 0777,
 			'file_chmod'     => 0666,
@@ -256,6 +256,7 @@ class Libs_Image extends \Image
 		}
 		else
 		{
+			\Log::debug(print_r(\Upload::get_errors(), 1));
 			foreach (\Upload::get_errors() as $error)
 			{
 				if ($error['error'] === \Upload::UPLOAD_ERR_INI_SIZE or
