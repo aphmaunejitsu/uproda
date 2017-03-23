@@ -7,10 +7,9 @@ $(document).on("ajaxSend", function(e,jqXHR,obj){
 			$loading.addClass("is-hide");
 			obj.loadingHide(data);
 		})
-		.fail(function(data) {
-			console.log(data);
+		.fail(function(data, text) {
 			$loading.addClass("is-hide");
-			obj.loadingError(data);
+			obj.loadingError(data, text);
 		});
 	}, 400);
 });
@@ -32,10 +31,9 @@ $(function() {
 			loadingHide: function(xhr) {
 				location.href = xhr.image;
 			},
-			loadingError: function(xhr) {
-				console.log(xhr);
+			loadingError: function(xhr, text) {
 				$('input[type="submit"]').prop('disabled', false);
-				alert(xhr.message);
+				alert(xhr.responseJSON.message);
 			}
 		});
 		return false;

@@ -222,12 +222,22 @@ class Libs_Image extends \Image
 			$file = reset($files);
 			$image_path = self::build_real_image_path($file['basename'], $file['extension']);
 
-			//ハッシュ値の保存
+			//ハッシュチェック
+			$hash = \Libs_Image_Hash::check($file['basename'], $file['extension']);
+
 			try {
-				$image_id = \Libs_Image_Hash::save($file['basename'], $file['extension']);
+				//ハッシュ値の保存
+				if ($hash === null)
+				{
+					$image_id = \Libs_Image_Hash::save_by_hash($file['hash']);
+				}
+				else
+				{
+					$image_id = $hash->id;
+				}
 			} catch (\Exception $e) {
 				unlink($image_path);
-				throw new \Libs_Image_Exception('fail upload image [hash]', self::IMAGE_FAILED_CREATE);
+				throw new \Libs_Image_Exception('fail upload image [hash]', self::IMAGE_FAILED_CREATE_HASH);
 			}
 
 			$image_info = [
@@ -248,7 +258,6 @@ class Libs_Image extends \Image
 			{
 				//ゴミ掃除
 				unlink($image_path);
-
 				throw new \Libs_Image_Exception('fail upload image [mysql]', self::IMAGE_FAILED_CREATE);
 			}
 
@@ -256,18 +265,23 @@ class Libs_Image extends \Image
 		}
 		else
 		{
-			\Log::debug(print_r(\Upload::get_errors(), 1));
-			foreach (\Upload::get_errors() as $error)
+			//エラーチェック
+			foreach (\Upload::get_errors() as $info)
 			{
-				if ($error['error'] === \Upload::UPLOAD_ERR_INI_SIZE or
-					$error['error'] === \Upload::UPLOAD_ERR_FORM_SIZE or
-					$error['error'] === \Upload::UPLOAD_ERR_MAX_SIZE)
+				if ($info['error'] !== \Upload::UPLOAD_ERR_OK)
 				{
-					throw new \Libs_Image_Exception('fail upload image [Max Size]', self::IMAGE_OVER_MAXSIZE);
+					foreach ($info['errors'] as $error)
+					{
+						//ファイルサイズオーバーはエラーメッセージを変更する
+						if ($error['error'] === \Upload::UPLOAD_ERR_INI_SIZE or $error['error'] === \Upload::UPLOAD_ERR_FORM_SIZE or $error['error'] === \Upload::UPLOAD_ERR_MAX_SIZE)
+						{
+							throw new \Libs_Image_Exception('fail upload image [Max Size]', self::IMAGE_OVER_MAXSIZE);
+						}
+					}
 				}
-
 			}
 
+			// 基本は汎用的なメッセージにしておく
 			throw new \Libs_Image_Exception('fail upload image', self::IMAGE_FAILED_CREATE);
 		}
 	}

@@ -1,6 +1,9 @@
 <?php
 class Libs_Image_Hash
 {
+	const HASH_NO_ERROR = 0;
+	const HASH_NG = 1;
+
 	public static function create($basename, $ext)
 	{
 		try {
@@ -53,6 +56,31 @@ class Libs_Image_Hash
 						->offset($offset)
 						->order_by(\DB::expr('count(images.id)'), 'desc');
 		});
+
+		return $hash;
+	}
+
+	/**
+	 * ハッシュチェック
+	 * NGなら例外になる
+	 *
+	 * @param string $basename
+	 * @param string $ext
+	 *
+	 * @return success: \Model_Image_Hash, 取得なし: null
+	 * @throws Libs_image_hash_exception (NG画像)
+	 **/
+	public static function check($basename, $ext)
+	{
+		if (($hash = self::get($basename, $ext)) === null)
+		{
+			return null;
+		}
+
+		if ($hash->ng == 1)
+		{
+			throw new \Libs_Image_Hash_Exception('Image is NG', self::HASH_NG);
+		}
 
 		return $hash;
 	}

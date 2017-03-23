@@ -3,12 +3,19 @@ class Controller_Error extends \Controller_Rest
 {
 	protected $default_format = 'json';
 	protected $ignore_http_accept = true;
+	protected $no_data_status = 404;
+	protected $no_method_status = 404;
+	protected $_supported_formats = [
+		'html' => 'text/html',
+		'json' => 'application/json'
+	];
 
 	public function before()
 	{
 		parent::before();
 		\Libs_Config::load();
 		\Libs_Lang::load();
+		\Libs_Lang::load('error');
 
 		if (! \Input::is_ajax()) {
 			$this->theme = \Theme::instance();
@@ -52,14 +59,17 @@ class Controller_Error extends \Controller_Rest
 		{
 			$this->default_format = 'json';
 			$ex = \Arr::get(\Request::active()->method_params, '1.0');
-			$message = null;
-			if (($exp = $ex->getPrevious()) !== null)
+			$message = 'エラーが発生しました';
+			if ($ex !== null)
 			{
-				$class = get_class($exp);
-				\Libs_Lang::load('error');
-				$message = \Libs_Lang::get($class.'.'.$exp->getCode());
+				if (($exp = $ex->getPrevious()) !== null)
+				{
+					$class = get_class($exp);
+					$message = \Libs_Lang::get($class.'.'.$exp->getCode());
+				}
 			}
 
+			$this->response(['test' => 'error'], 403);
 			return $this->response([
 				'error'   => 'Access Forbidden',
 				'message' => $message,
@@ -112,12 +122,27 @@ class Controller_Error extends \Controller_Rest
 
 	public function after($response)
 	{
-		if (empty($response) or ! $response instanceof Response)
+		if (\Input::is_ajax())
 		{
-			$response = \Response::forge($this->theme->render());
-		}
+			if (is_array($response))
+			{
+			    $response = $this->response($response);
+			}
 
-		$response->set_status($this->response_status);
+			if ( ! $response instanceof Response)
+			{
+			    $response = $this->response;
+			}
+		}
+		else
+		{
+			if (empty($response) or ! $response instanceof Response)
+			{
+				$response = \Response::forge($this->theme->render());
+			}
+
+			$response->set_status($this->response_status);
+		}
 		return parent::after($response);
 	}
 }

@@ -4,6 +4,7 @@ class Controller_Api_V1_Image extends Controller_Api_V1
 	public function get_list($page)
 	{
 		try {
+			$this->format = 'html';
 			$mode = \Libs_Settings::get_listmode()?'image/listview':'image/thumbnailview';
 			$view = \Presenter::forge('image/list', 'view', null, $mode)->set('param', ['page' => $page]);
 
@@ -35,8 +36,8 @@ class Controller_Api_V1_Image extends Controller_Api_V1
 				}
 
 				//ファイル数がｔぽｋ
-				$delete_images = Libs_Image::get_images_for_delete();
-				Libs_Image::delete_by_images($delete_images);
+				$delete_images = \Libs_Image::get_images_for_delete();
+				\Libs_Image::delete_by_images($delete_images);
 				return $this->response([
 					'status' => 200,
 					'image'  => \Uri::create('image/'.\Arr::get($file, 'basename'))
