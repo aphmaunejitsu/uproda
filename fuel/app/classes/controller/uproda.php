@@ -1,5 +1,5 @@
 <?php
-class Controller_Uproda extends Controller_Rest
+class Controller_Uproda extends Controller
 {
 	protected $default_format = 'json';
 	protected $ignore_http_accept = true;

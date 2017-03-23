@@ -1,6 +1,9 @@
 <?php
 class Libs_Image_Hash
 {
+	const HASH_NO_ERROR = 0;
+	const HASH_NG = 1;
+
 	public static function create($basename, $ext)
 	{
 		try {
@@ -57,6 +60,31 @@ class Libs_Image_Hash
 		return $hash;
 	}
 
+	/**
+	 * ハッシュチェック
+	 * NGなら例外になる
+	 *
+	 * @param string $basename
+	 * @param string $ext
+	 *
+	 * @return success: \Model_Image_Hash, 取得なし: null
+	 * @throws Libs_image_hash_exception (NG画像)
+	 **/
+	public static function check($basename, $ext)
+	{
+		if (($hash = self::get($basename, $ext)) === null)
+		{
+			return null;
+		}
+
+		if ($hash->ng == 1)
+		{
+			throw new \Libs_Image_Hash_Exception('Image is NG', self::HASH_NG);
+		}
+
+		return $hash;
+	}
+
 	public static function get($basename, $ext)
 	{
 		return self::get_by_hash(self::create($basename, $ext));
@@ -101,12 +129,12 @@ class Libs_Image_Hash
 
 		if (($hash = \Model_Image_Hash::find_one_by('hash', $hash_key)) === null)
 		{
-			//$B?75,:n@.(B
+			//新規作成
 			return self::save_by_hash($hash_key, $ng, $comment);
 		}
 		else
 		{
-			//$B99?7(B
+			//更新
 			$hash->set([
 				'ng'      => $ng,
 				'comment' => $comment,

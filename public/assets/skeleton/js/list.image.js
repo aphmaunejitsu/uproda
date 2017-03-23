@@ -5,7 +5,7 @@ $(function() {
 	  page = 1;
   }
 
-  var url = '/image/list/' + page;
+  var url = '/api/v1/image/list/' + page;
   $.ajax({
   	url: url,
   	dataType:"html",

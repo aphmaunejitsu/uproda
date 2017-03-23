@@ -7,9 +7,9 @@ $(document).on("ajaxSend", function(e,jqXHR,obj){
 			$loading.addClass("is-hide");
 			obj.loadingHide(data);
 		})
-		.fail(function(data) {
+		.fail(function(data, text) {
 			$loading.addClass("is-hide");
-			obj.loadingError(data);
+			obj.loadingError(data, text);
 		});
 	}, 400);
 });
@@ -27,12 +27,13 @@ $(function() {
 			processData: false,
 			contentType: false,
 			timeout: 30000,
+			dataType: 'json',
 			loadingHide: function(xhr) {
 				location.href = xhr.image;
 			},
-			loadingError: function(xhr) {
+			loadingError: function(xhr, text) {
 				$('input[type="submit"]').prop('disabled', false);
-				alert('うｐに失敗');
+				alert(xhr.responseJSON.message);
 			}
 		});
 		return false;

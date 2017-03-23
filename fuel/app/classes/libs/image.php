@@ -4,7 +4,13 @@ class Libs_Image_Exception extends \Libs_Exception {}
 class Libs_Image extends \Image
 {
 	const MAGICCODE = 'desushiosushi';
-	const IMAGE_NOT_FOUND = 0;
+
+	const NO_ERROR = 0;
+	const IMAGE_NOT_FOUND = 1;
+	const IMAGE_FAILED_CREATE = 2;
+	const IMAGE_OVER_MAXSIZE =4;
+	const IMAGE_UPLOAD_NG = 5;
+	const IMAGE_FAILED_CREATE_HASH = 8;
 
 	public static function hash($id)
 	{
@@ -182,7 +188,6 @@ class Libs_Image extends \Image
 	 **/
 	public static function upload()
 	{
-		self::delete_captcha_session();
 		\Upload::register('validate', function(&$file) {
 			$file['basename'] = \Str::random('alnum', 8);
 			$file['hash'] = \Libs_Image_Hash::create_by_file($file['tmp_name']);
@@ -202,9 +207,9 @@ class Libs_Image extends \Image
 		umask(0);
 		\Upload::process([
 			'auto_process'   => false,
-			'path'           => DOCROOT.Libs_Config::get('board.dir'),
-			'ext_whitelist'  => explode(',', Libs_Config::get('board.ext')),
-			'type_whitelist' => explode(',', Libs_Config::get('board.type')),
+			'path'           => DOCROOT.\Libs_Config::get('board.dir'),
+			'ext_whitelist'  => explode(',', \Libs_Config::get('board.ext')),
+			'type_whitelist' => explode(',', \Libs_Config::get('board.type')),
 			'max_size'       => \Libs_Config::get('board.maxsize') * 1024 * 1024, //バイトに変換
 			'path_chmod'     => 0777,
 			'file_chmod'     => 0666,
@@ -217,12 +222,22 @@ class Libs_Image extends \Image
 			$file = reset($files);
 			$image_path = self::build_real_image_path($file['basename'], $file['extension']);
 
-			//ハッシュ値の保存
+			//ハッシュチェック
+			$hash = \Libs_Image_Hash::check($file['basename'], $file['extension']);
+
 			try {
-				$image_id = \Libs_Image_Hash::save($file['basename'], $file['extension']);
+				//ハッシュ値の保存
+				if ($hash === null)
+				{
+					$image_id = \Libs_Image_Hash::save_by_hash($file['hash']);
+				}
+				else
+				{
+					$image_id = $hash->id;
+				}
 			} catch (\Exception $e) {
 				unlink($image_path);
-				throw new \Libs_Image_Exception('fail upload image [hash]', __LINE__);
+				throw new \Libs_Image_Exception('fail upload image [hash]', self::IMAGE_FAILED_CREATE_HASH);
 			}
 
 			$image_info = [
@@ -243,15 +258,31 @@ class Libs_Image extends \Image
 			{
 				//ゴミ掃除
 				unlink($image_path);
-				throw new \Libs_Image_Exception('fail upload image', __LINE__);
+				throw new \Libs_Image_Exception('fail upload image [mysql]', self::IMAGE_FAILED_CREATE);
 			}
 
 			return $image_info;
 		}
 		else
 		{
-			\Log::warning(print_r(\Upload::get_errors(),1));
-			throw new \Libs_Image_Exception('fail upload image', __LINE__);
+			//エラーチェック
+			foreach (\Upload::get_errors() as $info)
+			{
+				if ($info['error'] !== \Upload::UPLOAD_ERR_OK)
+				{
+					foreach ($info['errors'] as $error)
+					{
+						//ファイルサイズオーバーはエラーメッセージを変更する
+						if ($error['error'] === \Upload::UPLOAD_ERR_INI_SIZE or $error['error'] === \Upload::UPLOAD_ERR_FORM_SIZE or $error['error'] === \Upload::UPLOAD_ERR_MAX_SIZE)
+						{
+							throw new \Libs_Image_Exception('fail upload image [Max Size]', self::IMAGE_OVER_MAXSIZE);
+						}
+					}
+				}
+			}
+
+			// 基本は汎用的なメッセージにしておく
+			throw new \Libs_Image_Exception('fail upload image', self::IMAGE_FAILED_CREATE);
 		}
 	}
 
