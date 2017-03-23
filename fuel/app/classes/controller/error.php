@@ -69,7 +69,6 @@ class Controller_Error extends \Controller_Rest
 				}
 			}
 
-			$this->response(['test' => 'error'], 403);
 			return $this->response([
 				'error'   => 'Access Forbidden',
 				'message' => $message,
