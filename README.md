@@ -7,8 +7,8 @@ http://minus-k.com/nejitsu/upload.html の管理人さん今までありがと�
 - PathToDocrootdirは、clone後の「uproda/public」までをフルパス指定
 - PathTologdirは、apacheのログディレクトリをフルパス指定
 - pathtossldirは、crt,keyを保管するディレクトリをフルパス指定
-- SSLオンリーでも80は作っておく（80 -> 443リダイレクト用)
-    <VirtualHost *:80>
+- SSLオンリーでも80は作っておく（80 -> 443リダイレクト用)  
+```    <VirtualHost *:80>
       ServerAdmin Admin@server.com
         DocumentRoot "/PathToDocrootdir"
         ServerName xxxx.com
@@ -46,19 +46,19 @@ http://minus-k.com/nejitsu/upload.html の管理人さん今までありがと�
             Require all denied
             Require all granted
         </Directory>
-    </VirtualHost>
-
+    </VirtualHost>
+``` 
+     
 ## DBへTableのインストールとか
-FUEL_ENV=production php oil r migrate
-失敗した場合は、DB定義でactiveの定義をmaintenanceに変更して実行  
+FUEL_ENV=production php oil r migrate 
+失敗した場合は、DB定義でactiveの定義をmaintenanceに変更して実行   
 
 ## 管理ユーザの初期投入
-利用する人数分投入
-	FUEL_ENV=production php oil console
-	\Auth::create_user('admin', 'password', 'aphmau_nejitsu@icloud.com', 100);
+利用する人数分投入  
+FUEL_ENV=production php oil console  
+\Auth::create_user('admin', 'password', 'aphmau_nejitsu@icloud.com', 100);
 
 ## 管理ページ
-----
 - https://yourdomain.com/admin/
 
 
