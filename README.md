@@ -50,12 +50,17 @@ http://minus-k.com/nejitsu/upload.html の管理人さん今までありがと�
 ```
     
 ## DBへTableのインストールとか
-FUEL_ENV=production php oil r migrate
+FUEL_ENV=production php oil r migrate  
 失敗した場合は、DB定義でactiveの定義をmaintenanceに変更して実行   
 
+## データの初期投入
+- TOR: FUEL_ENV=production php oir r tor
+- NGWord: FUEL_ENV=production php oil r ngwords
+- NGHash: FUEL_ENV=production php oil r hashes
+
 ## 管理ユーザの初期投入
-利用する人数分投入
-FUEL_ENV=production php oil console
+利用する人数分投入 
+FUEL_ENV=production php oil console 
 \Auth::create_user('admin', 'password', 'aphmau_nejitsu@icloud.com', 100);
 
 ## 管理ページ
