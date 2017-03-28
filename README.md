@@ -54,7 +54,7 @@ FUEL_ENV=production php oil r migrate
 失敗した場合は、DB定義でactiveの定義をmaintenanceに変更して実行   
 
 ## データの初期投入
-- TOR: FUEL_ENV=production php oir r tor
+- TOR: FUEL_ENV=production php oil r tor
 - NGWord: FUEL_ENV=production php oil r ngwords
 - NGHash: FUEL_ENV=production php oil r hashes
 
