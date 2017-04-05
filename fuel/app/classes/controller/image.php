@@ -24,4 +24,27 @@ class Controller_Image extends Controller_Uproda
 			throw new HttpNotFoundException();
 		}
 	}
+
+	public function post_delete()
+	{
+		try {
+			Libs_Deny_Ip::check(\Input::real_ip());
+			Libs_Csrf::check_token();
+
+			$hash = \Security::clean(\Input::post('file'), ['strip_tags', 'htmlentities']);
+			$v = \Validation::forge();
+			$v->add_field('hash', 'hash', 'required|valid_string[alpha,numeric]');
+			if ( ! $v->run(['hash' => $hash], true))
+			{
+				throw new \Exception('validate error: '.$hash);
+			}
+
+			\Libs_Image::delete_by_hash($hash, \Input::post('pass'));
+			//失敗は無視してトップへリダイレクト
+			\Response::redirect('/');
+		} catch (\Exception $e) {
+			\Log::error($e);
+			throw new HttpNoAccessException();
+		}
+	}
 }
