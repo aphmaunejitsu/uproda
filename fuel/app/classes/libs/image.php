@@ -3,8 +3,6 @@ class Libs_Image_Exception extends \Libs_Exception {}
 
 class Libs_Image extends \Image
 {
-	const MAGICCODE = 'desushiosushi';
-
 	const NO_ERROR = 0;
 	const IMAGE_NOT_FOUND = 1;
 	const IMAGE_FAILED_CREATE = 2;
@@ -14,8 +12,7 @@ class Libs_Image extends \Image
 
 	public static function hash($id)
 	{
-		$mc = Libs_Config::get('board.key', self::MAGICCODE);
-		return sha1($mc.$id);
+		return \Libs_Hash::crypt($id);
 	}
 
 	public static function get_one_char_from_basename($basename)
