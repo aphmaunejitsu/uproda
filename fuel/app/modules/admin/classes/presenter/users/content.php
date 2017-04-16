@@ -7,12 +7,12 @@ class Presenter_Users_Content extends Presenter_Admin
 		parent::view();
 		$per_page = \Libs_Config::get('board.pagination.per_page', 100);
 		$offset = (\Arr::get($this->param, 'page', 1) - 1) * $per_page;
-		$users = Model_User::find_all($per_page, $offset);
+		$users = \Model_User::find_all($per_page, $offset);
 
 		$this->set('users', $users);
 
 		//pager
-		$count = Model_User::count();
+		$count = \Model_User::count();
 		$config = [
 		    'pagination_url' => 'admin/users',
 		    'uri_segment' => 3,

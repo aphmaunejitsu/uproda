@@ -115,6 +115,14 @@ class Controller_Admin extends \Controller_Rest
 		]);
 	}
 
+	public function action_user($hash = null)
+	{
+		$this->theme->set_partial('contents', 'contents')->set([
+			'content' => $this->theme->presenter('user/content')->set('param', ['hash' => $hash]),
+			'sidebar' => $this->theme->presenter('sidebar')->set('param', ['active' => 'users']),
+		]);
+	}
+
 	public function after($response)
 	{
 		if ( ! \Input::is_ajax())

@@ -13,7 +13,7 @@
 				<?php foreach ($users as $index => $user): ?>
 				<tr>
 					<td class='number'><?php echo $user->id ?></td>
-					<td><a href="/admin/user/<?php echo $id2hash($user->id);?>" target='_blank'><?php echo $user->username; ?></a></td>
+					<td><a href="/admin/user/<?php echo $id2hash($user->id);?>" ><?php echo $user->username; ?></a></td>
 					<td class='ip'><?php echo $user->email; ?></td>
 					<td class='date'><?php echo $format_date($user->last_login); ?></td>
 					<td class='date'><?php echo $format_date($user->created_at); ?></td>
