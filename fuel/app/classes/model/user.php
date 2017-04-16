@@ -1,5 +1,4 @@
 <?php
-namespace Admin;
 class Model_User extends \Model_Base
 {
 	protected static $_table_name = 'users';
