@@ -1,0 +1,26 @@
+common:
+  title: ネ実うpろだ
+  description: ネ実, nejitsu, FF11, オススメ
+  header_message: テスト運用中。違法とされるファイル、削除依頼があれば気がついた時点で削除します。
+  menu:
+    upload: うp
+    about: ここ
+imgform:
+  filelabel: FILE max :sizeKB (:countFiles)
+  dellabel: DELKEY
+  commentlabel: COMMENT
+  buttonlabel: Upload
+settings:
+  listmode: サムネイル表示
+500:
+  エラーが起きちゃいましたし
+  はー？れじれじ・・・
+  ユーザーがデバッグすればいい
+  赤だけかな、最悪なのは
+  そんバラピーにゃん
+404:
+  便乗ばかりで、ごめんなさいね。
+  なんてことだ、ここはネ実だったのか
+  つよさは？とら。全滅しますた。
+  画像を探して見てください＾＾
+

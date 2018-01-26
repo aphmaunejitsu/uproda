@@ -1,0 +1,18 @@
+board:
+  dir: up                   # 無視パラメータ
+  maxsize: 2                # アップロード最大サイズ(MB)
+  maxfiles: 5000            # 最大ファイル数
+  type: image               # 許可するmimetypeのtype image/jpegならimageを指定する,カンマ区切り
+  ext: gif,jpg,png,bmp,jpeg # 許可する拡張子,カンマ区切り
+  thumbnail:                # サムネイル
+    dir: thumbnail          # 無視パラメータ
+    length: 400             # 縦横の大きさ
+  pagination:
+    per_page: 100           # 1ページあたりの数(デフォルト)
+  key: desushiosushi        # ハッシュ用(変更すること)
+  del: qwer					        # デフォルト削除パス(変更すること) 削除キーがないものは全てこれで削除できる
+	post: 60                  # 次のポストができるまでの間隔 default:60秒
+admin:
+  id: admin        #変更すること
+  uass: qwer       #変更すること
+  email: ahumau_nejitu@icloud.com #管理者メール
