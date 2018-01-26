@@ -11,7 +11,8 @@ return [
 	'uproda-master' => [
 		'type' => 'pdo',
 		'connection'  => [
-			'dsn'        => 'mysql:host=127.0.0.1;dbname=uproda',
+			'dsn'        => 'mysql:host=roda-db;dbname=uproda',
+			'port'       => 23306,
 			'username'   => 'updater',
 			'password'   => 'tekitou'
 		],
@@ -24,7 +25,8 @@ return [
 	'uproda-slave' => [
 		'type' => 'pdo',
 		'connection'  => [
-			'dsn'        => 'mysql:host=127.0.0.1;dbname=uproda',
+			'dsn'        => 'mysql:host=roda-db;dbname=uproda',
+			'port'       => 23306,
 			'username'   => 'reader',
 			'password'   => 'tekitou'
 		],
@@ -37,7 +39,8 @@ return [
 	'uproda-maintenance' => [
 		'type' => 'pdo',
 		'connection'  => [
-			'dsn'        => 'mysql:host=127.0.0.1;dbname=uproda',
+			'dsn'        => 'mysql:host=roda-db;dbname=uproda',
+			'port'       => 23306,
 			'username'   => 'maintenance',
 			'password'   => 'tekitou'
 		],

@@ -18,7 +18,7 @@ return [
 	],
 	'uproda-maintenance' => [
 		'connection'  => [
-			'password'   => '9Ol.,ki8'
+			'password'   => '8ik,.lO9'
 		],
 	],
 ];
