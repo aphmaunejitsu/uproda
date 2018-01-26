@@ -1,0 +1,8 @@
+[mysqld]
+default-storage-engine=InnoDB
+character-set-server=utf8
+skip-character-set-client-handshake
+
+[mysql]
+default-character-set=utf8
+

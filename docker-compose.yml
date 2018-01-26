@@ -1,0 +1,36 @@
+version: '2'
+services:
+  web:
+    build: ./nginx
+    ports:
+      - "1080:80"
+    volumes:
+      - "./php/web:/var/www/roda/"
+    depends_on:
+      - "php"
+    links:
+      - "db:roda-db"
+  php:
+    build: ./php
+    hostname: "roda-web"
+    volumes:
+      - "./php/web:/var/www/roda/"
+      - "./db/tmp/mysld:/var/run/mysqld"
+    depends_on:
+      - "db"
+    links:
+      - "db:roda-db"
+  db:
+    build: ./db
+    hostname: "roda-db"
+    environment:
+      MYSQL_ROOT_PASSWORD: 4rfvcde3
+      MYSQL_HOST: ""
+      TZ: "Asia/Tokyo"
+    mem_limit: 1000000000
+    volumes:
+      - "./db/data:/var/lib/mysql"
+      - "./db/tmp/mysld:/var/run/mysqld"
+      - "./db/init:/docker-entrypoint-initdb.d"
+    ports:
+      - "23306:3306"
