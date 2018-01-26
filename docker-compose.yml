@@ -15,7 +15,6 @@ services:
     hostname: "roda-web"
     volumes:
       - "./php/web:/var/www/roda/"
-      - "./db/tmp/mysld:/var/run/mysqld"
     depends_on:
       - "db"
     links:
@@ -30,7 +29,6 @@ services:
     mem_limit: 1000000000
     volumes:
       - "./db/data:/var/lib/mysql"
-      - "./db/tmp/mysld:/var/run/mysqld"
       - "./db/init:/docker-entrypoint-initdb.d"
     ports:
       - "23306:3306"
