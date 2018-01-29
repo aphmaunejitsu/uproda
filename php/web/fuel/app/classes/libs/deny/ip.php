@@ -22,26 +22,38 @@ class Libs_Deny_Ip extends Libs_Deny
 	}
 
 	/**
+	 * 連投規制用のIPを登録する
+	 *
+	 * @param string $ip IPアドレス
+	 * @param int $expire 連投制限時間 default 60秒
+	 */
+	public static function set_ip($ip, $expire = 60)
+	{
+		$redis = \Libs_Redis::forge();
+		//既にキーが登録されているので無視
+		if ($data = $redis->get($ip))
+		{
+			return;
+		}
+
+		$post = \Libs_Config::get('board.post', $expire);
+		$redis->set($ip, $ip);
+		$redis->expire($ip, $post);
+	}
+
+	/**
 	 * ポスト可能か調べる(連投規制対応)
 	 *
 	 * @return booelan ポスト可能: true
 	 * @throws Libs_Deny_Ip_Exception 連投規制にひっかかった
 	 **/
-	public static function enable_post()
+	public static function enable_post($ip)
 	{
-		$post = \Libs_Config::get('board.post');
-		if (($images = \Model_Image::find([
-			'where'    => ['ip'=> \Input::real_ip()],
-			'order_by' => ['created_at' => 'desc'],
-			'limit'     => 1
-		])) === null)
-		{
-			return true;
-		}
+		$redis = \Libs_Redis::forge();
 
-		if ((time() - strtotime(reset($images)->created_at)) < $post)
+		if ($data = $redis->get($ip))
 		{
-			throw new Libs_Deny_Ip_Exception('連投規制: '.\Input::real_ip(), self::ERROR_STRAIGHT);
+			throw new Libs_Deny_Ip_Exception('連投規制: '.$ip, self::ERROR_STRAIGHT);
 		}
 
 		return true;
