@@ -4,12 +4,10 @@ services:
     build: ./nginx
     ports:
       - "1080:80"
+      - "1443:443"
+    restart: always
     volumes:
       - "./php/web:/var/www/roda/"
-    depends_on:
-      - "php"
-    links:
-      - "db:roda-db"
   php:
     build: ./php
     hostname: "roda-web"
@@ -17,11 +15,14 @@ services:
       - "./php/web:/var/www/roda/"
     depends_on:
       - "db"
+      - "redis"
     links:
       - "db:roda-db"
+      - "redis:roda-redis"
   db:
     build: ./db
     hostname: "roda-db"
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 4rfvcde3
       MYSQL_HOST: ""
@@ -32,3 +33,12 @@ services:
       - "./db/init:/docker-entrypoint-initdb.d"
     ports:
       - "23306:3306"
+  redis:
+    build: ./redis
+    hostname: "roda-redis"
+    restart: always
+    volumes:
+      - "./redis/data:/data"
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes

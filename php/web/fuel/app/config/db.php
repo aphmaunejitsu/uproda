@@ -6,8 +6,6 @@
  */
 
 return [
-	//意味はないけど、将来大規模になったらM/S構成に
-	'active' => 'uproda-slave',
 	'uproda-master' => [
 		'type' => 'pdo',
 		'connection'  => [
@@ -48,5 +46,15 @@ return [
 	  'table_prefix'   => '',
 	  'charset'        => 'utf8',
 		'profiling'      => false,
+	],
+
+	//Redis
+	'redis' => [
+		'default' => [
+			'hostname' => 'roda-redis',
+			'port'     => 6379,
+			'timeout'	 => null,
+			'database' => 0,
+		],
 	],
 ];
