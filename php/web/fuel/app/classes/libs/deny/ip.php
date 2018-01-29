@@ -37,8 +37,7 @@ class Libs_Deny_Ip extends Libs_Deny
 		}
 
 		$post = \Libs_Config::get('board.post', $expire);
-		$redis->set($ip, $ip);
-		$redis->expire($ip, $post);
+		$redis->setex($ip, $post, $ip);
 	}
 
 	/**
