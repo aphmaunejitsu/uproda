@@ -1,12 +1,15 @@
 <?php
 class Libs_Cache extends \Cache
 {
+	protected static $secret = 'uproda';
+
 	public static function cached($name, $method, $params, $expire = 60, $force = false)
 	{
 		try {
+			$key = $name.'_'.hash_hmac('sha256', json_encode($method).json_encode($params).'_'.$expire, self::$secret);
 			if ( ! $force)
 			{
-				$result = self::get($name);
+				$result = self::get($key);
 			}
 		} catch (\CacheNotFoundException $e) {
 			\Log::info($e->getMessage());
@@ -20,7 +23,7 @@ class Libs_Cache extends \Cache
 			  $result = 0;
 			}
 
-			self::set($name, $result, $expire);
+			self::set($key, $result, $expire);
 		}
 
 		return $result;
