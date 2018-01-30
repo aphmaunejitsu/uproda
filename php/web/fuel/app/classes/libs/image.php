@@ -162,7 +162,7 @@ class Libs_Image extends \Image
 	 **/
 	public static function get($id)
 	{
-		return Libs_Redis::cached('Libs_Image::get', ['Libs_Image', '_get'], [$id]);
+		return Libs_Cache::cached('Libs_Image-get', ['Libs_Image', '_get'], [$id]);
 	}
 
 	/**

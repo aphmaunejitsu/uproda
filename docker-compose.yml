@@ -19,6 +19,7 @@ services:
     links:
       - "db:roda-db"
       - "redis:roda-redis"
+      - "memcached:roda-memcached"
   db:
     build: ./db
     hostname: "roda-db"
@@ -42,3 +43,10 @@ services:
     ports:
       - "6379:6379"
     command: redis-server --appendonly yes
+
+  memcached:
+    build: ./memcached
+    hostname: "roda-memcached"
+    restart: always
+    ports:
+      - "11211:11211"
