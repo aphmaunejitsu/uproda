@@ -7,12 +7,12 @@ services:
       - "1443:443"
     restart: always
     volumes:
-      - "./php/web:/var/www/roda/"
+      - "./app:/var/www/roda/"
   php:
     build: ./php
     hostname: "roda-web"
     volumes:
-      - "./php/web:/var/www/roda/"
+      - "./app:/var/www/roda/"
     depends_on:
       - "db"
       - "redis"
