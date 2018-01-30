@@ -6,6 +6,7 @@
  */
 
 return [
+	'active' => 'uproda-slave',
 	'uproda-master' => [
 		'type' => 'pdo',
 		'connection'  => [
