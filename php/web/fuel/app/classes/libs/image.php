@@ -162,7 +162,7 @@ class Libs_Image extends \Image
 	 **/
 	public static function get($id)
 	{
-		return Libs_Redis::cached('Libs_Image::get', ['Libs_Image', '_get'], [$id]);
+		return Libs_Cache::cached('Libs_Image-get', ['Libs_Image', '_get'], [$id]);
 	}
 
 	/**
@@ -372,8 +372,8 @@ class Libs_Image extends \Image
 	 **/
 	public static function get_images($offset, $limit, $ng = 0)
 	{
-		//1秒だけRedisにキャッシュ
-		return Libs_Redis::cached('get_images', ['Libs_Image', '_get_images'], [$offset, $limit, $ng], 5);
+		//5秒だけキャッシュ
+		return Libs_Cache::cached('Libs_Image-get_images', ['Libs_Image', '_get_images'], [$offset, $limit, $ng], 5);
 	}
 
 	public static function _get_images($offset, $limit, $ng = 0)
