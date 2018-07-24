@@ -3,7 +3,7 @@ services:
   web:
     build: ./nginx
     ports:
-      - "1080:80"
+      - "80:80"
     volumes:
       - "./php/web:/var/www/roda/"
     depends_on:
