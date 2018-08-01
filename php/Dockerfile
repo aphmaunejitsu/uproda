@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
 RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer && \
     chmod 777 /usr/local/bin/composer
+#この辺でいい具合にcomposerをインストール
 
 RUN cd /var/www && \
     curl https://get.fuelphp.com/oil | sh
