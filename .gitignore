@@ -1,14 +1,15 @@
-/db/data/**/*
-/db/tmp/**/*
+/web/db/data/**/*
+/web/db/tmp/**/*
+/web/redis/data/**/*
 
 # the composer package lock file and install directory
 # Commit your application's lock file http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file
 # You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
 # /composer.lock
-/php/web/fuel/vendor
+/web/app/fuel/vendor
 
 # the fuelphp document
-/php/web/docs/
+/web/app/docs/
 
 # you may install these packages with `oil package`.
 # http://fuelphp.com/docs/packages/oil/package.html
@@ -19,12 +20,13 @@
 # /fuel/packages/parser/
 
 # dynamically generated files
-/php/web/fuel/app/logs/*/*/*
-/php/web/fuel/app/cache/*/*
-/php/web/fuel/app/cache/*
-/php/web/fuel/app/tmp/*/*
-/php/web/public/up/*/*
-/php/web/fuel/app/config/crypt.php
+/web/app/fuel/app/logs/*/*/*
+/web/app/fuel/app/cache/*/*
+/web/app/fuel/app/cache/*
+/web/app/fuel/app/tmp/*/*
+/web/app/public/up/*/*
+/web/app/public/1.php
+/web/app/fuel/app/config/crypt.php
 
 # Mac
 .DS_Store

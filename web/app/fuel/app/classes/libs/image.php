@@ -158,8 +158,17 @@ class Libs_Image extends \Image
 	 * @param string $id 画像ID
 	 * @return Model_Image 画像モデルのオブジェクト
 	 * @throws Libs_Image_Exception 画像が見つからない場合
+	 * @see Libs_Image::_get
 	 **/
 	public static function get($id)
+	{
+		return Libs_Cache::cached('Libs_Image-get', ['Libs_Image', '_get'], [$id]);
+	}
+
+	/**
+	 * Libs_image::get
+	 **/
+	public static function _get($id)
 	{
 		try {
 			$image = \Model_Image::find_one_by('basename', $id);
@@ -359,9 +368,15 @@ class Libs_Image extends \Image
 	 * @param int $limit 取得する数
 	 *
 	 * @return array
-	 *
+	 * @see Libs_Image::_get_images
 	 **/
 	public static function get_images($offset, $limit, $ng = 0)
+	{
+		//5秒だけキャッシュ
+		return Libs_Cache::cached('Libs_Image-get_images', ['Libs_Image', '_get_images'], [$offset, $limit, $ng], 5);
+	}
+
+	public static function _get_images($offset, $limit, $ng = 0)
 	{
 		try {
 			$images = \Model_Image::find([

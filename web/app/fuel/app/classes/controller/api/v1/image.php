@@ -21,7 +21,7 @@ class Controller_Api_V1_Image extends Controller_Api_V1
 			\Libs_Deny_Ip::check(\Input::real_ip());
 			\Libs_Csrf::check_token();
 			\Libs_Captcha::check();
-			\Libs_Deny_Ip::enable_post();
+			\Libs_Deny_Ip::enable_post(\Input::real_ip());
 			\Libs_Deny_Word::check(\Input::post('comment'));
 			\Libs_Captcha::delete_session();
 
@@ -35,6 +35,7 @@ class Controller_Api_V1_Image extends Controller_Api_V1
 					\Log::warning($e);
 				}
 
+				\Libs_Deny_Ip::set_ip(\Input::real_ip());
 				//ファイル数がｔぽｋ
 				$delete_images = \Libs_Image::get_images_for_delete();
 				\Libs_Image::delete_by_images($delete_images);
