@@ -1,3 +1,3 @@
 FROM nginx:latest
 
-COPY etc/default.conf /etc/nginx/conf.d/
+COPY ./etc/default.conf /etc/nginx/conf.d/

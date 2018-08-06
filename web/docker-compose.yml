@@ -1,7 +1,9 @@
 version: '2'
 services:
   web:
-    build: ./nginx
+    build:
+      context: nginx
+      dockerfile: "DockerFile"
     ports:
       - "80:80"
       - "443:443"
@@ -9,7 +11,9 @@ services:
     volumes:
       - "./app:/var/www/roda/"
   php:
-    build: ./php
+    build:
+      context: php
+      dockerfile: "DockerFile"
     hostname: "roda-web"
     volumes:
       - "./app:/var/www/roda/"
@@ -21,21 +25,24 @@ services:
       - "redis:roda-redis"
       - "memcached:roda-memcached"
   db:
-    build: ./db
+    build:
+      context: db
+      dockerfile: "DockerFile"
     hostname: "roda-db"
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 4rfvcde3
       MYSQL_HOST: ""
       TZ: "Asia/Tokyo"
-    mem_limit: 1000000000
     volumes:
       - "./db/data:/var/lib/mysql"
       - "./db/init:/docker-entrypoint-initdb.d"
     ports:
       - "23306:3306"
   redis:
-    build: ./redis
+    build:
+      context: .
+      dockerfile: "./redis/DockerFile"
     hostname: "roda-redis"
     restart: always
     volumes:
@@ -45,7 +52,9 @@ services:
     command: redis-server --appendonly yes
 
   memcached:
-    build: ./memcached
+    build:
+      context: .
+      dockerfile: "./memcached/DockerFile"
     hostname: "roda-memcached"
     restart: always
     ports:
