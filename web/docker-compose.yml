@@ -3,7 +3,7 @@ services:
   web:
     build:
       context: nginx
-      dockerfile: "DockerFile"
+      dockerfile: "Dockerfile"
     ports:
       - "80:80"
       - "443:443"
@@ -13,7 +13,7 @@ services:
   php:
     build:
       context: php
-      dockerfile: "DockerFile"
+      dockerfile: "Dockerfile"
     hostname: "roda-web"
     volumes:
       - "./app:/var/www/roda/"
@@ -27,7 +27,7 @@ services:
   db:
     build:
       context: db
-      dockerfile: "DockerFile"
+      dockerfile: "Dockerfile"
     hostname: "roda-db"
     restart: always
     environment:
