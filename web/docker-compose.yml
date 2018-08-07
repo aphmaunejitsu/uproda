@@ -42,7 +42,7 @@ services:
   redis:
     build:
       context: .
-      dockerfile: "./redis/DockerFile"
+      dockerfile: "./redis/Dockerfile"
     hostname: "roda-redis"
     restart: always
     volumes:
@@ -54,7 +54,7 @@ services:
   memcached:
     build:
       context: .
-      dockerfile: "./memcached/DockerFile"
+      dockerfile: "./memcached/Dockerfile"
     hostname: "roda-memcached"
     restart: always
     ports:
