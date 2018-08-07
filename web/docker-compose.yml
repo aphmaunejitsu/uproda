@@ -1,15 +1,31 @@
 version: '2'
 services:
+  https-portal:
+    image: steveltn/https-portal:1
+    container_name: roda-portal
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    links:
+      - "web:roda-web"
+    environment:
+      STAGE: 'local'
+      DOMAINS: "minus-y.com -> http://roda-web:1080"
+    volumes:
+      - "./app:/var/www/roda/"
+      - "./app:/var/www/vhosts/minus-y.com"
+      - "./nginx/ssl:/var/lib/https-portal"
   web:
     build:
       context: nginx
       dockerfile: "Dockerfile"
     ports:
-      - "80:80"
-      - "443:443"
+      - "1080:80"
     restart: always
     volumes:
       - "./app:/var/www/roda/"
+      - "./app:/var/www/vhosts/minus-y.com"
   php:
     build:
       context: php
@@ -17,6 +33,7 @@ services:
     hostname: "roda-web"
     volumes:
       - "./app:/var/www/roda/"
+      - "./app:/var/www/vhosts/minus-y.com"
     depends_on:
       - "db"
       - "redis"
