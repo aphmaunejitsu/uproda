@@ -32,5 +32,6 @@ ENV LANG ja_JP.UTF-8
 ENV LC_CTYPE ja_JP.UTF-8
 RUN localedef -f UTF-8 -i ja_JP ja_JP.utf8
 COPY etc/upload.ini /usr/local/etc/php/conf.d/
+# COPY etc/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 WORKDIR /var/www
