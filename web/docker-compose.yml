@@ -8,24 +8,24 @@ services:
       - "443:443"
     restart: always
     links:
-      - "web:roda-web"
+      - "dockerhost"
     environment:
       STAGE: 'local'
-      DOMAINS: "minus-y.com -> http://roda-web:1080"
+      DOMAINS: "minus-y.com -> http://dockerhost:1080"
     volumes:
-      - "./app:/var/www/roda/"
-      - "./app:/var/www/vhosts/minus-y.com"
       - "./nginx/ssl:/var/lib/https-portal"
-  web:
+  dockerhost:
     build:
       context: nginx
       dockerfile: "Dockerfile"
+    container_name: "dockerhost"
+    links:
+      - "php"
     ports:
       - "1080:80"
     restart: always
     volumes:
       - "./app:/var/www/roda/"
-      - "./app:/var/www/vhosts/minus-y.com"
   php:
     build:
       context: php
@@ -33,7 +33,6 @@ services:
     hostname: "roda-web"
     volumes:
       - "./app:/var/www/roda/"
-      - "./app:/var/www/vhosts/minus-y.com"
     depends_on:
       - "db"
       - "redis"
