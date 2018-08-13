@@ -6,7 +6,7 @@
 			<?php echo Libs_Form::label($filelabel, 'upfile'); ?>
 			<?php echo Libs_Form::file('upfile', ['class' => 'u-full-width button-primary']); ?>
 			<?php echo Libs_Form::label($dellabel, 'pass'); ?>
-			<?php echo Libs_Form::input(['type' => 'text', 'name' => 'pass', 'maxlength' => 8, 'class' => 'u-full-width'], null); ?>
+			<?php echo Libs_Form::input(['type' => 'text', 'name' => 'pass', 'maxlength' => 20, 'class' => 'u-full-width'], null); ?>
 			<?php echo Libs_Form::label($commentlabel, 'comment'); ?>
 			<?php echo Libs_Form::input(['type' => 'text', 'name' => 'comment', 'maxlength' => 140, 'class' => 'u-full-width'], null); ?>
 			<?php echo Libs_Form::captcha(); ?>

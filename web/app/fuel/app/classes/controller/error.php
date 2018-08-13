@@ -17,7 +17,7 @@ class Controller_Error extends \Controller_Rest
 		\Libs_Lang::load();
 		\Libs_Lang::load('error');
 
-		if (! \Input::is_ajax()
+		if (! \Input::is_ajax())
 		{
 			$this->theme = \Theme::instance();
 			$this->theme->active('skeleton');
