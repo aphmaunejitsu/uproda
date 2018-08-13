@@ -7,17 +7,17 @@ services:
       - "443:443"
     restart: always
     links:
-      - "dockerhost"
+      - "roda-proxy"
     environment:
       STAGE: 'local'
-      DOMAINS: "minus-y.co.jp -> http://dockerhost:1080"
+      DOMAINS: "nejitsu.minus-y.com -> http://roda-proxy"
     volumes:
       - "./nginx/ssl:/var/lib/https-portal"
-  dockerhost:
+  roda-proxy:
     build:
       context: nginx
       dockerfile: "Dockerfile"
-    container_name: "dockerhost"
+    container_name: "roda-proxy"
     links:
       - "php"
     ports:
