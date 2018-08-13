@@ -1,5 +1,18 @@
 version: '2'
 services:
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    links:
+      - "dockerhost"
+    environment:
+      STAGE: 'local'
+      DOMAINS: "minus-y.co.jp -> http://dockerhost:1080"
+    volumes:
+      - "./nginx/ssl:/var/lib/https-portal"
   dockerhost:
     build:
       context: nginx
@@ -40,7 +53,7 @@ services:
       - "./db/data:/var/lib/mysql"
       - "./db/init:/docker-entrypoint-initdb.d"
     ports:
-      - "23306:3306"
+      - "53306:3306"
   redis:
     build:
       context: .
