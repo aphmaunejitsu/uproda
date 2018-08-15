@@ -1,7 +1,7 @@
 <?php
 class Libs_Image_Exception extends \Libs_Exception {}
 
-class Libs_Image extends \Image
+class Libs_Image
 {
 	const NO_ERROR = 0;
 	const IMAGE_NOT_FOUND = 1;
@@ -51,11 +51,12 @@ class Libs_Image extends \Image
 		]);
 	}
 
-	public static function build_real_thumbnail_path($basename)
+	public static function build_real_thumbnail_path($basename, $ext = 'jpg')
 	{
-		return \Str::tr(':thumbnaildir:basename.jpg', [
+		return \Str::tr(':thumbnaildir:basename.:ext', [
 			'thumbnaildir' => self::build_real_thumbnail_dir($basename),
 			'basename'     => $basename,
+			'ext'          => $ext,
 		]);
 	}
 
@@ -86,7 +87,7 @@ class Libs_Image extends \Image
 				return;
 			}
 
-			$image = self::load($filename);
+			$image = \Image::load($filename);
 			switch ($orientation)
 			{
 			    case 0:
@@ -246,9 +247,15 @@ class Libs_Image extends \Image
 				throw new \Libs_Image_Exception('fail upload image [hash]', self::IMAGE_FAILED_CREATE_HASH);
 			}
 
+      $ext = $file['extension'];
+      if ($ext == 'jpeg')
+      {
+        $ext = 'jpg';
+      }
+
 			$image_info = [
 				'basename'      => $file['basename'],
-				'ext'           => $file['extension'],
+				'ext'           => $ext,
 				'original'      => $file['name'],
 				'delkey'        => \Security::clean(\Input::post('pass'), ['strip_tags', 'htmlentities']),
 				'mimetype'      => $file['mimetype'],
@@ -447,7 +454,7 @@ class Libs_Image extends \Image
 				$error->is_error = true;
 				$error->thumbnail = false;
 				$delete_flg = false;
-				\Log::warningj($e->getMessage());
+				\Log::warning($e->getMessage());
 			}
 
 			try {
