@@ -21,7 +21,8 @@ RUN curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-m
 
 #install Imagemagick & PHP Imagick ext
 RUN apt-get update && apt-get install -y \
-        libmagickwand-dev --no-install-recommends
+        libmagickwand-dev --no-install-recommends \
+        imagemagick
 RUN pecl install imagick && docker-php-ext-enable imagick
 
 #composer
