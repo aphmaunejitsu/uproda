@@ -30,7 +30,7 @@ class Controller_Api_V1_Image extends Controller_Api_V1
 			{
 				//サムネイル作成
 				try {
-          $thumbnail = \Libs_Image_Thumbnail::singleton($file, 'thumbnail');
+          $thumbnail = \Libs_Image_Thumbnail::forge($file);
           $thumbnail->create_dir($file);
 					$thumbnail->create($file);
 				} catch (\Libs_Image_Thumbnail_Exception $e) {

@@ -5,14 +5,9 @@ class Libs_Image_Thumbnail extends Libs_Image
   private static $_instance = [];
   private function __construct() {}
 
-  public static function singleton($image)
+  public static function forge($image)
   {
-    $ext = \Str::lower(\Arr::get($image, 'ext', 'jpg'));
-    if ($ext === 'jpeg')
-    {
-      $ext = 'jpg';
-    }
-
+    $ext = self::ext($image);
     if ($ext !== 'gif')
     {
       $ext = 'jpg';
@@ -20,7 +15,7 @@ class Libs_Image_Thumbnail extends Libs_Image
 
     if ( ! isset(self::$_instance[$ext]) )
     {
-      $class = \Str::tr('Libs_Image_Thumbnail_:ext', ['ext' => $ext]);
+      $class = \Str::tr('Libs_Image_Thumbnail_Driver_:ext', ['ext' => $ext]);
       try {
         self::$_instance[$ext] = new $class();
       } catch ( \Exception $e ) {
@@ -51,13 +46,8 @@ class Libs_Image_Thumbnail extends Libs_Image
 	public function create($file)
 	{
 		try {
-			$basename = \Arr::get($file, 'basename');
-			$length = Libs_Config::get('board.thumbnail.length', 400);
-			$image_path = self::build_real_image_path($basename, \Arr::get($file, 'ext'));
-			$save_path = self::build_real_thumbnail_path($basename, \Arr::get($file, 'ext'));
-			$image = \Image::load($image_path)->crop_resize($length, $length);
-
-			$image->save($save_path);
+      $ext = self::ext($file);
+      self::$_instance[$ext]->create();
 		} catch (\Exception $e) {
 			\Log::error($e);
 			throw new Libs_Image_Thumbnail_Exception('fail create thumbnail', __LINE__);
@@ -67,9 +57,7 @@ class Libs_Image_Thumbnail extends Libs_Image
   public function create_dir($file)
   {
     try {
-			$basename = \Arr::get($file, 'basename');
-      $thumbnail_dir = self::build_real_thumbnail_dir($basename);
-			$image_dir = self::build_real_image_dir($basename);
+      list($basename, $ext, $image_path, $thumbnail_dir, $image_dir, $save_path, $length) = self::path_infos($file);
 
       try {
         \File::read_dir($thumbnail_dir);
@@ -82,6 +70,25 @@ class Libs_Image_Thumbnail extends Libs_Image
 			throw new Libs_Image_Thumbnail_Exception('fail create thumbnail dir', __LINE__);
     }
   }
+
+  public static function path_infos($file)
+  {
+			$basename = \Arr::get($file, 'basename');
+      $ext = self::ext($file);
+			$length = Libs_Config::get('board.thumbnail.length', 400);
+			$image_path = self::build_real_image_path($basename, $ext);
+			$save_path = self::build_real_thumbnail_path($basename, $ext);
+      $thumbnail_dir = self::build_real_thumbnail_dir($basename);
+			$image_dir = self::build_real_image_dir($basename);
+
+      return [$basename, $ext, $image_path, $thumbnail_dir, $image_dir, $save_path, $length];
+  }
+
+  public static function ext($file)
+  {
+    return \Str::lower(\Arr::get($file, 'ext', 'jpg'));
+  }
+
 }
 
 class Libs_Image_Thumbnail_Exception extends Libs_Exception {}

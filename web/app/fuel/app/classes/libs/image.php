@@ -36,7 +36,7 @@ class Libs_Image
 
 	public static function build_real_image_path($basename, $ext)
 	{
-		return \Str::tr(':imagedir/:basename.:ext', [
+		return \Str::tr(':imagedir:basename.:ext', [
 			'imagedir' => self::build_real_image_dir($basename),
 			'basename' => $basename,
 			'ext'      => $ext,
@@ -247,15 +247,9 @@ class Libs_Image
 				throw new \Libs_Image_Exception('fail upload image [hash]', self::IMAGE_FAILED_CREATE_HASH);
 			}
 
-      $ext = $file['extension'];
-      if ($ext == 'jpeg')
-      {
-        $ext = 'jpg';
-      }
-
 			$image_info = [
 				'basename'      => $file['basename'],
-				'ext'           => $ext,
+				'ext'           => $file['extension'],
 				'original'      => $file['name'],
 				'delkey'        => \Security::clean(\Input::post('pass'), ['strip_tags', 'htmlentities']),
 				'mimetype'      => $file['mimetype'],

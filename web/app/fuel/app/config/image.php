@@ -23,7 +23,7 @@ return array(
 	/**
 	 * The driver to be used. Currently gd, imagemagick or imagick
 	 */
-	'driver' => 'imagemagick',
+	'driver' => 'imagick',
 
 	/**
 	 * Sets the background color of the image.
