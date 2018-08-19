@@ -1,13 +1,12 @@
 <?php
 
-class Libs_Image_Thumbnail_Driver_Jpg extends Libs_Image_Thumbnail {
+class Libs_Image_Thumbnail_Driver_Jpg extends Libs_Image_Thumbnail
+{
+  protected $ext = 'jpg';
 	public function create($file)
 	{
 		try {
       list($basename, $ext, $image_path, $thumbnail_dir, $image_dir, $save_path, $length) = self::path_infos($file);
-      \Log::debug($image_path);
-      \Log::debug($length);
-      \Log::debug($save_path);
 
 			$image = \Image::load($image_path)->crop_resize($length, $length);
 
@@ -18,4 +17,8 @@ class Libs_Image_Thumbnail_Driver_Jpg extends Libs_Image_Thumbnail {
 		}
 	}
 
+  public function get_ext()
+  {
+    return $this->ext;
+  }
 }

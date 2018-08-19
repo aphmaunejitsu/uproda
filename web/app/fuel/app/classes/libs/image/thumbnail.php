@@ -2,29 +2,27 @@
 class Libs_Image_Thumbnail extends Libs_Image
 {
   const THUBMNAIL_NOTSUPPORT_EXT = 1;
-  private static $_instance = [];
+  private static $_instance;
   private function __construct() {}
+
+  protected $ext = 'jpg';
 
   public static function forge($image)
   {
-    $ext = self::ext($image);
-    if ($ext !== 'gif')
+    if ( ! isset(self::$_instance) )
     {
-      $ext = 'jpg';
-    }
-
-    if ( ! isset(self::$_instance[$ext]) )
-    {
+      $ext = self::ext($image);
+      $ext = ($ext == 'gif') ? $ext : 'jpg';
       $class = \Str::tr('Libs_Image_Thumbnail_Driver_:ext', ['ext' => $ext]);
       try {
-        self::$_instance[$ext] = new $class();
+        self::$_instance = new $class();
       } catch ( \Exception $e ) {
-        \Log::error($e);
+        \Log::error($e->getMessage());
         throw new \Libs_Image_Exception('failed create new class: ' . get_class($this));
       }
     }
 
-    return self::$_instance[$ext];
+    return self::$_instance;
   }
 
   public final function __clone()
@@ -84,11 +82,17 @@ class Libs_Image_Thumbnail extends Libs_Image
       return [$basename, $ext, $image_path, $thumbnail_dir, $image_dir, $save_path, $length];
   }
 
-  public static function ext($file)
+  protected static function ext($file)
   {
-    return \Str::lower(\Arr::get($file, 'ext', 'jpg'));
+    $ext =  \Str::lower(\Arr::get($file, 'ext', \Arr::get($file, 'extension', 'jpg')));
+
+    return $ext;
   }
 
+  public function get_ext()
+  {
+    return self::$_instance->get_ext();
+  }
 }
 
 class Libs_Image_Thumbnail_Exception extends Libs_Exception {}

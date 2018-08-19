@@ -246,10 +246,12 @@ class Libs_Image
 				unlink($image_path);
 				throw new \Libs_Image_Exception('fail upload image [hash]', self::IMAGE_FAILED_CREATE_HASH);
 			}
+      $t_ext = \Libs_Image_Thumbnail::forge($file)->get_ext($file['extension']);
 
 			$image_info = [
 				'basename'      => $file['basename'],
 				'ext'           => $file['extension'],
+        't_ext'         => $t_ext,
 				'original'      => $file['name'],
 				'delkey'        => \Security::clean(\Input::post('pass'), ['strip_tags', 'htmlentities']),
 				'mimetype'      => $file['mimetype'],
@@ -292,7 +294,6 @@ class Libs_Image
 			throw new \Libs_Image_Exception('fail upload image', self::IMAGE_FAILED_CREATE);
 		}
 	}
-
 
 	/**
 	 * 画像数を取得(全て)する

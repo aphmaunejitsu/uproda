@@ -2,6 +2,7 @@
 
 class Libs_Image_Thumbnail_Driver_Gif extends Libs_Image_Thumbnail
 {
+  protected $ext = 'gif';
 	public function create($file)
   {
 		try {
@@ -27,5 +28,9 @@ class Libs_Image_Thumbnail_Driver_Gif extends Libs_Image_Thumbnail
 		}
   }
 
+  public function get_ext()
+  {
+    return $this->ext;
+  }
 }
 
