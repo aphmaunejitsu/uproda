@@ -5,7 +5,7 @@ class Libs_Image_Thumbnail extends Libs_Image
   private static $_instance;
   private function __construct() {}
 
-  protected $ext = 'jpg';
+  protected static $ext = 'jpg';
 
   public static function forge($image)
   {
@@ -55,7 +55,7 @@ class Libs_Image_Thumbnail extends Libs_Image
   public function create_dir($file)
   {
     try {
-      list($basename, $ext, $image_path, $thumbnail_dir, $image_dir, $save_path, $length) = self::path_infos($file);
+      list($image_dir, $thumbnail_dir) = self::dir_infos($file);
 
       try {
         \File::read_dir($thumbnail_dir);
@@ -69,17 +69,24 @@ class Libs_Image_Thumbnail extends Libs_Image
     }
   }
 
+  public static function dir_infos($file)
+  {
+			$basename = \Arr::get($file, 'basename');
+      $thumbnail_dir = self::build_real_thumbnail_dir($basename);
+			$image_dir = self::build_real_image_dir($basename);
+
+      return [$image_dir, $thumbnail_dir];
+  }
+
   public static function path_infos($file)
   {
 			$basename = \Arr::get($file, 'basename');
       $ext = self::ext($file);
 			$length = Libs_Config::get('board.thumbnail.length', 400);
 			$image_path = self::build_real_image_path($basename, $ext);
-			$save_path = self::build_real_thumbnail_path($basename, $ext);
-      $thumbnail_dir = self::build_real_thumbnail_dir($basename);
-			$image_dir = self::build_real_image_dir($basename);
+			$save_path = self::build_real_thumbnail_path($basename, self::$_instance->get_ext());
 
-      return [$basename, $ext, $image_path, $thumbnail_dir, $image_dir, $save_path, $length];
+      return [$image_path, $save_path, $length];
   }
 
   protected static function ext($file)

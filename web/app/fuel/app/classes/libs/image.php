@@ -251,7 +251,7 @@ class Libs_Image
 			try {
         $thumbnail = \Libs_Image_Thumbnail::forge($file);
         $thumbnail->create_dir($file);
-			  list($t_base, $t_ext) = $thumbnail->create($file);
+			  $thumbnail->create($file);
 			} catch (\Libs_Image_Thumbnail_Exception $e) {
 			  //サムネイル作成はエラーが出ても無視
 				\Log::warning($e);
@@ -260,7 +260,7 @@ class Libs_Image
 			$image_info = [
 				'basename'      => $file['basename'],
 				'ext'           => $file['extension'],
-        't_ext'         => $t_ext,
+        't_ext'         => $thumbnail->get_ext(),
 				'original'      => $file['name'],
 				'delkey'        => \Security::clean(\Input::post('pass'), ['strip_tags', 'htmlentities']),
 				'mimetype'      => $file['mimetype'],
