@@ -22,15 +22,11 @@ class Libs_Image_Thumbnail_Driver_Gif extends Libs_Image_Thumbnail
 
       $image->writeImages($save_path, true);
       $image->clear();
+      return [$basename, $ext];
 		} catch (\Exception $e) {
 			\Log::error($e);
 			throw new Libs_Image_Thumbnail_Exception('fail create thumbnail', __LINE__);
 		}
-  }
-
-  public function get_ext()
-  {
-    return $this->ext;
   }
 }
 

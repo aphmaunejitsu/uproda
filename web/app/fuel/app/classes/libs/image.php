@@ -246,7 +246,16 @@ class Libs_Image
 				unlink($image_path);
 				throw new \Libs_Image_Exception('fail upload image [hash]', self::IMAGE_FAILED_CREATE_HASH);
 			}
-      $t_ext = \Libs_Image_Thumbnail::forge($file)->get_ext($file['extension']);
+      \Libs_Image_Thumbnail::forge($file);
+		  //サムネイル作成
+			try {
+        $thumbnail = \Libs_Image_Thumbnail::forge($file);
+        $thumbnail->create_dir($file);
+			  list($t_base, $t_ext) = $thumbnail->create($file);
+			} catch (\Libs_Image_Thumbnail_Exception $e) {
+			  //サムネイル作成はエラーが出ても無視
+				\Log::warning($e);
+			}
 
 			$image_info = [
 				'basename'      => $file['basename'],

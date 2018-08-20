@@ -28,16 +28,6 @@ class Controller_Api_V1_Image extends Controller_Api_V1
 
 			if (($file = \Libs_Image::upload()) !== null)
 			{
-				//サムネイル作成
-				try {
-          $thumbnail = \Libs_Image_Thumbnail::forge($file);
-          $thumbnail->create_dir($file);
-					$thumbnail->create($file);
-				} catch (\Libs_Image_Thumbnail_Exception $e) {
-					//サムネイル作成はエラーが出ても無視
-					\Log::warning($e);
-				}
-
 				\Libs_Deny_Ip::set_ip(\Input::real_ip());
 				//ファイル数がｔぽｋ
 				$delete_images = \Libs_Image::get_images_for_delete();

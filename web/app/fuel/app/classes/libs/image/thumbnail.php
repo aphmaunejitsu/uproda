@@ -45,7 +45,7 @@ class Libs_Image_Thumbnail extends Libs_Image
 	{
 		try {
       $ext = self::ext($file);
-      self::$_instance[$ext]->create();
+      return self::$_instance[$ext]->create();
 		} catch (\Exception $e) {
 			\Log::error($e);
 			throw new Libs_Image_Thumbnail_Exception('fail create thumbnail', __LINE__);
