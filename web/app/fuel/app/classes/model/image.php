@@ -6,6 +6,7 @@ class Model_Image extends Model_Base
 	protected static $_properties = [
 		'basename',
 		'ext',
+		't_ext',
 		'original',
 		'delkey',
 		'mimetype',

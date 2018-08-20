@@ -1,7 +1,7 @@
 <?php
 class Libs_Image_Exception extends \Libs_Exception {}
 
-class Libs_Image extends \Image
+class Libs_Image
 {
 	const NO_ERROR = 0;
 	const IMAGE_NOT_FOUND = 1;
@@ -36,7 +36,7 @@ class Libs_Image extends \Image
 
 	public static function build_real_image_path($basename, $ext)
 	{
-		return \Str::tr(':imagedir/:basename.:ext', [
+		return \Str::tr(':imagedir:basename.:ext', [
 			'imagedir' => self::build_real_image_dir($basename),
 			'basename' => $basename,
 			'ext'      => $ext,
@@ -51,11 +51,12 @@ class Libs_Image extends \Image
 		]);
 	}
 
-	public static function build_real_thumbnail_path($basename)
+	public static function build_real_thumbnail_path($basename, $ext = 'jpg')
 	{
-		return \Str::tr(':thumbnaildir:basename.jpg', [
+		return \Str::tr(':thumbnaildir:basename.:ext', [
 			'thumbnaildir' => self::build_real_thumbnail_dir($basename),
 			'basename'     => $basename,
+			'ext'          => $ext,
 		]);
 	}
 
@@ -86,7 +87,7 @@ class Libs_Image extends \Image
 				return;
 			}
 
-			$image = self::load($filename);
+			$image = \Image::load($filename);
 			switch ($orientation)
 			{
 			    case 0:
@@ -245,10 +246,21 @@ class Libs_Image extends \Image
 				unlink($image_path);
 				throw new \Libs_Image_Exception('fail upload image [hash]', self::IMAGE_FAILED_CREATE_HASH);
 			}
+      \Libs_Image_Thumbnail::forge($file);
+		  //サムネイル作成
+			try {
+        $thumbnail = \Libs_Image_Thumbnail::forge($file);
+        $thumbnail->create_dir($file);
+			  list($t_base, $t_ext) = $thumbnail->create($file);
+			} catch (\Libs_Image_Thumbnail_Exception $e) {
+			  //サムネイル作成はエラーが出ても無視
+				\Log::warning($e);
+			}
 
 			$image_info = [
 				'basename'      => $file['basename'],
 				'ext'           => $file['extension'],
+        't_ext'         => $t_ext,
 				'original'      => $file['name'],
 				'delkey'        => \Security::clean(\Input::post('pass'), ['strip_tags', 'htmlentities']),
 				'mimetype'      => $file['mimetype'],
@@ -291,7 +303,6 @@ class Libs_Image extends \Image
 			throw new \Libs_Image_Exception('fail upload image', self::IMAGE_FAILED_CREATE);
 		}
 	}
-
 
 	/**
 	 * 画像数を取得(全て)する
@@ -447,7 +458,7 @@ class Libs_Image extends \Image
 				$error->is_error = true;
 				$error->thumbnail = false;
 				$delete_flg = false;
-				\Log::warningj($e->getMessage());
+				\Log::warning($e->getMessage());
 			}
 
 			try {

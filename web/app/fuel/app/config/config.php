@@ -131,7 +131,7 @@ return array(
 		 * Examples of these are HTTP_X_FORWARDED_FOR and HTTP_X_FORWARDED_PROTO, which
 		 * can be faked which could have security implications
 		 */
-		 //'allow_x_headers'       => true,
+		 'allow_x_headers'       => true,
 
 		/**
 		 * This input filter can be any normal PHP function as well as 'xss_clean'

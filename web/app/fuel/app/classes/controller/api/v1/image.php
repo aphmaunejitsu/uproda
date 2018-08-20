@@ -17,6 +17,7 @@ class Controller_Api_V1_Image extends Controller_Api_V1
 
 	public function post_add()
 	{
+		\Log::info('recive post add');
 		try {
 			\Libs_Deny_Ip::check(\Input::real_ip());
 			\Libs_Csrf::check_token();
@@ -25,16 +26,8 @@ class Controller_Api_V1_Image extends Controller_Api_V1
 			\Libs_Deny_Word::check(\Input::post('comment'));
 			\Libs_Captcha::delete_session();
 
-			if (($file = Libs_Image::upload()) !== null)
+			if (($file = \Libs_Image::upload()) !== null)
 			{
-				//サムネイル作成
-				try {
-					\Libs_Image_Thumbnail::create($file);
-				} catch (\Libs_Image_Thumbnail_Exception $e) {
-					//サムネイル作成はエラーが出ても無視
-					\Log::warning($e);
-				}
-
 				\Libs_Deny_Ip::set_ip(\Input::real_ip());
 				//ファイル数がｔぽｋ
 				$delete_images = \Libs_Image::get_images_for_delete();

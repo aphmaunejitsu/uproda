@@ -1,7 +1,7 @@
 <?php
 class Presenter_Image extends Presenter_Uproda
 {
-	protected function build_thumbnail_url($basename)
+	protected function build_thumbnail_url($basename, $ext)
 	{
 		if ($basename === null)
 		{
@@ -9,7 +9,7 @@ class Presenter_Image extends Presenter_Uproda
 		}
 		else
 		{
-			return \Libs_Image_Thumbnail::build_url($basename);
+			return \Libs_Image_Thumbnail::build_url($basename, $ext);
 		}
 	}
 

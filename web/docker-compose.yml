@@ -10,7 +10,7 @@ services:
       - "roda-proxy"
     environment:
       STAGE: 'local'
-      DOMAINS: "nejitsu.minus-y.com-> http://roda-proxy"
+      DOMAINS: "nejitsu.minus-y.co.jp-> http://roda-proxy, minus-y.co.jp -> http://roda-proxy"
       CLIENT_MAX_BODY_SIZE: 20M
     volumes:
       - "./nginx/ssl:/var/lib/https-portal"
