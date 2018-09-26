@@ -1,7 +1,7 @@
   <div class="container menubox">
     <div class="row u-pull-left">
        <a href='/' class='button'><?php echo $title;?></a>
-       <b>ネ実だけで使ってね</b>
+       ネ実onry
     </div>
     <div class="row u-pull-right">
        <a href='#uproda-form' class='open-popup-form button'><?php echo $upload; ?></a>
