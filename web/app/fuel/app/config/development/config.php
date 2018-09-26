@@ -23,7 +23,7 @@ return array(
 	 *
 	 * Set this to null to have it automatically detected.
 	 */
-	'base_url'  => "https://nejitsu.minus-y.co.jp/",
+	'base_url'  => "https://nejitsu.minus-y.com/",
 
 	/**
 	 * url_suffix - Any suffix that needs to be added to
