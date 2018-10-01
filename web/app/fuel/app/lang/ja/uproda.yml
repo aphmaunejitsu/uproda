@@ -6,7 +6,7 @@ common:
     upload: うp
     about: ここ
 imgform:
-  filelabel: FILE max :sizeKB (:countFiles)
+  filelabel: FILE max :sizeKB (:countFiles) (:extensions)
   dellabel: DELKEY
   commentlabel: COMMENT
   buttonlabel: Upload
