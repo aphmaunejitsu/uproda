@@ -1,19 +1,5 @@
 version: '2'
 services:
-  https-portal:
-    image: steveltn/https-portal:1
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: always
-    links:
-      - "roda-proxy"
-    environment:
-      STAGE: 'local'
-      DOMAINS: "nejitsu.minus-y.com -> http://roda-proxy"
-      CLIENT_MAX_BODY_SIZE: 20M
-    volumes:
-      - "./nginx/ssl:/var/lib/https-portal"
   roda-proxy:
     build:
       context: nginx

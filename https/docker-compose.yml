@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - '80:80'
+      - '443:443'
+    restart: always
+    environment:
+      DOMAINS: 'nejitsu.minus-y.com -> http://roda-proxy'
+      STAGE: 'local'
+      CLIENT_MAX_BODY_SIZE: 20M
+    volumes:
+      - "./ssl:/var/lib/https-portal"
+    networks:
+      - default
+      - web_default
+
+networks:
+  web_default:
+    external: true
