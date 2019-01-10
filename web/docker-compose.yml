@@ -51,7 +51,7 @@ services:
       - "./redis/data:/data"
     ports:
       - "6379:6379"
-    command: redis-server --appendonly yes
+    command: redis-server --appendonly yes --requirepass warecoli
 
   memcached:
     build:

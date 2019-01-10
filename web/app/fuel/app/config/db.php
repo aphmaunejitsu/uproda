@@ -54,8 +54,9 @@ return [
 		'default' => [
 			'hostname' => 'roda-redis',
 			'port'     => 6379,
-			'timeout'	 => null,
+			'timeout'	 => 10,
 			'database' => 0,
+			'password' => 'warecoli'
 		],
 	],
 ];
