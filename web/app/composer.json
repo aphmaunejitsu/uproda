@@ -16,7 +16,8 @@
         "fuelphp/upload": "2.0.6",
         "monolog/monolog": "1.5.*",
         "phpseclib/phpseclib": "2.0.0",
-        "michelf/php-markdown": "1.4.0"
+        "michelf/php-markdown": "1.4.0",
+        "lsolesen/pel": "^0.9.6"
     },
     "require-dev": {
         "fuel/docs": "1.8.*"
@@ -45,4 +46,3 @@
     },
     "minimum-stability": "stable"
 }
-

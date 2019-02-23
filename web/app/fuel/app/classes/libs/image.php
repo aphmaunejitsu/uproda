@@ -60,81 +60,6 @@ class Libs_Image
 		]);
 	}
 
-	public static function exif($filename)
-	{
-		try {
-			return exif_read_data($filename);
-		} catch (\Exception $e) {
-			\Log::warning($e->getMessage());
-			return false;
-		}
-	}
-
-	/**
-	 * exif情報を元に、画像の上下左右を修正する
-	 *
-	 **/
-	public static function fixed($filename)
-	{
-		try {
-			if (($exif = self::exif($filename)) === false)
-			{
-				return;
-			}
-
-			if (($orientation = \Arr::get($exif, 'Orientation', null)) === null)
-			{
-				return;
-			}
-
-			$image = \Image::load($filename);
-			switch ($orientation)
-			{
-			    case 0:
-			    case 1:
-			    return;
-
-			    case 2:
-			        $image->flip('horizontal');
-			    break;
-
-			    case 3:
-		      	$image->rotate(180);
-			    break;
-
-			    case 4:
-		      	$image->flip('vertical');
-			    break;
-
-			    case 5:
-		      	$image->rotate(-90);
-		      	$image->flip('vertical');
-			    break;
-
-			    case 6:
-		      	$image->rotate(90);
-			    break;
-
-			    case 7:
-		      	$image->rotate(90);
-		      	$image->flip('vertical');
-			    break;
-
-			    case 8:
-		          $image->rotate(-90);
-			    break;
-
-			    default:
-			    return;
-			}
-
-			$image->save($filename);
-		} catch (\Exception $e) {
-			\Log::warning($e->getMessage());
-			return;
-		}
-	}
-
 	/**
 	 * 画像IDのフォーマットチェック
 	 *
@@ -208,7 +133,10 @@ class Libs_Image
 		});
 
 		\Upload::register('after', function(&$file) {
-			\Libs_Image::fixed($file->path.$file->saved_as);
+			$exif = \Libs_Image_Exif::info($file);
+			\Libs_Image_Exif::Fixed($file, $exif);
+			\Libs_Image_Exif::Orientation($file, 1);
+			\Libs_Image_Exif::Location($file, 125.7625, 39.0392, 10);
 		});
 
 		umask(0);
