@@ -2,7 +2,7 @@
 use \lsolesen\pel\PelJpeg;
 use \lsolesen\pel\PelTag;
 use \lsolesen\pel\PelIfd;
-
+use \lsolesen\pel\PelEntryShort;
 
 class Libs_Image_Exif_Orientation
 {
@@ -41,12 +41,12 @@ class Libs_Image_Exif_Orientation
 			}
 			else
 			{
-				$entry = new  PelEntryShort(PelTag::ORIENTATION, 1);
-				$exif->addEntry($entry);
+				return;
 			}
 
 			file_put_contents($filename, $image->getBytes());
 		} catch (\Exception $e) {
+			// エラーは無視
 			\Log::debug($e->getMessage());
 		}
 	}
