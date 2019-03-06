@@ -17,6 +17,7 @@ services:
       context: php
       dockerfile: "Dockerfile"
     hostname: "roda-web"
+    restart: always
     volumes:
       - "./app:/var/www/roda/"
     depends_on:
