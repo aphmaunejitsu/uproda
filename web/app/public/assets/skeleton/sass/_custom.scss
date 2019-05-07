@@ -1,14 +1,8 @@
 /* テンプレート */
 
-#nejitsu {
-  position: relative;
-  min-height: 100%;
+#root {
+	max-width: 1280px;
 }
-
-#osusume {
-  padding-bottom: 3.5rem;
-}
-
 .container {
 	padding: 0.5rem;
 }
