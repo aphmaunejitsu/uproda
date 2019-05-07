@@ -1,0 +1,19 @@
+header {
+  nav {
+		padding: 0.5rem 1rem;
+    display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		.button {
+			margin-bottom: initial;
+		}
+  }
+}
+
+header.sticking {
+	width: 100%;
+	z-index: 999;
+	background-color: #ffffff;
+}
+

@@ -130,6 +130,7 @@ CREATE TABLE `images` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `basename` varchar(100) NOT NULL,
   `ext` varchar(10) DEFAULT NULL,
+  `t_ext` varchar(10) DEFAULT NULL,
   `original` varchar(100) DEFAULT NULL,
   `delkey` varchar(20) DEFAULT NULL,
   `mimetype` varchar(20) DEFAULT NULL,

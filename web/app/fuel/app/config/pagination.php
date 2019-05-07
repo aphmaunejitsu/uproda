@@ -64,7 +64,7 @@ return array(
 		'first-inactive-link'     => "",
 
 		'previous'                => "<li>{link}</li>",
-		'previous-marker'         => "&lt;",
+		'previous-marker'         => "<i class=\"fas fa-angle-left\"></i>",
 		'previous-link'           => "<a href=\"{uri}\"  rel=\"prev\">{page}</a>",
 
 		'previous-inactive'       => "<li class=\"disabled\">{link}</li>",
@@ -77,7 +77,7 @@ return array(
 		'active-link'             => "<a >{page} <span class=\"sr-only\"></span></a>",
 
 		'next'                    => "<li>{link}</li>",
-		'next-marker'             => "&gt;",
+		'next-marker'             => "<i class=\"fas fa-angle-right\"></i>",
 		'next-link'               => "<a href=\"{uri}\" rel=\"next\" >{page}</a>",
 
 		'next-inactive'           => "<li class=\"disabled\">{link}</li>",

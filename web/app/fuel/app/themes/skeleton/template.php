@@ -4,18 +4,16 @@
   <?php echo $partials['head'];?>
 </head>
 <body>
-<div id='nejitsu'>
-	<header class='warecoli'>
-  <?php echo $partials['header'] ?>
-	</header>
-	<div id='osusume'>
-  	<?php echo $partials['content'] ?>
+	<div id="root">
+		<header class='warecoli'>
+		<?php echo $partials['header'] ?>
+		</header>
+		<?php echo $partials['content'] ?>
 	</div>
-	<footer>
-  <?php echo $partials['footer'] ?>
+	<footer id="footer">
+	<?php echo $partials['footer'] ?>
 	<?php echo $partials['form'] ?>
 	</footer>
-</div>
 </body>
 </html>
 <!--
