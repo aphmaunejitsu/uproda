@@ -5,7 +5,7 @@ class Controller_Api_V1_Image extends Controller_Api_V1
 	{
 		try {
 			$this->format = 'html';
-			$mode = \Libs_Settings::get_listmode()?'image/listview':'image/thumbnailview';
+			$mode = 'image/thumbnailview';
 			$view = \Presenter::forge('image/list', 'view', null, $mode)->set('param', ['page' => $page]);
 
 			return $this->response($view->render());

@@ -8,7 +8,7 @@ class Presenter_Uproda_Content_Pager extends \Presenter
 		    'pagination_url' => '/',
 		    'uri_segment' => 1,
 		    'per_page'    => Libs_Config::get('board.pagination.per_page', 100),
-				'num_links'   => 10,
+				'num_links'   => 5,
 		    'total_items' => $count,
 			//'show_first'  => true,
 			//'show_last'   => true
