@@ -4,11 +4,13 @@
   <?php echo $partials['head'];?>
 </head>
 <body>
+	<header class='warecoli'>
+	<?php echo $partials['header'] ?>
+	</header>
 	<div id="root">
-		<header class='warecoli'>
-		<?php echo $partials['header'] ?>
-		</header>
+		<div id="content">
 		<?php echo $partials['content'] ?>
+		</div>
 	</div>
 	<footer id="footer">
 	<?php echo $partials['footer'] ?>
