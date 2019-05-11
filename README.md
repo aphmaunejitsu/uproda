@@ -1,6 +1,4 @@
 # uproda
-http://minus-k.com/nejitsu/upload.html の管理人さん今までありがとうだよ
-
 ## Docker
 - git clone git@github.com:aphmaunejitsu/uproda.git
 - docker-compose build
