@@ -21,11 +21,11 @@ server {
         fastcgi_split_path_info  ^(.+\.php)(/.+)$;
         fastcgi_pass             php:9000;
         fastcgi_index            index.php;
-        include                  /etc/nginx/fastcgi_params;
+    	include                  /etc/nginx/fastcgi_params;
         fastcgi_param            SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param            PATHINFO        $fastcgi_path_info;
         fastcgi_param            PATH_TRANSLATED $document_root$fastcgi_path_info;
-        fastcgi_param            FUEL_ENV "${FUEL_ENV}";
+		fastcgi_param            FUEL_ENV "development";
     }
 
     error_page 404 /index.php;
