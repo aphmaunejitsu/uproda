@@ -17,20 +17,19 @@ services:
       context: php
       dockerfile: "Dockerfile"
     restart: always
-    env_file:
-      .env
     volumes:
       - "./roda:/var/www/roda/"
     links:
       - "db"
       - "redis"
+
   db:
     build:
       context: db
       dockerfile: "Dockerfile"
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: 4rfvcde3
       MYSQL_HOST: ""
       TZ: "Asia/Tokyo"
     volumes:
@@ -39,7 +38,9 @@ services:
     ports:
       - "53306:3306"
   redis:
-    image: redis:latest
+    build:
+      context: .
+      dockerfile: "./redis/Dockerfile"
     hostname: "roda-redis"
     ports:
       - "26379:6379"
