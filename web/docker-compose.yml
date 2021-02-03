@@ -10,7 +10,7 @@ services:
     links:
       - "php"
     ports:
-      - "1080:80"
+      - "127.0.0.1:1080:80"
     restart: always
     volumes:
       - "./app:/var/www/roda/"
@@ -56,8 +56,8 @@ services:
     volumes:
       - "./redis/data:/data"
     ports:
-      - "127.0.0.1:6379:6379"
-    command: redis-server --appendonly yes --requirepass warecoli
+      - "127.0.0.1:16379:6379"
+    command: redis-server --requirepass warecoli
 
   memcached:
     build:
@@ -67,7 +67,7 @@ services:
     restart: always
     ports:
       - "127.0.0.1:11211:11211"
+
 networks:
   uproda-proxy-network:
     external: true
-
