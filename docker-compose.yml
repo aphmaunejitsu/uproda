@@ -1,47 +1,47 @@
 version: '2'
 services:
-  roda-proxy:
-    build:
-      context: nginx
-      dockerfile: "Dockerfile"
+  proxy:
+    image: nginx:latest
+    volumes:
+      - "./app/public:/var/www/html/public"
+      - "./local/nginx/default.conf:/etc/nginx/conf.d/default.conf"
     links:
       - "php"
     ports:
-      - "1080:80"
+      - "127.0.0.1:1081:80"
     restart: always
     volumes:
-      - "./roda/public:/var/www/roda/"
+      - "./roda/public:/var/www/html"
 
-  php:
+  app:
     build:
-      context: php
+      context: local/php
       dockerfile: "Dockerfile"
     restart: always
     volumes:
-      - "./roda:/var/www/roda/"
+      - "./app:/var/www/html"
     links:
-      - "db"
+      - "db-primary"
       - "redis"
 
-  db:
-    build:
-      context: db
-      dockerfile: "Dockerfile"
-    restart: always
+  db-primary:
+    image: mariadb:10.5
     environment:
       MYSQL_ROOT_PASSWORD: 4rfvcde3
-      MYSQL_HOST: ""
+      MYSQL_DATABASE: uproda
+      DB_USERNAME: uproda_user
+      DB_PASSWORD: 1Qazxsw23edcvfR4
       TZ: "Asia/Tokyo"
+    ports:
+      - 127.0.0.1:33306:3306
     volumes:
-      - "./db/data:/var/lib/mysql"
+      - "./data:/var/lib/mysql"
       - "./db/init:/docker-entrypoint-initdb.d"
     ports:
       - "53306:3306"
+
   redis:
-    build:
-      context: .
-      dockerfile: "./redis/Dockerfile"
-    hostname: "roda-redis"
+    image: redis:latest
     ports:
-      - "26379:6379"
-    command: redis-server --appendonly yes --requirepass warecoli
+      - "127.0.0.1:36379:6379"
+    command: redis-server
