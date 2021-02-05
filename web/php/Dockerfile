@@ -1,10 +1,11 @@
 FROM php:7-fpm
-RUN apt-get update --fix-missing \
+RUN echo  nameserver 8.8.8.8 >> /etc/resolv.conf
+RUN apt-get update --fix-missing --no-install-recommends\
     && apt-get install -y \
         locales \
         libmemcached-dev \
         curl \
-        libzip-dev \ 
+        libzip-dev \
         zip \
         libonig-dev \
     && docker-php-ext-install -j$(nproc) iconv pdo pdo_mysql mbstring exif pcntl \
@@ -20,19 +21,10 @@ RUN apt-get update && apt-get install -y \
         imagemagick
 RUN pecl install imagick && docker-php-ext-enable imagick
 
-ARG PUID=1000
-ENV PUID ${PUID}
-ARG PGID=1000
-ENV PGID ${PGID}
-
-RUN groupadd -g ${PGID} aphmau && \
-    useradd -u ${PUID} -g aphmau -m aphmau && \
-    usermod -p "*" aphmau -s /bin/sh
-
 #composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-ENV PATH $PATH:/home/aphmau/.composer/vendor/bin
-RUN composer config -g repos.packagist composer https://packagist.jp && composer global require hirak/prestissimo
+ENV PATH $PATH:/home/root/.composer/vendor/bin
+
 # RUN service supervisor start
 
 RUN locale-gen ja_JP.UTF-8

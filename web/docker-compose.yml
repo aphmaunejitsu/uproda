@@ -10,7 +10,7 @@ services:
       - "1080:80"
     restart: always
     volumes:
-      - "./roda/public:/var/www/roda/"
+      - "./app/public:/var/www/roda/"
 
   php:
     build:
@@ -20,7 +20,7 @@ services:
     env_file:
       .env
     volumes:
-      - "./roda:/var/www/roda/"
+      - "./app:/var/www/roda/"
     links:
       - "db"
       - "redis"
@@ -38,9 +38,22 @@ services:
       - "./db/init:/docker-entrypoint-initdb.d"
     ports:
       - "53306:3306"
+
   redis:
     image: redis:latest
     hostname: "roda-redis"
+    restart: always
+    volumes:
+      - "./redis/data:/data"
     ports:
-      - "26379:6379"
-    command: redis-server --appendonly yes --requirepass warecoli
+      - "127.0.0.1:16379:6379"
+    command: redis-server --requirepass warecoli
+
+  memcached:
+    build:
+      context: .
+      dockerfile: "./memcached/Dockerfile"
+    hostname: "roda-memcached"
+    restart: always
+    ports:
+      - "127.0.0.1:11211:11211"

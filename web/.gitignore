@@ -1,5 +1,9 @@
 .env
 vendor/
+db/data/
+redis/data/
+.sass-cache
+
 ### https://raw.github.com/github/gitignore/218a941be92679ce67d0484547e3e142b2f5f6f0/FuelPHP.gitignore
 
 # the composer package lock file and install directory
