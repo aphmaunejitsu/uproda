@@ -20,8 +20,8 @@ class CreateDenyIpsTable extends Migration
     {
         Schema::create('deny_ips', function (Blueprint $table) {
             $table->bigInteger('id')->autoIncrement();
-            $table->string('ip', 40)->nullable()->default(NULL);
-            $table->datetime('created_at')->default(current_timestamp());
+            $table->string('ip', 40)->nullable()->default(null);
+            $table->timestamp('created_at')->useCurrent()->index();
         });
     }
 
@@ -35,4 +35,3 @@ class CreateDenyIpsTable extends Migration
         Schema::dropIfExists('deny_ips');
     }
 }
-

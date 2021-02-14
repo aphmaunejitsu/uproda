@@ -18,12 +18,12 @@ class CreateImageHashTable extends Migration
      */
     public function up()
     {
-        Schema::create('image_hash', function (Blueprint $table) {
+        Schema::create('image_hashes', function (Blueprint $table) {
             $table->bigInteger('id')->autoIncrement();
             $table->string('hash', 256);
             $table->text('comment')->nullable();
             $table->tinyInteger('ng')->nullable()->default(0);
-            $table->datetime('created_at')->default(CURRENT_TIMESTAMP);
+            $table->timestamp('created_at')->useCurrent()->index('idx_created_at');
         });
     }
 
@@ -34,6 +34,6 @@ class CreateImageHashTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('image_hash');
+        Schema::dropIfExists('image_hashes');
     }
 }
