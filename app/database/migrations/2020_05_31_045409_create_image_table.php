@@ -9,7 +9,7 @@ use Illuminate\Database\Migrations\Migration;
  * @author https://tableplus.com
  * @source https://github.com/TablePlus/tabledump
  */
-class CreateImagesTable extends Migration
+class CreateImageTable extends Migration
 {
     /**
      * Run the migrations.
@@ -20,6 +20,7 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->bigInteger('id')->autoIncrement();
+            $table->bigInteger('image_hash_id')->nullable()->comment('image_hash.id');
             $table->string('basename', 100);
             $table->string('ext', 10)->nullable();
             $table->string('t_ext', 10)->nullable()->default('jpg');
@@ -29,8 +30,9 @@ class CreateImagesTable extends Migration
             $table->integer('size')->nullable();
             $table->text('comment')->nullable();
             $table->string('ip', 40)->nullable();
-            $table->bigInteger('image_hash_id')->comment('image_hash.id');
-            $table->datetime('created_at')->default(CURRENT_TIMESTAMP);
+            $table->timestamp('created_at')->useCurrent()->index();
+
+            $table->foreign('image_hash_id')->references('id')->on('image_hashes');
         });
     }
 
