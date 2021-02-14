@@ -1,16 +1,14 @@
 version: '2'
 services:
   proxy:
-    image: nginx:latest
+    image: nginx:alpine
     volumes:
       - "./app/public:/var/www/html/public"
       - "./local/nginx/default.conf:/etc/nginx/conf.d/default.conf"
     links:
       - app
     ports:
-      - "127.0.0.1:1081:80"
-    volumes:
-      - "./roda/public:/var/www/html"
+      - 127.0.0.1:1081:80
 
   app:
     build:
@@ -19,8 +17,8 @@ services:
     volumes:
       - "./app:/var/www/html"
     links:
-      - "db-primary"
-      - "redis"
+      - db-primary
+      - redis
 
   db-primary:
     image: mariadb:10.5
@@ -36,7 +34,7 @@ services:
       - "./data:/var/lib/mysql"
       - "./db/init:/docker-entrypoint-initdb.d"
     ports:
-      - "53306:3306"
+      - "127.0.0.1:53306:3306"
 
   redis:
     image: redis:latest
