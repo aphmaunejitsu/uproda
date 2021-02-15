@@ -1,5 +1,5 @@
 FROM php:8-fpm
-RUN apt-get update --fix-missing --no-install-recommends\
+RUN apt-get update --fix-missing --no-install-recommends \
     && apt-get install -y \
         curl \
         libzip-dev \
@@ -9,7 +9,6 @@ RUN apt-get update --fix-missing --no-install-recommends\
         libpng-dev \
         libmagickwand-dev \
         supervisor \
-        nodejs \
     && docker-php-ext-install -j$(nproc) exif iconv pdo pdo_mysql mbstring pcntl \
     && pecl install redis \
     && docker-php-ext-enable redis \
@@ -27,7 +26,12 @@ ADD ./cron/crontab /var/spool/cron/crontabs/root
 ADD ./supervisor/conf.d/cron.conf /etc/supervisor/conf.d/cron.conf
 ADD ./supervisor/conf.d/roda.conf /etc/supervisor/conf.d/roda.conf
 
-#composer
+# Node
+RUN curl -fsSL https://deb.nodesource.com/setup_15.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm@latest
+
+# composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 ENV PATH $PATH:/home/root/.composer/vendor/bin
 
