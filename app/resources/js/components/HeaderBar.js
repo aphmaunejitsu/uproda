@@ -1,9 +1,12 @@
 import React from 'react';
-
+import styled from '@emotion/styled';
 import NavBar from './header/NavBar';
 import SiteLogo from './header/SiteLogo';
 
-function Header() {
+const Header = styled.article`
+`;
+
+function HeaderBar() {
   return (
     <header className="Top">
       <SiteLogo />

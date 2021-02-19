@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Header from './Header';
+import HeaderBar from './HeaderBar';
 
 function App() {
   return (
-    <Header />
+    <HeaderBar />
   );
 }
 
