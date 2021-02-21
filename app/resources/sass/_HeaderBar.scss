@@ -1,0 +1,39 @@
+.headerBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem;
+  border-bottom: 1px solid rgba(silver, 0.8);
+
+  .SiteLogo {
+    &:after {
+      content: ' ネ実onry';
+    }
+
+    img {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  Nav {
+    display: flex;
+    align-items: center;
+
+    ul {
+      margin: 0;
+      list-style: none;
+      display: flex;
+      align-items: center;
+
+      li {
+        padding-right: 0.25rem;
+        padding-left: 0.25rem;
+
+        img {
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
+}
