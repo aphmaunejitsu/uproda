@@ -1,11 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import Header from './Header';
+import HeaderBar from './HeaderBar';
+import Top from './Top';
+import About from './About';
 
 function App() {
   return (
-    <Header />
+    <Router>
+      <div className="main">
+        <HeaderBar />
+        <Switch>
+          <Route path="/" exact component={Top} />
+          <Route path="/about" component={About} />
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
