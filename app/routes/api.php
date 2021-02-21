@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['namespace' => 'Api\V1\Image', 'prefix' => 'api/v1/image', 'middreware' => 'api'], function (Request $request) {
+    Route::get('/{page?}', 'Index')->name('v1.image.index');
 });
