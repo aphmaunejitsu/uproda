@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['namespace' => 'Api\V1\Image', 'prefix' => 'api/v1/image', 'middreware' => 'api'], function (Request $request) {
-    Route::get('/{page?}', 'Index')->name('v1.image.index');
-});
+Route::group(
+    [
+        'namespace'  => 'Api\V1\Image',
+        'prefix'     => 'api/v1/image',
+        'middleware' => ['api'],
+        'name'       => 'v1.image.'
+
+    ],
+    function () {
+        Route::get('/{page?}', 'Index')
+        ->where(['page' => '[0-9]+'])
+        ->name('index');
+    }
+);
