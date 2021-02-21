@@ -1777,16 +1777,16 @@ pre code {
 .table td {
   padding: 0.75rem;
   vertical-align: top;
-  border-top: 1px solid #dee2e6;
+  border-top: 1px solid rgba(192, 192, 192, 0.8);
 }
 
 .table thead th {
   vertical-align: bottom;
-  border-bottom: 2px solid #dee2e6;
+  border-bottom: 2px solid rgba(192, 192, 192, 0.8);
 }
 
 .table tbody + tbody {
-  border-top: 2px solid #dee2e6;
+  border-top: 2px solid rgba(192, 192, 192, 0.8);
 }
 
 .table-sm th,
@@ -1795,12 +1795,12 @@ pre code {
 }
 
 .table-bordered {
-  border: 1px solid #dee2e6;
+  border: 1px solid rgba(192, 192, 192, 0.8);
 }
 
 .table-bordered th,
 .table-bordered td {
-  border: 1px solid #dee2e6;
+  border: 1px solid rgba(192, 192, 192, 0.8);
 }
 
 .table-bordered thead th,
@@ -2024,7 +2024,7 @@ pre code {
 .table .thead-light th {
   color: #495057;
   background-color: #e9ecef;
-  border-color: #dee2e6;
+  border-color: rgba(192, 192, 192, 0.8);
 }
 
 .table-dark {
@@ -6315,7 +6315,7 @@ a.close.disabled {
   align-items: flex-start;
   justify-content: space-between;
   padding: 1rem 1rem;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid rgba(192, 192, 192, 0.8);
   border-top-left-radius: calc(0.3rem - 1px);
   border-top-right-radius: calc(0.3rem - 1px);
 }
@@ -6342,7 +6342,7 @@ a.close.disabled {
   align-items: center;
   justify-content: flex-end;
   padding: 0.75rem;
-  border-top: 1px solid #dee2e6;
+  border-top: 1px solid rgba(192, 192, 192, 0.8);
   border-bottom-right-radius: calc(0.3rem - 1px);
   border-bottom-left-radius: calc(0.3rem - 1px);
 }
@@ -7092,23 +7092,23 @@ button.bg-dark:focus {
 }
 
 .border {
-  border: 1px solid #dee2e6 !important;
+  border: 1px solid rgba(192, 192, 192, 0.8) !important;
 }
 
 .border-top {
-  border-top: 1px solid #dee2e6 !important;
+  border-top: 1px solid rgba(192, 192, 192, 0.8) !important;
 }
 
 .border-right {
-  border-right: 1px solid #dee2e6 !important;
+  border-right: 1px solid rgba(192, 192, 192, 0.8) !important;
 }
 
 .border-bottom {
-  border-bottom: 1px solid #dee2e6 !important;
+  border-bottom: 1px solid rgba(192, 192, 192, 0.8) !important;
 }
 
 .border-left {
-  border-left: 1px solid #dee2e6 !important;
+  border-left: 1px solid rgba(192, 192, 192, 0.8) !important;
 }
 
 .border-0 {
@@ -10935,12 +10935,57 @@ a.text-dark:focus {
   .table-dark td,
   .table-dark thead th,
   .table-dark tbody + tbody {
-    border-color: #dee2e6;
+    border-color: rgba(192, 192, 192, 0.8);
   }
 
   .table .thead-dark th {
     color: inherit;
-    border-color: #dee2e6;
+    border-color: rgba(192, 192, 192, 0.8);
   }
+}
+
+#root {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.headerBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem;
+  border-bottom: 1px solid rgba(192, 192, 192, 0.8);
+}
+
+.headerBar .SiteLogo:after {
+  content: " \30CD\5B9Fonry";
+}
+
+.headerBar .SiteLogo img {
+  width: 32px;
+  height: 32px;
+}
+
+.headerBar Nav {
+  display: flex;
+  align-items: center;
+}
+
+.headerBar Nav ul {
+  margin: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.headerBar Nav ul li {
+  padding-right: 0.25rem;
+  padding-left: 0.25rem;
+}
+
+.headerBar Nav ul li img {
+  width: 24px;
+  height: 24px;
 }
 

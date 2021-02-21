@@ -1,8 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 function Top() {
   return (
+    <h1>Top</h1>
   );
 }
 

@@ -1,18 +1,14 @@
 import React from 'react';
-import styled from '@emotion/styled';
-import NavBar from './header/NavBar';
+import Nav from './header/Nav';
 import SiteLogo from './header/SiteLogo';
-
-const Header = styled.article`
-`;
 
 function HeaderBar() {
   return (
-    <header className="Top">
+    <header className="headerBar">
       <SiteLogo />
-      <NavBar />
+      <Nav />
     </header>
   );
 }
 
-export default Header;
+export default HeaderBar;
