@@ -21,7 +21,7 @@ class CreateDenyWordsTable extends Migration
         Schema::create('deny_words', function (Blueprint $table) {
             $table->id();
             $table->string('word', 200);
-            $table->timestamp('created_at')->useCurrent()->index();
+            $table->dateTime('created_at')->useCurrent()->index();
         });
     }
 

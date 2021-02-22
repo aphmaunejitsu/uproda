@@ -23,7 +23,7 @@ class ImageHashFactory extends Factory
     {
         return [
             'hash'    => md5($this->faker->word),
-            'comment' => $this->faker->words,
+            'comment' => $this->faker->word,
             'ng'      => rand(0, 1)
         ];
     }
