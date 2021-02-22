@@ -23,7 +23,7 @@ class CreateImageHashTable extends Migration
             $table->string('hash', 256);
             $table->text('comment')->nullable();
             $table->tinyInteger('ng')->nullable()->default(0);
-            $table->timestamp('created_at')->useCurrent()->index('idx_created_at');
+            $table->dateTime('created_at')->useCurrent()->index();
         });
     }
 
