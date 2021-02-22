@@ -23,9 +23,7 @@ class ImageFactory extends Factory
     public function definition()
     {
         return [
-            'image_hash_id' => function () {
-                return ImageHash::factory()->id;
-            },
+            'image_hash_id' => ImageHash::factory(),
             'basename'      => $this->faker->firstNameFemale,
             'ext'           => 'jpg',
             't_ext'         => 'jpg',
@@ -33,7 +31,7 @@ class ImageFactory extends Factory
             'delkey'        => $this->faker->word,
             'mimetype'      => $this->faker->mimeType,
             'size'          => rand(1, 1024),
-            'comment'       => $this->faker->words,
+            'comment'       => $this->faker->word,
             'ip'            => $this->faker->ipv4,
         ];
     }

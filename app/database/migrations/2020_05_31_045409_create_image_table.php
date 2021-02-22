@@ -30,9 +30,7 @@ class CreateImageTable extends Migration
             $table->integer('size')->nullable();
             $table->text('comment')->nullable();
             $table->string('ip', 40)->nullable();
-            $table->timestamp('created_at')->useCurrent()->index();
-
-            $table->foreign('image_hash_id')->references('id')->on('image_hashes');
+            $table->dateTime('created_at')->useCurrent()->index();
         });
     }
 

@@ -27,11 +27,22 @@ services:
       MYSQL_DATABASE: uproda
       DB_USERNAME: uproda_user
       DB_PASSWORD: 1Qazxsw23edcvfR4
-      TZ: "Asia/Tokyo"
     ports:
       - 127.0.0.1:33306:3306
     volumes:
       - ./data:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d
+
+  db-test:
+    image: mariadb:10.5
+    environment:
+      MYSQL_ROOT_PASSWORD: 4rfvcde3
+      MYSQL_DATABASE: uproda
+      DB_USERNAME: uproda_user
+      DB_PASSWORD: 1Qazxsw23edcvfR4
+    ports:
+      - 127.0.0.1:33307:3306
+    volumes:
       - ./db/init:/docker-entrypoint-initdb.d
 
   redis:
