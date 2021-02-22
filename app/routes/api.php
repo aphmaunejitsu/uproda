@@ -19,12 +19,9 @@ Route::group(
         'namespace'  => 'Api\V1\Image',
         'prefix'     => 'api/v1/image',
         'middleware' => ['api'],
-        'name'       => 'v1.image.'
 
     ],
     function () {
-        Route::get('/{page?}', 'Index')
-        ->where(['page' => '[0-9]+'])
-        ->name('index');
+        Route::get('/', 'Index')->name('v1.image.index');
     }
 );

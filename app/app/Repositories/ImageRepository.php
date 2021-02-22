@@ -14,6 +14,11 @@ class ImageRepository implements ImageRepositoryInterface
 
     public function paginate(int $perPage = 50)
     {
-        return $this->model->orderby('created_at')->paginate($perPage);
+        return $this->model
+                    ->whereHas('imageHash', function ($query) {
+                        $query->where('ng', 0);
+                    })
+                    ->with('imageHash')
+                    ->orderby('created_at')->paginate($perPage);
     }
 }
