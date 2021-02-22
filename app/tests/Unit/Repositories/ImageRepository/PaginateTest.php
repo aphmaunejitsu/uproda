@@ -5,8 +5,13 @@ namespace Tests\Unit\Repositories\ImageRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Image;
+use App\Models\ImageHash;
+use App\Repositories\ImageRepositoryInterface;
+use App\Repositories\ImageRepository;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 
 /**
+ * @group api/v1/image/index
  * @group ImageRepositoryPaginateTest
  */
 class PaginateTest extends TestCase
@@ -20,11 +25,11 @@ class PaginateTest extends TestCase
         parent::setUp();
 
         $this->app->bind(
-            \App\Repositories\ImageRepositoryInterface::class,
-            \App\Repositories\ImageRepository::class,
+            ImageRepositoryInterface::class,
+            ImageRepository::class,
         );
 
-        $this->repo = $this->app->make(\App\Repositories\ImageRepositoryInterface::class);
+        $this->repo = $this->app->make(ImageRepositoryInterface::class);
     }
 
     /**
@@ -48,11 +53,34 @@ class PaginateTest extends TestCase
      */
     public function testPaginate()
     {
-        Image::factory()->count(51)->create();
-        $result = $this->repo->paginate(10);
+        Image::factory()
+            ->count(51)
+            ->forImageHash(['ng' => 0 ])->create();
+        Image::factory()
+            ->count(51)
+            ->forImageHash(['ng' => 1 ])->create();
+        $result = $this->repo->paginate(50);
+
 
         $this->assertEquals(51, $result->total());
-        $this->assertEquals(10, $result->perPage());
+        $this->assertEquals(50, $result->perPage());
         $this->assertTrue($result->hasMorePages());
+    }
+
+    /**
+     * A basic unit test example.
+     *
+     * @return void
+     */
+    public function testPaginateNg()
+    {
+        Image::factory()
+            ->count(51)
+            ->forImageHash(['ng' => 1 ])->create();
+        $result = $this->repo->paginate(50);
+
+
+        $this->assertEquals(0, $result->total());
+        $this->assertFalse($result->hasMorePages());
     }
 }
