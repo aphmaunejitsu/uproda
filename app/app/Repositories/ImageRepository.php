@@ -12,6 +12,10 @@ class ImageRepository implements ImageRepositoryInterface
         $this->model = $image;
     }
 
+    public function find(int $id)
+    {
+    }
+
     public function paginate(int $perPage = 50)
     {
         return $this->model
@@ -19,6 +23,7 @@ class ImageRepository implements ImageRepositoryInterface
                         $query->where('ng', 0);
                     })
                     ->with('imageHash')
+                    ->withCount('comments')
                     ->orderby('created_at')->paginate($perPage);
     }
 }

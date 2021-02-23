@@ -13,4 +13,9 @@ class Image extends Model
     {
         return $this->belongsTo(ImageHash::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
