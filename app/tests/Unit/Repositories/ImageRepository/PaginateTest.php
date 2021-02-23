@@ -9,11 +9,11 @@ use App\Models\ImageHash;
 use App\Models\Comment;
 use App\Repositories\ImageRepositoryInterface;
 use App\Repositories\ImageRepository;
-use Illuminate\Database\Eloquent\Factories\Sequence;
 
 /**
  * @group api/v1/image/index
- * @group ImageRepositoryPaginateTest
+ * @group ImageRepository
+ * @group PaginateTest
  */
 class PaginateTest extends TestCase
 {

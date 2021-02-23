@@ -13,8 +13,21 @@ class ImageRepository implements ImageRepositoryInterface
         $this->model = $image;
     }
 
-    public function find(int $id)
+    public function findByBasename(string $basename)
     {
+        return $this->model
+                    ->whereHas('imageHash', function ($query) {
+                        $query->where('ng', 0);
+                    })
+                    ->with([
+                        'imageHash',
+                        'comments' => function ($query) {
+                            $query->orderby('created_at', 'desc');
+                        }
+                    ])
+                    ->withCount('comments')
+                    ->where('basename', $basename)
+                    ->first();
     }
 
     public function paginate(int $perPage = 50)
