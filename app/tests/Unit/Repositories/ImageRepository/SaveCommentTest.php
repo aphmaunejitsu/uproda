@@ -42,4 +42,10 @@ class SaveCommentTest extends TestCase
 
         $this->assertEquals('test comment', $comment->comment);
     }
+
+    public function testFail()
+    {
+        $result = $this->repo->saveComment(0, 'test');
+        $this->assertNull($result);
+    }
 }

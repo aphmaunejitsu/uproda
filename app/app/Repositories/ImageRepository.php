@@ -41,6 +41,11 @@ class ImageRepository implements ImageRepositoryInterface
                     ->orderby('created_at')->paginate($perPage);
     }
 
+    public function create(array $data)
+    {
+        return $this->model->create($data);
+    }
+
     public function saveComment(int $id, string $comment)
     {
         if (! ($image = $this->model->find($id))) {
