@@ -10,6 +10,7 @@ use App\Repositories\ImageRepositoryInterface;
 use App\Repositories\ImageRepository;
 
 /**
+ * @group ImageRepository
  * @group SaveCommentTest
  */
 class SaveCommentTest extends TestCase
@@ -33,7 +34,7 @@ class SaveCommentTest extends TestCase
      *
      * @return void
      */
-    public function testExample()
+    public function testSaveComment()
     {
         $image = Image::factory()->create();
 
