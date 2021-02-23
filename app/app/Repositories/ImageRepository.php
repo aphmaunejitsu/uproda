@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Image;
+use App\Models\Comment;
 
 class ImageRepository implements ImageRepositoryInterface
 {
@@ -25,5 +26,17 @@ class ImageRepository implements ImageRepositoryInterface
                     ->with('imageHash')
                     ->withCount('comments')
                     ->orderby('created_at')->paginate($perPage);
+    }
+
+    public function saveComment(int $id, string $comment)
+    {
+        if (! ($image = $this->model->find($id))) {
+            return null;
+        }
+
+        return $image->comments()
+                     ->save(
+                         new Comment(['comment' => $comment])
+                     );
     }
 }
