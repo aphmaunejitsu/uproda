@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Image;
 use App\Models\ImageHash;
+use App\Models\Comment;
 use App\Repositories\ImageRepositoryInterface;
 use App\Repositories\ImageRepository;
 use Illuminate\Database\Eloquent\Factories\Sequence;
@@ -54,17 +55,17 @@ class PaginateTest extends TestCase
     public function testPaginate()
     {
         Image::factory()
-            ->count(51)
-            ->forImageHash(['ng' => 0 ])->create();
-        Image::factory()
-            ->count(51)
-            ->forImageHash(['ng' => 1 ])->create();
+            ->has(Comment::factory()->count(10))
+            ->count(51)->forImageHash(['ng' => 0 ])->create();
+        Image::factory()->count(51)->forImageHash(['ng' => 1 ])->create();
         $result = $this->repo->paginate(50);
-
 
         $this->assertEquals(51, $result->total());
         $this->assertEquals(50, $result->perPage());
         $this->assertTrue($result->hasMorePages());
+        $this->assertInstanceOf(Image::class, $result[0]);
+        $this->assertInstanceOf(ImageHash::class, $result[0]->imageHash);
+        $this->assertEquals(10, $result[0]->comments_count);
     }
 
     /**
@@ -74,9 +75,7 @@ class PaginateTest extends TestCase
      */
     public function testPaginateNg()
     {
-        Image::factory()
-            ->count(51)
-            ->forImageHash(['ng' => 1 ])->create();
+        Image::factory()->count(51)->forImageHash(['ng' => 1 ])->create();
         $result = $this->repo->paginate(50);
 
 

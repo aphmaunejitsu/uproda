@@ -21,6 +21,7 @@ class AddForienkeyToImageTable extends Migration
                   ->index()->after('created_at');
             $table->timestamp('deleted_at')->nullable()->index()->after('updated_at');
             $table->string('mimetype', 100)->nullable()->change();
+            $table->index('basename');
         });
 
         DB::statement('ALTER TABLE `images` MODIFY `created_at` timestamp NOT NULL DEFAULT current_timestamp');
@@ -35,6 +36,7 @@ class AddForienkeyToImageTable extends Migration
     {
         Schema::table('images', function (Blueprint $table) {
             $table->dropForeign(['image_hash_id']);
+            $table->dropIndex(['basename']);
             $table->dateTime('created_at')->change();
             $table->dropColumn('updated_at');
             $table->dropColumn('deleted_at');
