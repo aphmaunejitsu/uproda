@@ -31,6 +31,8 @@ class ImageFactory extends Factory
             'delkey'        => $this->faker->word,
             'mimetype'      => $this->faker->mimeType,
             'size'          => rand(1, 1024),
+            'width'         => rand(1, 1024),
+            'height'        => rand(1, 1024),
             'comment'       => $this->faker->word,
             'ip'            => $this->faker->ipv4,
         ];
