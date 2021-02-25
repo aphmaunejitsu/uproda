@@ -1,9 +1,7 @@
 version: '2'
 services:
   roda-proxy:
-    build:
-      context: nginx
-      dockerfile: "Dockerfile"
+    image: nginx:latest
     env_file:
       .env
     container_name: "roda-proxy"
@@ -14,9 +12,11 @@ services:
     restart: always
     volumes:
       - "./app:/var/www/roda/"
+      - "./nginx/etc/default.conf:/etc/nginx/templates/default.conf.template"
     networks:
       - default
       - uproda-proxy-network 
+
   php:
     build:
       context: php
@@ -34,14 +34,13 @@ services:
       - "db:roda-db"
       - "redis:roda-redis"
       - "memcached:roda-memcached"
+
   db:
-    build:
-      context: db
-      dockerfile: "Dockerfile"
+    image: ${IMAGE_DB}
     hostname: "roda-db"
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 4rfvcde3
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_HOST: ""
       TZ: "Asia/Tokyo"
     volumes:
@@ -49,22 +48,17 @@ services:
       - "./db/init:/docker-entrypoint-initdb.d"
     ports:
       - "127.0.0.1:53306:3306"
+
   redis:
-    build:
-      context: .
-      dockerfile: "./redis/Dockerfile"
+    image: redis:latest
     hostname: "roda-redis"
     restart: always
-    volumes:
-      - "./redis/data:/data"
     ports:
       - "127.0.0.1:16379:6379"
-    command: redis-server --requirepass warecoli
+    command: redis-server --requirepass ${REDIS_PASSWORD}
 
   memcached:
-    build:
-      context: .
-      dockerfile: "./memcached/Dockerfile"
+    image: memcached:latest
     hostname: "roda-memcached"
     restart: always
     ports:
