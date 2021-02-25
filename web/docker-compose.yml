@@ -23,6 +23,8 @@ services:
       dockerfile: "Dockerfile"
     hostname: "roda-web"
     restart: always
+    env_file:
+      .env
     volumes:
       - "./app:/var/www/roda/"
     depends_on:
