@@ -1,7 +1,7 @@
 version: '2'
 services:
   roda-proxy:
-    image: nginx:latest
+    image: nginx:alpine
     env_file:
       .env
     container_name: "roda-proxy"
@@ -12,10 +12,10 @@ services:
     restart: always
     volumes:
       - "./app:/var/www/roda/"
-      - "./nginx/etc/default.conf:/etc/nginx/templates/default.conf.template"
+      - "./nginx/etc/default.conf.template:/etc/nginx/templates/default.conf.template"
     networks:
       - default
-      - uproda-proxy-network 
+      - uproda-proxy-network
 
   php:
     build:
