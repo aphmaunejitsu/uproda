@@ -14,3 +14,15 @@
   <?php echo Theme::instance()->asset->render('settings'); ?>
   <?php echo Theme::instance()->asset->css(['style.css']); ?>
   <link rel="icon" href="favicon.ico">
+
+<?php if (isset($_SERVER['GOOGLE_TAG_MANAGER']) && $_SERVER['GOOGLE_TAG_MANAGER']) : ?>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo $_SERVER['GOOGLE_TAG_MANAGER']; ?>"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '<?php echo $_SERVER['GOOGLE_TAG_MANAGER']; ?>');
+</script>
+<?php endif; ?>
