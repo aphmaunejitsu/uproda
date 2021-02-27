@@ -34,12 +34,7 @@ class Presenter_Image extends Presenter_Uproda
 		}
 		else
 		{
-			return \Uri::create('/:image_dir/:image_short_dir/:basename.:ext', [
-				'image_dir'       => Libs_Config::get('board.dir'),
-				'image_short_dir' => Libs_Image::get_one_char_from_basename($basename),
-				'basename'        => $basename,
-				'ext'             => $ext,
-			]);
+            return \Libs_Image::build_image_real_url($basename, $ext);
 		}
 	}
 

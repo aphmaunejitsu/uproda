@@ -26,6 +26,16 @@ class Libs_Image
 		return \Uri::create('image/:basename', ['basename' => $basename]);
 	}
 
+    public static function build_image_real_url($basename, $ext)
+    {
+        return \Uri::create('/:image_dir/:image_short_dir/:basename.:ext', [
+            'image_dir'       => Libs_Config::get('board.dir'),
+            'image_short_dir' => Libs_Image::get_one_char_from_basename($basename),
+            'basename'        => $basename,
+            'ext'             => $ext,
+        ]);
+    }
+
 	public static function build_real_image_dir($basename)
 	{
 		return \Str::tr(DOCROOT.':savedir/:onechardir/', [
