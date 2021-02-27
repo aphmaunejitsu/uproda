@@ -16,8 +16,11 @@
 	}
 
 	@include mq($from: tablet) {
+	  justify-content: start;
 		article {
 			width: calc( 100% / 4 - .5rem);
+      padding-right: 0.25rem;
+      padding-left: 0.25rem;
 		}
 	}
 

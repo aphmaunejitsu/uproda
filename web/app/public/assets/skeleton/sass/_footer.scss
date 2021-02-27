@@ -1,8 +1,9 @@
-@import "compass/layout/sticky-footer";
-@include sticky-footer(54px);
+// @import "compass/layout/sticky-footer";
+// @include sticky-footer(54px);
 
 footer {
-	padding: 0 1rem;
+  margin-top: auto;
+	padding: 1rem;
 	nav {
 		display: flex;
 		justify-content: flex-end;
