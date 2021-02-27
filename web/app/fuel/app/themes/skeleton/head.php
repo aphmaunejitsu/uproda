@@ -21,7 +21,7 @@
 <meta property="og:title" content="<?php echo $title ?>" />
 <meta property="og:description" content="<?php echo $image->comment; ?>" />
 <meta property="og:site_name" content="ネ実うpろだ" />
-<meta property="og:image" content="<?php echo \Libs_Image_Thumbnail::build_url($image->basename, $image->t_ext) ?>" />
+<meta property="og:image" content="<?php echo \Libs_Image::build_image_url($image->basename, $image->ext) ?>" />
 <?php endif; ?>
 
 <?php if (isset($_SERVER['GOOGLE_TAG_MANAGER']) && $_SERVER['GOOGLE_TAG_MANAGER']) : ?>
