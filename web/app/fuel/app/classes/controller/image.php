@@ -4,7 +4,20 @@ class Controller_Image extends Controller_Uproda
 
 	public function before()
 	{
-		parent::before();
+		Libs_Config::load();
+		Libs_Lang::load();
+
+		$this->theme = \Theme::instance();
+		$this->theme->active('skeleton');
+		$this->theme->asset->add_path('assets/global', ['css', 'js', 'img']);
+
+		if ( ! \Input::is_ajax())
+		{
+			$template = $this->theme->set_template('template');
+			$this->theme->set_partial('header', $this->theme->presenter('header'));
+			$this->theme->set_partial('footer', $this->theme->presenter('footer'));
+			$this->theme->set_partial('form', $this->theme->presenter('form'));
+		}
 	}
 
 	public function action_index($page = null)
@@ -16,6 +29,7 @@ class Controller_Image extends Controller_Uproda
 
 			$this->theme->asset->js(['clipboard.min.js', 'cp.js'], [], 'clipboard', false);
 
+			$this->theme->set_partial('head', $this->theme->presenter('head')->set('param', ['image' => $image]));
 			$this->theme->set_partial('content', 'image/content')->set([
 				'image' =>  $this->theme->presenter('image/content/image')->set('param', ['id' => $page, 'image' => $image])
 			]);

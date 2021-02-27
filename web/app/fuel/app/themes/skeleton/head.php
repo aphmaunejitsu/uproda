@@ -15,6 +15,15 @@
   <?php echo Theme::instance()->asset->css(['style.css']); ?>
   <link rel="icon" href="favicon.ico">
 
+<?php if ($image) : ?>
+<meta property="og:url" content="<?php echo \Uri::current(); ?>" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="<?php echo $title ?>" />
+<meta property="og:description" content="<?php echo $image->comment; ?>" />
+<meta property="og:site_name" content="ネ実うpろだ" />
+<meta property="og:image" content="<?php echo \Libs_Image_Thumbnail::build_url($image->basename, $image->t_ext) ?>" />
+<?php endif; ?>
+
 <?php if (isset($_SERVER['GOOGLE_TAG_MANAGER']) && $_SERVER['GOOGLE_TAG_MANAGER']) : ?>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo $_SERVER['GOOGLE_TAG_MANAGER']; ?>"></script>
