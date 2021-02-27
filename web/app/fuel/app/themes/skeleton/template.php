@@ -9,7 +9,7 @@
 	</header>
     <?php if (isset($_SERVER['ADCASH_BANNER1']) && $_SERVER['ADCASH_BANNER1']) : ?>
 	<div class="adcash">
-    <script data-cfasync="false" type="text/javascript" src="<?php $_SERVER['ADCASH_BANNER1'] ?>"></script>
+    <script data-cfasync="false" type="text/javascript" src="<?php echo $_SERVER['ADCASH_BANNER1'] ?>"></script>
 	</div>
     <?php endif; ?>
 	<div id="root">
@@ -19,7 +19,7 @@
 	</div>
     <?php if (isset($_SERVER['ADCASH_BANNER1']) && $_SERVER['ADCASH_BANNER1']) : ?>
 	<div class="adcash">
-    <script data-cfasync="false" type="text/javascript" src="<?php $_SERVER['ADCASH_BANNER1'] ?>"></script>
+    <script data-cfasync="false" type="text/javascript" src="<?php echo $_SERVER['ADCASH_BANNER1'] ?>"></script>
 	</div>
     <?php endif; ?>
 	<footer id="footer">
