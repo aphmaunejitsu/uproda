@@ -13,7 +13,7 @@
   <?php echo Theme::instance()->asset->render('clipboard'); ?>
   <?php echo Theme::instance()->asset->render('settings'); ?>
   <?php echo Theme::instance()->asset->css(['style.css']); ?>
-  <link rel="icon" href="favicon.ico">
+  <link rel="icon" href="/favicon.ico">
 
 <?php if ($image) : ?>
 <meta property="og:url" content="<?php echo \Uri::current(); ?>" />
