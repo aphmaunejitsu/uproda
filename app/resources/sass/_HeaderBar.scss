@@ -5,13 +5,15 @@
   border-bottom: 1px solid rgba(silver, 0.8);
 
   .SiteLogo {
+    display: flex;
+    align-items: center;
     &:after {
       content: ' ネ実onry';
     }
 
     img {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
     }
   }
 

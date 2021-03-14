@@ -1,12 +1,12 @@
 import React from 'react';
-import Cloud from '../../../images/cloud_upload-black-48dp.svg';
+import UpDialog from './UpDialog';
 
 function Nav() {
   return (
     <nav>
       <ul>
         <li>
-          <img src={Cloud} alt="uproda" />
+          <UpDialog />
         </li>
       </ul>
     </nav>
