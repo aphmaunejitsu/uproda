@@ -19,7 +19,7 @@ function UpDialog() {
   };
 
   return (
-    <div>
+    <div className="upload-button">
       <IconButton
         variant="outlined"
         color="default"

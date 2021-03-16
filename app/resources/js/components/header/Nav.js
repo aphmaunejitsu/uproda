@@ -1,12 +1,15 @@
 import React from 'react';
-import UpDialog from './UpDialog';
+import { Link } from 'react-router-dom';
 
 function Nav() {
   return (
     <nav>
       <ul>
         <li>
-          <UpDialog />
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/about">About</Link>
         </li>
       </ul>
     </nav>
