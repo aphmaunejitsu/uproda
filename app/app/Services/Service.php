@@ -3,10 +3,9 @@
 namespace App\Services;
 
 use App\Exceptions\ServiceException;
-use App\Services\Traits\Transaction;
+use App\Services\Traits\TransactionTrait;
 use App\Services\TransactionInterface;
 use App\Services\CacheInterface;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\App;
@@ -14,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Service
 {
-    use Transaction;
+    use TransactionTrait;
 
     protected $namespace = 'App\Services';
     protected $service   = null;

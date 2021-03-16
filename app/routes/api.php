@@ -17,11 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::group(
     [
         'namespace'  => 'Api\V1\Image',
-        'prefix'     => 'api/v1/image',
-        'middleware' => ['api'],
-
+        'prefix'     => 'v1/image',
     ],
     function () {
         Route::get('/', 'Index')->name('v1.image.index');
+        Route::get('/{basename}', 'Detail')->name('v1.image.detail');
     }
 );
