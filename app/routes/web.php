@@ -13,24 +13,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(
-    [
-        'namespace'  => 'Api\V1\Image',
-        'middleware' => ['api'],
-        'name'       => 'front.'
+Route::get(
+	'/',
+	function () {
+		return view( 'welcome' );
+	}
+)->name( 'top' );
 
-    ],
-    function () {
-        Route::get('/about', function () {
-            return view('welcome');
-        })->name('about');
+Route::get(
+	'/about',
+	function () {
+		return view( 'welcome' );
+	}
+)->name( 'about' );
 
-        Route::get('/image/{hash}', function () {
-            return view('welcome');
-        })->name('image');
-
-        Route::get('/{page?}', function () {
-            return view('welcome');
-        })->name('top');
-    }
-);
+Route::get(
+	'/image/{hash}',
+	function () {
+		return view( 'welcome' );
+	}
+)->where( 'hash', '[0-9a-zA-Z]{8}' )
+  ->name( 'image' );

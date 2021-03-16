@@ -1,12 +1,15 @@
 import React from 'react';
-import Cloud from '../../../images/cloud_upload-black-48dp.svg';
+import { Link } from 'react-router-dom';
 
 function Nav() {
   return (
     <nav>
       <ul>
         <li>
-          <img src={Cloud} alt="uproda" />
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/about">About</Link>
         </li>
       </ul>
     </nav>
