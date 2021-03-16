@@ -37,21 +37,27 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => [
+                env('LOG_CHANNELS_1', 'slack'),
+                env('LOG_CHANNELS_2', 'stdout'),
+                env('LOG_CHANNELS_2', 'daily'),
+            ],
             'ignore_exceptions' => false,
         ],
 
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
+            'tap'  => [App\Logging\AppLogFormatter::class],
             'level' => 'debug',
         ],
 
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
+            'tap'  => [App\Logging\AppLogFormatter::class],
             'level' => 'debug',
-            'days' => 14,
+            'days' => 2,
         ],
 
         'slack' => [
@@ -70,6 +76,17 @@ return [
                 'host' => env('PAPERTRAIL_URL'),
                 'port' => env('PAPERTRAIL_PORT'),
             ],
+        ],
+
+        'stdout' => [
+            'driver'    => 'monolog',
+            'handler'   => StreamHandler::class,
+            'formatter' => env('LOG_STDERR_FORMATTER'),
+            'tap'       => [App\Logging\AppLogFormatter::class],
+            'with'      => [
+                'stream' => 'php://stdout',
+            ],
+            'level'     => env('LOG_LEVEL'),
         ],
 
         'stderr' => [
