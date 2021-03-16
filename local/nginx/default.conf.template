@@ -20,6 +20,10 @@ server {
 
     index index.php;
 
+    location ~ ^/up/(.*)/ {
+        return 301 ${REDIRECT_HOST}/$1;
+    }
+
     location / {
         try_files $uri $uri/ /index.php$is_args$args;
     }
