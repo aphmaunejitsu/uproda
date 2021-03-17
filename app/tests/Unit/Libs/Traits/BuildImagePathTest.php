@@ -3,7 +3,6 @@
 namespace Tests\Unit\Libs\Traits;
 
 use Tests\TestCase;
-use Mockery\MockInterface;
 use App\Libs\Traits\BuildImagePath;
 
 /**
