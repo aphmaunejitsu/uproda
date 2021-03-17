@@ -1,0 +1,16 @@
+.images {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: .25rem;
+
+  .thumbnail {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: .5rem;
+
+    img {
+      width: 100%;
+    }
+  }
+}
