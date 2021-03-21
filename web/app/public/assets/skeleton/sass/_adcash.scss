@@ -1,6 +1,17 @@
-.adcash {
-	width: 100%;
-	padding: 0.25rem;
-	display: flex;
-	justify-content: center;
+.dmm {
+  display: flex;
+  flex-direction: column;
+  .dmm-widget-placement {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  @include mq($from: tablet) {
+    flex-direction: row;
+    justify-content: center;
+    .dmm-widget-placement {
+      margin-right: initial;
+      margin-left: initial;
+    }
+  }
 }
