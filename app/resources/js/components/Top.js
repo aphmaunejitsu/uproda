@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import Thumbnail from './top/Thumbnail';
 
-
 function Top() {
   const [error, setError] = React.useState(null);
   const [isLoaded, setIsLoaded] = React.useState(false);
@@ -21,27 +20,21 @@ function Top() {
     getImages();
   }, []);
 
-  let el;
   if (isLoaded) {
-    el = (
+    return (
       <div className="images">
         {items.map((image) => (
-          <Thumbnail
-            key={image.id}
-            image={image}
-          />
+          <Thumbnail image={image} key={image.id} />
         ))}
       </div>
     );
-  } else if (error) {
-    el = <div>error...</div>;
-  } else {
-    el = (
-      <div className="Loading">Loading...</div>
-    );
   }
 
-  return el;
+  if (error) {
+    return <div>error...</div>;
+  }
+
+  return <div className="Loading">Loading...</div>;
 }
 
 export default Top;
