@@ -1,6 +1,7 @@
 body {
   background-color: $white;
   color: $black;
+  min-width: 320px;
   @media (prefers-color-scheme: dark) {
     background-color: $white-dark;
     color: $black-dark;
