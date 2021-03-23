@@ -2,15 +2,22 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: .25rem;
+  padding-right: .25rem;
+  padding-left: .25rem;
+
+  min-width: 320px;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
 
   a {
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: .5rem;
 
     img {
-      width: 100%;
+      padding: 2px;
+      max-width: 100%!important;
+      height: auto!important;
     }
   }
 }
