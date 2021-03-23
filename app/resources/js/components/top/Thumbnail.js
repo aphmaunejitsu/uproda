@@ -1,34 +1,32 @@
-import React, { useEffect } from 'react';
-// import { LazyLoadImage } from 'react-lazy-load-image-component';
+import React from 'react';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import noimage from '../../../images/noimage.gif';
+import useWindowDimensions from '../hook/useWindowDimensions';
 
 function Thumbnail({ image }) {
-  const [isLoaded, setIsLoaded] = React.useState(false);
-
-  useEffect(() => {
-    const img = new Image();
-    img.src = image.thumbnail;
-    img.onload = () => {
-      setIsLoaded(true);
-    };
-  }, []);
-
-  if (isLoaded) {
-    return (
-      <>
-        <Link to={image.detail}>
-          <img src={image.thumbnail} alt={image.comment} />
-        </Link>
-      </>
-    );
+  const { width, height } = useWindowDimensions();
+  console.log(width);
+  console.log(height);
+  let w;
+  if (width >= 420 && width <= 1280) {
+    w = (width - 8) / 4;
+  } else if (width < 420) {
+    w = (width - 8) / 2;
+  } else {
+    w = (1280 - 8) / 4;
   }
-
   return (
     <>
       <Link to={image.detail}>
-        <img src={noimage} alt="noimage" />
+        <LazyLoadImage
+          alt={image.comment}
+          effect="blur"
+          src={image.thumbnail}
+          height={w}
+          width={w}
+        />
       </Link>
     </>
   );
