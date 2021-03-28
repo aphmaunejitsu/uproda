@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import Thumbnail from './top/Thumbnail';
+import Loading from './common/Loading';
 
 function Top() {
   const [error, setError] = React.useState(null);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [items, setItems] = React.useState([]);
+
   const getImages = async () => {
     try {
       const response = await axios.get('/api/v1/image/');
-      setItems(response.data.data);
+      setItems(response.data);
       setIsLoaded(true);
     } catch (e) {
       setError(true);
@@ -22,11 +24,13 @@ function Top() {
 
   if (isLoaded) {
     return (
-      <div className="images">
-        {items.map((image) => (
-          <Thumbnail image={image} key={image.id} />
-        ))}
-      </div>
+      <>
+        <div className="images">
+          {items.data.map((image) => (
+            <Thumbnail image={image} key={image.id} />
+          ))}
+        </div>
+      </>
     );
   }
 
@@ -34,7 +38,7 @@ function Top() {
     return <div>error...</div>;
   }
 
-  return <div className="Loading">Loading...</div>;
+  return <Loading />;
 }
 
 export default Top;
