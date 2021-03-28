@@ -6,9 +6,7 @@ import PropTypes from 'prop-types';
 import useWindowDimensions from '../hook/useWindowDimensions';
 
 function Thumbnail({ image }) {
-  const { width, height } = useWindowDimensions();
-  console.log(width);
-  console.log(height);
+  const { width } = useWindowDimensions();
   let w;
   if (width >= 420 && width <= 1280) {
     w = (width - 8) / 4;
