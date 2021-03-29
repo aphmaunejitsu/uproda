@@ -11,13 +11,13 @@ function Thumbnail({ image }) {
   if (width >= 420 && width <= 1280) {
     w = (width - 8) / 4;
   } else if (width < 420) {
-    w = (width - 8) / 1;
+    w = (width - 8) / 2;
   } else {
     w = (1280 - 8) / 4;
   }
   return (
     <>
-      <Link to={image.detail} key={image.id}>
+      <Link to={image.detail} key={image.basename}>
         <LazyLoadImage
           alt={image.comment}
           effect="blur"

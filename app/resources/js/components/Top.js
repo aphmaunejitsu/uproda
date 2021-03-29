@@ -8,18 +8,35 @@ import Loading from './common/Loading';
 function Top() {
   const [items, setItems] = React.useState([]);
   const [hasMore, setHasMore] = React.useState(true);
+  const [isError, setIsError] = React.useState(false);
 
   const getImages = async (p) => {
-    const response = await axios.get('/api/v1/image/', { params: { page: p } });
-    const data = response.data.data;
+    await axios.get('/api/v1/image/', { params: { page: p } })
+      .then((response) => {
+        const { data } = response;
+        const images = data.data;
 
-    if (data.length < 1) {
-      setHasMore(false);
-      return;
-    }
+        if (images.length < 1) {
+          setHasMore(false);
+          return;
+        }
 
-    setItems([...items, ...data]);
+        setItems([...items, ...images]);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsError(true);
+      });
   };
+
+  if (isError) {
+    return (
+      <>
+        <div className="images error">could not load images</div>
+      </>
+
+    );
+  }
 
   return (
     <>
@@ -28,7 +45,7 @@ function Top() {
           pageStart={0}
           loadMore={getImages}
           hasMore={hasMore}
-          loader={<Loading />}
+          loader={<Loading key={0} />}
         >
           {items.map((image) => (
             <Thumbnail image={image} key={image.basename} />
