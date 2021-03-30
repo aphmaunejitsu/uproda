@@ -1,0 +1,7 @@
+[mysqld]
+log-bin=/var/log/mysql/bin-log
+server-id=200
+read_only=1
+
+relay_log_info_repository=TABLE
+relay_log_recovery=ON
