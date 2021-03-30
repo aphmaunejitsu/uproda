@@ -29,6 +29,10 @@ function Top() {
       });
   };
 
+  const clickThumbnail = () => {
+    console.log('click thumbnail');
+  };
+
   if (isError) {
     return (
       <>
@@ -48,7 +52,7 @@ function Top() {
           loader={<Loading key={0} />}
         >
           {items.map((image) => (
-            <Thumbnail image={image} key={image.basename} />
+            <Thumbnail image={image} handleThumbnail={clickThumbnail} key={image.basename} />
           ))}
         </InfiniteScroll>
       </div>

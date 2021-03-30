@@ -1,0 +1,12 @@
+[mysqld]
+character-set-server=utf8mb4
+collation-server=utf8mb4_bin
+
+log-bin=/var/log/mysql/bin-log
+server-id=100
+
+ft_min_word_len=2
+innodb_ft_min_token_size=2
+
+[client]
+default-character-set=utf8mb4
