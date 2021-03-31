@@ -23,8 +23,7 @@ function Top() {
 
         setItems([...items, ...images]);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         setIsError(true);
       });
   };
