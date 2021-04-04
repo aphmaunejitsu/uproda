@@ -2,12 +2,12 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:s="http://sqlfairy.sourceforge.net/sqlfairy.xml">
 <xsl:output method="text" encoding="utf8"/>
 <xsl:template match="table_structure">
-## <xsl:value-of select="@name"/> - <xsl:value-of select="options/@Comment"/>
-#### column
+# <xsl:value-of select="@name"/> - <xsl:value-of select="options/@Comment"/>
+## column
 name|type|NULL|default|key|comment|Extra
 ----|----|----|----|----|---|---|
 <xsl:apply-templates select="field"/>
-#### index
+## index
 name|column|multi|NULL|UNIQ
 ----|----|----|----|----
 <xsl:apply-templates select="key"/>
