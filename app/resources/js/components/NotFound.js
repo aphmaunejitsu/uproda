@@ -7,7 +7,7 @@ function NotFound() {
     <div>
       <h1>Not Found</h1>
       <Link to="/">
-        <img src={NotFoundImage} alt="なんてこった、ここはね実だったのか" />
+        <img src={NotFoundImage} alt="なんてこった、ここはネ実だったのか" />
       </Link>
     </div>
   );

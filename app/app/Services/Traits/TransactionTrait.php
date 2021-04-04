@@ -4,7 +4,7 @@ namespace App\Services\Traits;
 
 use Illuminate\Support\Facades\DB;
 
-trait Transaction
+trait TransactionTrait
 {
     public function beginTransaction(): void
     {

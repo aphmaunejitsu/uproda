@@ -14,23 +14,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get(
-	'/',
-	function () {
-		return view( 'welcome' );
-	}
-)->name( 'top' );
+    '/',
+    function () {
+        return view('welcome');
+    }
+)->name('top');
 
 Route::get(
-	'/about',
-	function () {
-		return view( 'welcome' );
-	}
-)->name( 'about' );
+    '/about',
+    function () {
+        return view('welcome');
+    }
+)->name('about');
 
 Route::get(
-	'/image/{hash}',
-	function () {
-		return view( 'welcome' );
-	}
-)->where( 'hash', '[0-9a-zA-Z]{8}' )
-  ->name( 'image' );
+    '/image/{hash}',
+    function () {
+        return view('welcome');
+    }
+)->where('hash', '[0-9a-zA-Z]{8}')
+  ->name('image');
