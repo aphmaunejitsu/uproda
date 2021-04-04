@@ -1,8 +1,8 @@
 
 
 	
-## users - 
-#### column
+# users - 
+## column
 name|type|NULL|default|key|comment|Extra
 ----|----|----|----|----|---|---|
 id|bigint(20) unsigned|NO||PRI||auto_increment|
@@ -19,7 +19,7 @@ created_at|timestamp|NO|current_timestamp()|MUL|||
 updated_at|timestamp|NO|current_timestamp()|MUL||on update current_timestamp()|
 deleted_at|timestamp|YES|NULL|MUL|||
 
-#### index
+## index
 name|column|multi|NULL|UNIQ
 ----|----|----|----|----
 PRIMARY|id|1|NO|YES|
@@ -29,3 +29,6 @@ idx_updated_at|updated_at|1|NO|NO|
 idx_deleted_at|deleted_at|1|YES|NO|
 
 
+## Foreign Key
+column|references|delete|update
+----|----|----|----
