@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import PropTypes from 'prop-types';
 import useWindowDimensions from '../hook/useWindowDimensions';
 
-function Thumbnail({ image, handleThumbnail }) {
+function Thumbnail({ image, handleClick }) {
   const { width } = useWindowDimensions();
+
   let w;
   if (width >= 420 && width <= 1280) {
     w = (width - 8) / 4;
@@ -22,7 +23,7 @@ function Thumbnail({ image, handleThumbnail }) {
         src={image.thumbnail}
         height={w}
         width={w}
-        onClick={handleThumbnail}
+        onClick={() => handleClick(image)}
       />
     </>
   );
@@ -37,7 +38,7 @@ Thumbnail.propTypes = {
     thumbnail: PropTypes.string.isRequired,
     comment: PropTypes.string.isRequired,
   }).isRequired,
-  handleThumbnail: PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired,
 };
 
 export default Thumbnail;

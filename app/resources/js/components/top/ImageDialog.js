@@ -4,7 +4,15 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import PropTypes from 'prop-types';
 import useWindowDimensions from '../hook/useWindowDimensions';
 
-function ImageDialog({ image }) {
+function ImageDialog({ isOpen, setIsOpen, image }) {
+  if (!isOpen) {
+    return null;
+  }
+
+  if (!image) {
+    return null;
+  }
+
   const { width } = useWindowDimensions();
   let w;
   if (width >= 420 && width <= 1280) {
@@ -22,12 +30,15 @@ function ImageDialog({ image }) {
         effect="blur"
         src={image.image}
         width={w}
+        onClick={() => { setIsOpen(false);}}
       />
     </>
   );
 }
 
 ImageDialog.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
   image: PropTypes.shape({
     basename: PropTypes.string.isRequired,
     detail: PropTypes.string.isRequired,

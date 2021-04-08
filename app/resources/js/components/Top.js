@@ -1,14 +1,21 @@
 import React from 'react';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroller';
-
 import Thumbnail from './top/Thumbnail';
 import Loading from './common/Loading';
+import ImageDialog from './top/ImageDialog';
 
 function Top() {
   const [items, setItems] = React.useState([]);
   const [hasMore, setHasMore] = React.useState(true);
   const [isError, setIsError] = React.useState(false);
+  const [isOpenImage, setIsOpenImage] = React.useState(false);
+  const [showImage, setShowImage] = React.useState({
+    basename: '',
+    detail: '',
+    image: '',
+    comment: '',
+  });
 
   const getImages = async (p) => {
     await axios.get('/api/v1/image/', { params: { page: p } })
@@ -28,8 +35,9 @@ function Top() {
       });
   };
 
-  const clickThumbnail = () => {
-    console.log('click thumbnail');
+  const onClickThumbnail = (image) => {
+    setIsOpenImage(true);
+    setShowImage(image);
   };
 
   if (isError) {
@@ -51,10 +59,19 @@ function Top() {
           loader={<Loading key={0} />}
         >
           {items.map((image) => (
-            <Thumbnail image={image} handleThumbnail={clickThumbnail} key={image.basename} />
+            <Thumbnail
+              image={image}
+              key={image.basename}
+              handleClick={onClickThumbnail}
+            />
           ))}
         </InfiniteScroll>
       </div>
+      <ImageDialog
+        isOpen={isOpenImage}
+        image={showImage}
+        setIsOpen={setIsOpenImage}
+      />
     </>
   );
 }
