@@ -10,16 +10,16 @@
   margin-left: auto;
   margin-right: auto;
 
-  span {
-    margin-left: auto;
-    margin-right: auto;
-    img {
-      padding: 2px;
-    }
+    span {
+      margin-left: auto;
+      margin-right: auto;
+      img {
+        padding: 2px;
+      }
 
-    &:after {
-      content: '';
-      display: block;
+      &:after {
+        content: '';
+        display: block;
+      }
     }
-  }
 }
