@@ -11,6 +11,7 @@ return [
             'thumbnail' => env('RODA_THUMBNAIL_DIR', 'thumbnail')
         ]
     ],
+    'storage' => env('RODA_IMAGE_STORAGE', 'image'),
     'pagination' => [
         'perPage' => env('RODA_PAGINATION_PERPAGE', 100),
     ]

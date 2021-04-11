@@ -18,15 +18,40 @@ class BuildImagePathTest extends TestCase
         $this->trait = $this->getMockForTrait(BuildImagePath::class);
     }
 
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
-    public function testGetImageUrl()
+    public function testGetImageStorage()
     {
-        $image = $this->trait->getImageUrl('Abc', 'jpg');
-        $this->assertEquals('http://testing.com/a/Abc.jpg', $image);
+        $image = $this->trait->getImageStorage();
+        $this->assertEquals('image', $image);
+    }
+
+    public function testGetSaveDirectory()
+    {
+        $image = $this->trait->getSaveDirectory('Abc');
+        $this->assertEquals('a', $image);
+    }
+
+    public function testBuildThumbnailDir()
+    {
+        $image = $this->trait->buildThumbnailDir('Abc');
+        $this->assertEquals('/a/thumbnail', $image);
+    }
+
+    public function testBuildFilename()
+    {
+        $image = $this->trait->buildFilename('Abc', 'png');
+        $this->assertEquals('Abc.png', $image);
+    }
+
+    public function testBuildThumbnailPath()
+    {
+        $image = $this->trait->buildThumbnailPath('Abc', 'png');
+        $this->assertEquals('/a/thumbnail/Abc.png', $image);
+    }
+
+    public function testBuildImagePath()
+    {
+        $image = $this->trait->buildImagePath('Abc', 'png');
+        $this->assertEquals('/a/Abc.png', $image);
     }
 
     public function testGetThumbnailUrl()
@@ -35,9 +60,9 @@ class BuildImagePathTest extends TestCase
         $this->assertEquals('http://testing.com/a/thumbnail/Abc.jpg', $image);
     }
 
-    public function testGetSaveDirectory()
+    public function testGetImageUrl()
     {
-        $image = $this->trait->getSaveDirectory('Abc');
-        $this->assertEquals('a', $image);
+        $image = $this->trait->getImageUrl('Abc', 'jpg');
+        $this->assertEquals('http://testing.com/a/Abc.jpg', $image);
     }
 }
