@@ -12,7 +12,8 @@ body {
     background-color: $white-dark;
     color: $black-dark;
   }
-}
 
-.Loading {
+  &.is-fixed {
+    overflow: hidden;
+  }
 }
