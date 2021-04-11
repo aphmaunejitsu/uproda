@@ -57,4 +57,13 @@ class ImageRepository implements ImageRepositoryInterface
                          new Comment(['comment' => $comment])
                      );
     }
+
+    public function getByIds(?array $ids = null)
+    {
+        return $this->model
+                    ->when($ids, function ($query, $ids) {
+                        $query->find($ids);
+                    })
+                    ->orderby('created_at');
+    }
 }

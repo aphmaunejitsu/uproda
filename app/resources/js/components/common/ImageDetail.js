@@ -12,6 +12,9 @@ function ImageDetail({ image }) {
     return null;
   }
 
+  const loadImage = () => {
+  }
+
   console.log(image);
 
   //   const { width } = useWindowDimensions();
