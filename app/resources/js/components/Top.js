@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroller';
 import Thumbnail from './top/Thumbnail';
@@ -21,19 +21,23 @@ function Top() {
     await axios.get('/api/v1/image/', { params: { page: p } })
       .then((response) => {
         const { data } = response;
-        const images = data.data;
+        const { meta } = data;
 
-        if (images.length < 1) {
+        if (data.data.length < 1 || !meta.to) {
           setHasMore(false);
           return;
         }
 
-        setItems([...items, ...images]);
+        setItems([...items, ...data.data]);
       })
       .catch(() => {
         setIsError(true);
       });
   };
+
+  useEffect(() => {
+    document.body.classList.toggle('is-fixed', isOpenImage);
+  }, [isOpenImage]);
 
   const onClickThumbnail = (image) => {
     setIsOpenImage(true);

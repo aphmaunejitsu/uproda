@@ -2,7 +2,7 @@ import React from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import PropTypes from 'prop-types';
-import useWindowDimensions from '../hook/useWindowDimensions';
+// import useWindowDimensions from '../hook/useWindowDimensions';
 
 function ImageDialog({ isOpen, setIsOpen, image }) {
   if (!isOpen) {
@@ -13,26 +13,35 @@ function ImageDialog({ isOpen, setIsOpen, image }) {
     return null;
   }
 
-  const { width } = useWindowDimensions();
-  let w;
-  if (width >= 420 && width <= 1280) {
-    w = (width - 8);
-  } else if (width < 420) {
-    w = (width - 8);
-  } else {
-    w = (1280 - 8);
-  }
+  //   const { width } = useWindowDimensions();
+  // let w;
+  // if (width >= 420 && width <= 1280) {
+  //   w = (width - 8);
+  // } else if (width < 420) {
+  //   w = (width - 8);
+  // } else {
+  //   w = (1280 - 8);
+  // }
 
   return (
-    <>
-      <LazyLoadImage
-        alt={image.comment}
-        effect="blur"
-        src={image.image}
-        width={w}
-        onClick={() => { setIsOpen(false);}}
-      />
-    </>
+    <div
+      className="image-main"
+      onClick={() => { setIsOpen(false); }}
+      role="presentation"
+    >
+      <div className="container">
+        <LazyLoadImage
+          alt={image.comment}
+          effect="blur"
+          src={image.image}
+          width={420}
+          onClick={(e) => { e.stopPropagation(); }}
+        />
+        <div className="body">
+          aaaaaaa
+        </div>
+      </div>
+    </div>
   );
 }
 
