@@ -1,7 +1,7 @@
 import React from 'react';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import PropTypes from 'prop-types';
+import ImageDetail from '../common/ImageDetail';
 // import useWindowDimensions from '../hook/useWindowDimensions';
 
 function ImageDialog({ isOpen, setIsOpen, image }) {
@@ -25,22 +25,11 @@ function ImageDialog({ isOpen, setIsOpen, image }) {
 
   return (
     <div
-      className="image-main"
+      className="image-dialog"
       onClick={() => { setIsOpen(false); }}
       role="presentation"
     >
-      <div className="container">
-        <LazyLoadImage
-          alt={image.comment}
-          effect="blur"
-          src={image.image}
-          width={420}
-          onClick={(e) => { e.stopPropagation(); }}
-        />
-        <div className="body">
-          aaaaaaa
-        </div>
-      </div>
+      <ImageDetail image={image} />
     </div>
   );
 }
@@ -48,12 +37,7 @@ function ImageDialog({ isOpen, setIsOpen, image }) {
 ImageDialog.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
-  image: PropTypes.shape({
-    basename: PropTypes.string.isRequired,
-    detail: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    comment: PropTypes.string.isRequired,
-  }).isRequired,
+  image: PropTypes.shape({}).isRequired,
 };
 
 export default ImageDialog;
