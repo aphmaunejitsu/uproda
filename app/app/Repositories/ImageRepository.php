@@ -64,7 +64,8 @@ class ImageRepository implements ImageRepositoryInterface
                     ->when($ids, function ($query, $ids) {
                         $query->find($ids);
                     })
-                    ->orderby('created_at');
+                    ->orderby('created_at')
+                    ->get();
     }
 
     public function updateGeometry(int $id, int $width, int $height)

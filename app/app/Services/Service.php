@@ -36,6 +36,7 @@ class Service
 
             $service = App::make($class);
         } catch (\Exception $e) {
+            Log::info(sprintf('[End service] %s', $class), $user + ['class' => $class, 'error' => $e->getMessage()]);
             throw new ServiceException('not found service', 9000, $e);
         }
 
@@ -80,7 +81,7 @@ class Service
                 $service->rollback();
             }
 
-            Log::info(sprintf('[End Service] %s, raised exception', $class), $user + ['class' => $class]);
+            Log::info(sprintf('[End Service] %s, raised exception', $class), $user + ['class' => $class, 'error' => $e->getMessage()]);
             throw new ServiceException('raise execption', 10000, $e);
         }
 
