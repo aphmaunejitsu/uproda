@@ -64,8 +64,4 @@ trait BuildImagePath
     {
         return Str::lower(Str::substr($basename, 0, 1));
     }
-
-    public function getTmpImageFile(string $basename)
-    {
-    }
 }

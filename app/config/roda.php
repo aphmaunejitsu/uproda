@@ -7,7 +7,6 @@ return [
     ],
     'url'        => [
         'image' => [
-            'base'      => env('RODA_URL_IMAGE_BASE', 'http://localhost'),
             'thumbnail' => env('RODA_THUMBNAIL_DIR', 'thumbnail')
         ]
     ],
