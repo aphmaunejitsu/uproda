@@ -8,6 +8,7 @@ interface ImageRepositoryInterface
     public function paginate(int $perPage);
     public function create(array $data);
     public function saveComment(int $id, string $comment);
+    public function updateGeometry(int $id, int $width, int $height);
 
     public function getByIds(?array $ids);
 }
