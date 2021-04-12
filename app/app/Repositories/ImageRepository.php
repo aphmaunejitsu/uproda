@@ -66,4 +66,18 @@ class ImageRepository implements ImageRepositoryInterface
                     })
                     ->orderby('created_at');
     }
+
+    public function updateGeometry(int $id, int $width, int $height)
+    {
+        if (!($image = $this->model->find($id))) {
+            return null;
+        }
+
+        $image->width = $width;
+        $image->height = $height;
+
+        $image->save();
+
+        return $image;
+    }
 }
