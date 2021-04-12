@@ -3,8 +3,9 @@
 namespace App\Services\ImageServices;
 
 use App\Repositories\ImageRepositoryInterface;
+use App\Services\ImageService;
 
-class Paginate
+class Paginate extends ImageService
 {
     public function __construct(ImageRepositoryInterface $image)
     {
