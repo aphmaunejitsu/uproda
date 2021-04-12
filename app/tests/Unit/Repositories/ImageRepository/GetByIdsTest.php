@@ -42,6 +42,7 @@ class GetByIdsTest extends TestCase
         $pluck = $images->pluck('id');
         $ids = $pluck->slice(1, 4);
         $result = $this->repo->getByIds($ids->toArray());
+        $this->assertIsObject($result);
         $this->assertEquals(4, $result->count());
     }
 
@@ -54,6 +55,7 @@ class GetByIdsTest extends TestCase
     {
         $images = Image::factory()->count(11)->create();
         $result = $this->repo->getByIds();
+        $this->assertIsObject($result);
         $this->assertEquals(11, $result->count());
     }
 
@@ -65,6 +67,7 @@ class GetByIdsTest extends TestCase
     public function testNotFound()
     {
         $result = $this->repo->getByIds();
+        $this->assertEmpty($result);
         $this->assertEquals(0, $result->count());
     }
 }

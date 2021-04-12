@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\ImageService;
 use Illuminate\Console\Command;
 
 class UpdateImageSize extends Command
@@ -11,7 +12,7 @@ class UpdateImageSize extends Command
      *
      * @var string
      */
-    protected $signature = 'image:updateSize';
+    protected $signature = 'image:updateSize {id?*}';
 
     /**
      * The console command description.
@@ -35,8 +36,17 @@ class UpdateImageSize extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(ImageService $image)
     {
+        $this->info('Start Update Image Geometry');
+        if (! ($result = $image->updateSize($this->argument('id')))) {
+            $this->info('there is no target');
+            $this->info('Finish Update Image Geometry');
+            return 1;
+        }
+
+        $this->info('Update ' . count($result) . ' Images.');
+        $this->info('Finish Update Image Geometry');
         return 0;
     }
 }

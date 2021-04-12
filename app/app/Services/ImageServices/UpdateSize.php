@@ -6,7 +6,6 @@ use App\Services\ImageService;
 use App\Repositories\ImageRepositoryInterface;
 use App\Repositories\FileRepositoryInterface;
 use App\Services\TransactionInterface;
-use Illuminate\Support\Facades\Log;
 
 class UpdateSize extends ImageService implements TransactionInterface
 {
