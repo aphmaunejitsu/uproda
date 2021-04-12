@@ -24,6 +24,8 @@ services:
       - db-primary
       - db-secondary
       - redis
+    external_links:
+      - roda-storage
     networks:
       - default
       - uproda-proxy-network

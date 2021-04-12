@@ -9,7 +9,8 @@ RUN apt-get update --fix-missing --no-install-recommends \
         libpng-dev \
         libmagickwand-dev \
         supervisor \
-    && docker-php-ext-install -j$(nproc) exif iconv pdo pdo_mysql mbstring pcntl \
+    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd exif iconv pdo pdo_mysql mbstring pcntl \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && docker-php-ext-configure zip \
