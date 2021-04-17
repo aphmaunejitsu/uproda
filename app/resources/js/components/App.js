@@ -11,7 +11,7 @@ import NotFoundPage from './NotFound';
 function App() {
   return (
     <Router>
-      <div className="main">
+      <>
         <HeaderBar />
         <Switch>
           <Route path="/" exact component={Top} />
@@ -19,7 +19,7 @@ function App() {
           <Route path="/image/:hash" component={ImageDetail} />
           <Route component={NotFoundPage} />
         </Switch>
-      </div>
+      </>
     </Router>
   );
 }

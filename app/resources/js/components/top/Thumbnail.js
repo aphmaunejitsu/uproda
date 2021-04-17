@@ -7,22 +7,20 @@ import useWindowDimensions from '../hook/useWindowDimensions';
 function Thumbnail({ image, handleClick }) {
   const { width } = useWindowDimensions();
 
-  let w;
-  if (width >= 420 && width <= 1280) {
-    w = (width - 8) / 4;
-  } else if (width < 420) {
-    w = (width - 8) / 2;
-  } else {
-    w = (1280 - 8) / 4;
-  }
+  // let w;
+  // if (width >= 420 && width <= 1280) {
+  //   w = (width - 8) / 4;
+  // } else if (width < 420) {
+  //   w = (width - 8) / 2;
+  // } else {
+  //   w = (1280 - 8) / 4;
+  // }
   return (
     <>
       <LazyLoadImage
         alt={image.comment}
         effect="blur"
         src={image.thumbnail}
-        height={w}
-        width={w}
         onClick={() => handleClick(image)}
       />
     </>
