@@ -3,19 +3,27 @@
   flex-direction: column;
   padding: 0.25rem;
   height: 100%;
+  overflow: auto;
 
   .view {
     width: 100%;
-    margin-top: auto;
-    margin-bottom: auto;
 
     img {
       width: 100%;
       height: auto;
     }
+
+    .contents {
+      color: $black;
+      @media (prefers-color-scheme: dark) {
+        color: $black-dark;
+      }
+    }
   }
 
-  .contents {
+
+
+  .footer {
     margin-top: auto;
     color: $black;
     @media (prefers-color-scheme: dark) {
