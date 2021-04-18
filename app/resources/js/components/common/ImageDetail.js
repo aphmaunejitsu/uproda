@@ -40,7 +40,6 @@ function ImageDetail({ image }) {
             coment
           </div>
         </div>
-        {/* .image-detail */}
         <div className="footer">
           footer
         </div>
