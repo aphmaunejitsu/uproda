@@ -38,7 +38,7 @@ class ImageRepository implements ImageRepositoryInterface
                     })
                     ->with('imageHash')
                     ->withCount('comments')
-                    ->orderby('created_at')
+                    ->orderby('created_at', 'desc')
                     ->paginate($perPage);
     }
 

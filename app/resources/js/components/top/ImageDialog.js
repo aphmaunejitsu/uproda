@@ -2,10 +2,9 @@ import React from 'react';
 import { LazyLoadComponent } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import PropTypes from 'prop-types';
-import ImageDetail from '../common/ImageDetail';
-// import useWindowDimensions from '../hook/useWindowDimensions';
-import CloudUplaodIcon from '@material-ui/icons/Close';
 import { Close } from '@material-ui/icons';
+import IconButton from '@material-ui/core/IconButton';
+import ImageDetail from '../common/ImageDetail';
 
 function ImageDialog({ isOpen, setIsOpen, image }) {
   if (!isOpen) {
@@ -22,7 +21,13 @@ function ImageDialog({ isOpen, setIsOpen, image }) {
       role="presentation"
     >
       <div className="header">
-        <Close />
+        <IconButton
+          onClick={() => setIsOpen(false)}
+          aria-label="close"
+          color="inherit"
+        >
+          <Close />
+        </IconButton>
       </div>
       <LazyLoadComponent id={image.basename}>
         <ImageDetail image={image} />
