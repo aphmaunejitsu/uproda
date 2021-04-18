@@ -1,37 +1,35 @@
 .images {
-  display: flex;
-  flex-direction: column;
   padding-right: .25rem;
   padding-left: .25rem;
 
-  min-width: 320px;
-  max-width: 320px;
   margin-left: auto;
   margin-right: auto;
 
-  & > div {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  min-width: 320px;
 
-    span.lazy-load-image-background {
-      margin-left: auto;
-      margin-right: auto;
+  display: flex;
+  flex-direction: column;
 
-      &:after {
-        content: '';
-        display: block;
-      }
+  span.lazy-load-image-background {
+    margin-left: auto;
+    margin-right: auto;
 
-      & > img {
-        padding: 0.25rem;
-        width: 100%;
-        border-radius: 4px;
-        filter: drop-shadow(1px 2px 2px rgba($black, 0.5));
+    &:after {
+      content: '';
+      display: block;
+    }
+
+    & > img {
+      padding: 0.25rem;
+      width: 100%;
+      height: auto;
+      @include border-radius(0.5rem);
+      filter: drop-shadow(1px 2px 4px rgba($black, 0.2));
+      @media (prefers-color-scheme: dark) {
+        filter: drop-shadow(1px 2px 4px rgba($black-dark, 0.2));
       }
     }
   }
-
 }
 
 .image-dialog {

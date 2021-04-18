@@ -44,33 +44,38 @@ function Top() {
     setShowImage(image);
   };
 
+  const showImages = (
+    <>
+      {items.map((image) => (
+        <Thumbnail
+          image={image}
+          key={image.basename}
+          handleClick={onClickThumbnail}
+        />
+      ))}
+    </>
+  );
+
   if (isError) {
     return (
       <>
         <div className="images error">could not load images</div>
       </>
-
     );
   }
 
   return (
     <>
-      <div className="images">
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={getImages}
-          hasMore={hasMore}
-          loader={<Loading key={0} />}
-        >
-          {items.map((image) => (
-            <Thumbnail
-              image={image}
-              key={image.basename}
-              handleClick={onClickThumbnail}
-            />
-          ))}
-        </InfiniteScroll>
-      </div>
+      <InfiniteScroll
+        pageStart={0}
+        loadMore={getImages}
+        hasMore={hasMore}
+        useWindow={true}
+        loader={<Loading key={0} />}
+        className="images"
+      >
+        {showImages}
+      </InfiniteScroll>
       <ImageDialog
         isOpen={isOpenImage}
         image={showImage}
