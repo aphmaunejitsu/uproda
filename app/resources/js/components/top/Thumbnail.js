@@ -2,19 +2,8 @@ import React from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import PropTypes from 'prop-types';
-import useWindowDimensions from '../hook/useWindowDimensions';
 
 function Thumbnail({ image, handleClick }) {
-  const { width } = useWindowDimensions();
-
-  // let w;
-  // if (width >= 420 && width <= 1280) {
-  //   w = (width - 8) / 4;
-  // } else if (width < 420) {
-  //   w = (width - 8) / 2;
-  // } else {
-  //   w = (1280 - 8) / 4;
-  // }
   return (
     <>
       <LazyLoadImage
