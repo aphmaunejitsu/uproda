@@ -39,3 +39,16 @@ $white-dark: #000000;
 $silver-dark: #3f3f3f;
 
 $border-color-dark: rgba(#3f3f3f, 0.8);
+
+$breakpoints: (
+  'xs': 'screen and (max-witdh: 375px)',
+  'sm': 'screen and (min-width: 376px) and (max-width: 428px)',
+  'md': 'screen and (min-width: 429px) and (max-width: 1199px)',
+  'lg': 'screen and (min-width: 1200px)',
+) !default;
+
+@mixin mq($breakpoint: sm) {
+  @media #{map-get($breakpoints, $breakpoint)} {
+    @content;
+  }
+}

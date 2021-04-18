@@ -1,0 +1,33 @@
+.image-detail {
+  display: flex;
+  flex-direction: column;
+  padding: 0.25rem;
+  height: 100%;
+  overflow: auto;
+
+  .view {
+    width: 100%;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+
+    .contents {
+      color: $black;
+      @media (prefers-color-scheme: dark) {
+        color: $black-dark;
+      }
+    }
+  }
+
+
+
+  .footer {
+    margin-top: auto;
+    color: $black;
+    @media (prefers-color-scheme: dark) {
+      color: $black-dark;
+    }
+  }
+}

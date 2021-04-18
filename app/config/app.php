@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -177,6 +178,7 @@ return [
 
         // costom
         App\Providers\ImageRepositoryProvider::class,
+        App\Providers\FileRepositoryProvider::class,
 
     ],
 
@@ -230,6 +232,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

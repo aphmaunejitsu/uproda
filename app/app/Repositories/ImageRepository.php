@@ -38,7 +38,8 @@ class ImageRepository implements ImageRepositoryInterface
                     })
                     ->with('imageHash')
                     ->withCount('comments')
-                    ->orderby('created_at')->paginate($perPage);
+                    ->orderby('created_at', 'desc')
+                    ->paginate($perPage);
     }
 
     public function create(array $data)
@@ -56,5 +57,29 @@ class ImageRepository implements ImageRepositoryInterface
                      ->save(
                          new Comment(['comment' => $comment])
                      );
+    }
+
+    public function getByIds(?array $ids = null)
+    {
+        return $this->model
+                    ->when($ids, function ($query, $ids) {
+                        $query->find($ids);
+                    })
+                    ->orderby('created_at')
+                    ->get();
+    }
+
+    public function updateGeometry(int $id, int $width, int $height)
+    {
+        if (!($image = $this->model->find($id))) {
+            return null;
+        }
+
+        $image->width = $width;
+        $image->height = $height;
+
+        $image->save();
+
+        return $image;
     }
 }

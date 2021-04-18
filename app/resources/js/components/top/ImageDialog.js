@@ -1,38 +1,46 @@
 import React from 'react';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { LazyLoadComponent } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import PropTypes from 'prop-types';
-import useWindowDimensions from '../hook/useWindowDimensions';
+import { Close } from '@material-ui/icons';
+import IconButton from '@material-ui/core/IconButton';
+import ImageDetail from '../common/ImageDetail';
 
-function ImageDialog({ image }) {
-  const { width } = useWindowDimensions();
-  let w;
-  if (width >= 420 && width <= 1280) {
-    w = (width - 8);
-  } else if (width < 420) {
-    w = (width - 8);
-  } else {
-    w = (1280 - 8);
+function ImageDialog({ isOpen, setIsOpen, image }) {
+  if (!isOpen) {
+    return null;
+  }
+
+  if (!image) {
+    return null;
   }
 
   return (
-    <>
-      <LazyLoadImage
-        alt={image.comment}
-        effect="blur"
-        src={image.image}
-        width={w}
-      />
-    </>
+    <div
+      className="image-dialog"
+      role="presentation"
+    >
+      <div className="header">
+        <IconButton
+          onClick={() => setIsOpen(false)}
+          aria-label="close"
+          color="inherit"
+        >
+          <Close />
+        </IconButton>
+      </div>
+      <LazyLoadComponent id={image.basename}>
+        <ImageDetail image={image} />
+      </LazyLoadComponent>
+    </div>
   );
 }
 
 ImageDialog.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
   image: PropTypes.shape({
     basename: PropTypes.string.isRequired,
-    detail: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    comment: PropTypes.string.isRequired,
   }).isRequired,
 };
 

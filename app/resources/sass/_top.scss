@@ -1,25 +1,49 @@
 .images {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   padding-right: .25rem;
   padding-left: .25rem;
 
-  min-width: 320px;
-  max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
 
-  span {
+  min-width: 320px;
+
+  display: flex;
+  flex-direction: column;
+
+  span.lazy-load-image-background {
     margin-left: auto;
     margin-right: auto;
-    img {
-      padding: 2px;
-    }
 
     &:after {
       content: '';
       display: block;
     }
+
+    & > img {
+      padding: 0.25rem;
+      width: 100%;
+      height: auto;
+      @include border-radius(0.5rem);
+      filter: drop-shadow(1px 2px 4px rgba($black, 0.2));
+      @media (prefers-color-scheme: dark) {
+        filter: drop-shadow(1px 2px 4px rgba($black-dark, 0.2));
+      }
+    }
+  }
+}
+
+.image-dialog {
+  z-index: 110;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba($white, 0.8);
+  display: flex;
+  flex-direction: column;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: rgba($white-dark, 0.8);
   }
 }
