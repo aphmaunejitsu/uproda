@@ -25,6 +25,7 @@ function ImageDialog({ isOpen, setIsOpen, image }) {
           onClick={() => setIsOpen(false)}
           aria-label="close"
           color="inherit"
+          className="close-image-dialog-button"
         >
           <Close />
         </IconButton>
