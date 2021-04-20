@@ -11,6 +11,11 @@
     img {
       width: 100%;
       height: auto;
+      filter: drop-shadow(1px 1px 1px rgba($black, 0.2));
+      @media (prefers-color-scheme: dark) {
+        filter: drop-shadow(1px 1px 1px rgba($black-dark, 0.2));
+      }
+
     }
 
     .contents {

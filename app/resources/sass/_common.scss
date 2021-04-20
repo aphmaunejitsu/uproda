@@ -17,3 +17,10 @@ body {
     overflow: hidden;
   }
 }
+
+a {
+  color: $black;
+  @media (prefers-color-scheme: dark) {
+    color: $black-dark;
+  }
+}
