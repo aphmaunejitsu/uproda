@@ -70,7 +70,6 @@ function Top() {
         pageStart={0}
         loadMore={getImages}
         hasMore={hasMore}
-        useWindow={true}
         loader={<Loading key={0} />}
         className="images"
       >

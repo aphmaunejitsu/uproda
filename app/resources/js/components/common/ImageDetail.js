@@ -35,9 +35,9 @@ function ImageDetail({ image }) {
             <div className="size">
               {formatBytes}
             </div>
-          </div>
-          <div className="comments">
-            coment
+            <div className="comments">
+              coment
+            </div>
           </div>
         </div>
         <div className="footer">

@@ -33,7 +33,16 @@
 
   Nav {
     margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
     display: none;
+    @include mq(md) {
+      display: inline;
+    }
+
+    @include mq(lg) {
+      display: inline;
+    }
 
     ul {
       margin: 0;
@@ -45,12 +54,6 @@
         padding-right: 0.25rem;
         padding-left: 0.25rem;
 
-        a {
-          color: $black;
-          @media (prefers-color-scheme: dark) {
-            color: $black-dark;
-          }
-        }
       }
     }
   }
@@ -63,4 +66,22 @@
       }
     }
   }
+
+  .submenu {
+    svg {
+      fill: $black;
+      @media (prefers-color-scheme: dark) {
+        fill: $black-dark;
+      }
+    }
+
+    @include mq(md) {
+      display: none;
+    }
+
+    @include mq(lg) {
+      display: none;
+    }
+  }
+
 }
