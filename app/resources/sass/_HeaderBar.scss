@@ -83,5 +83,13 @@
       display: none;
     }
   }
+}
 
+#site-menu {
+  .MuiPaper-root {
+    background-color: $white;
+      @media (prefers-color-scheme: dark) {
+        background-color: #101010;
+      }
+  }
 }
