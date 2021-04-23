@@ -15,7 +15,7 @@ function ImageView({ image }) {
       <div className="view">
         <div
           className="image"
-          style={{ height: `${h} px` }}
+          style={{ height: `${h}px` }}
         >
           <img
             src={image.image}
