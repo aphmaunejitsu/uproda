@@ -4,7 +4,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import PropTypes from 'prop-types';
 import { Close } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
-import ImageDetail from '../common/ImageDetail';
+import ImageDetail from '../detail/Main';
 
 function ImageDialog({ isOpen, setIsOpen, image }) {
   if (!isOpen) {
