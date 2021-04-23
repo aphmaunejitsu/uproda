@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import HeaderBar from './HeaderBar';
 import Top from './Top';
 import About from './About';
-import ImageDetail from './ImageDetail';
+import ImageDetail from './Detail';
 import NotFoundPage from './NotFound';
 
 function App() {
