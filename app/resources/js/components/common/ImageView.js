@@ -13,21 +13,15 @@ function ImageView({ image }) {
   return (
     <>
       <div className="view">
-        <a
-          href={image.image}
-          target="_blank"
-          rel="noopener noreferrer"
+        <div
+          className="image"
+          style={{ height: `${h} px` }}
         >
-          <div
-            className="image"
-            style={{ height: `${h} px` }}
-          >
-            <img
-              src={image.image}
-              alt={image.comment ? image.comment : image.basename}
-            />
-          </div>
-        </a>
+          <img
+            src={image.image}
+            alt={image.comment ? image.comment : image.basename}
+          />
+        </div>
       </div>
     </>
   );
