@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
@@ -6,18 +6,39 @@ import ShareIcon from '@material-ui/icons/Share';
 import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import TwitterIcon from '@material-ui/icons/Twitter';
+import CopyToClipBoard from 'react-copy-to-clipboard';
+import ToolTip from '@material-ui/core/Tooltip';
 
 function Main({ image }) {
   if (!image) {
     return null;
   }
 
+  const [openTip, setOpenTip] = useState(false);
+  const handleClose = () => {
+    setOpenTip(false);
+  };
+
+  const handleOpenTop = () => {
+    setOpenTip(true);
+  };
+
   return (
     <>
       <footer>
-        <IconButton>
-          <FileCopyIcon />
-        </IconButton>
+        <ToolTip
+          arrow
+          open={openTip}
+          onClose={handleClose}
+          placement="top"
+          title="Copied!"
+        >
+          <CopyToClipBoard text={image.image}>
+            <IconButton onClick={handleOpenTop}>
+              <FileCopyIcon />
+            </IconButton>
+          </CopyToClipBoard>
+        </ToolTip>
         <IconButton>
           <TwitterIcon />
         </IconButton>
