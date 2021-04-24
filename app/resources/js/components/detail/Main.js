@@ -2,7 +2,8 @@ import React from 'react';
 import { LazyLoadComponent } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import PropTypes from 'prop-types';
-import ImageView from './View';
+import View from './View';
+import Footer from './Footer';
 
 function Main({ image }) {
   if (!image) {
@@ -13,11 +14,9 @@ function Main({ image }) {
     <>
       <div className="image-detail">
         <LazyLoadComponent effect="blur">
-          <ImageView image={image} />
+          <View image={image} />
         </LazyLoadComponent>
-        <div className="footer">
-          footer
-        </div>
+        <Footer image={image} />
       </div>
     </>
   );
