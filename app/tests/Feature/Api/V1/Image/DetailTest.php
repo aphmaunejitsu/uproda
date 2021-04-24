@@ -17,9 +17,25 @@ class DetailTest extends TestCase
 {
     use RefreshDatabase;
 
+    public $imagesOK;
+    public $imagesNG;
+
     public function setUp(): void
     {
         parent::setUp();
+        $this->imagesOK = Image::factory()
+            ->count(10)
+            ->forImageHash([
+                'ng' => 0,
+            ])
+            ->create();
+
+        $this->imagesNG = Image::factory()
+            ->count(10)
+            ->forImageHash([
+                'ng' => 1,
+            ])
+            ->create();
     }
 
     /**
@@ -27,14 +43,39 @@ class DetailTest extends TestCase
      *
      * @return void
      */
-    public function testNotFound()
+    public function testNoData()
     {
         $url = route('v1.image.detail', ['basename' => 'xxxxx']);
-        $this->assertEquals('http://testing.com/api/v1/image/xxxxx', $url);
-        $response = $this->get(
-            route('v1.image.detail', ['basename' => 'xxxxx'])
-        );
+        $response = $this->get($url);
 
-        $response->assertStatus(404);
+        $this->assertEquals('http://testing.com/api/v1/image/xxxxx', $url);
+        $response->assertStatus(404)
+                 ->assertJson([
+                     'message' => 'not found'
+                 ]);
+    }
+
+    /**
+     * A basic feature test example.
+     *
+     * @return void
+     */
+    public function testSuccess()
+    {
+        $url = route('v1.image.detail', ['basename' => $this->imagesOK[1]->basename]);
+        $response = $this->get($url);
+
+        $response->assertStatus(200);
+    }
+
+    public function testNg()
+    {
+        $url = route('v1.image.detail', ['basename' => $this->imagesNG[1]->basename]);
+        $response = $this->get($url);
+
+        $response->assertStatus(404)
+                 ->assertJson([
+                     'message' => 'not found'
+                 ]);
     }
 }
