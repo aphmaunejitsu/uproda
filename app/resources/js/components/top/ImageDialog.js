@@ -4,7 +4,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import PropTypes from 'prop-types';
 import { Close } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
-import ImageDetail from '../common/ImageDetail';
+import ImageDetail from '../detail/Main';
 
 function ImageDialog({ isOpen, setIsOpen, image }) {
   if (!isOpen) {
@@ -20,7 +20,7 @@ function ImageDialog({ isOpen, setIsOpen, image }) {
       className="image-dialog"
       role="presentation"
     >
-      <div className="header">
+      <header>
         <IconButton
           onClick={() => setIsOpen(false)}
           aria-label="close"
@@ -29,7 +29,10 @@ function ImageDialog({ isOpen, setIsOpen, image }) {
         >
           <Close />
         </IconButton>
-      </div>
+        <div>
+          {image.comment}
+        </div>
+      </header>
       <LazyLoadComponent id={image.basename}>
         <ImageDetail image={image} />
       </LazyLoadComponent>
@@ -42,6 +45,7 @@ ImageDialog.propTypes = {
   setIsOpen: PropTypes.func.isRequired,
   image: PropTypes.shape({
     basename: PropTypes.string.isRequired,
+    comment: PropTypes.string,
   }).isRequired,
 };
 

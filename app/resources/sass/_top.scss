@@ -90,4 +90,11 @@
   @media (prefers-color-scheme: dark) {
     background-color: rgba($white-dark, 0.9);
   }
+
+  header {
+    height: 64px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 }

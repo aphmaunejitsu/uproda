@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-function ImageDetail() {
+function Detail() {
   const { hash } = useParams();
   return (
     <h1>
@@ -11,4 +11,4 @@ function ImageDetail() {
   );
 }
 
-export default ImageDetail;
+export default Detail;

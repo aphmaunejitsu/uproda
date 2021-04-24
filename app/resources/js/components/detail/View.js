@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import useWindowDemensions from '../hook/useWindowDimensions';
 
-function ImageView({ image }) {
+function View({ image }) {
   if (!image) {
     return null;
   }
 
   const { height } = useWindowDemensions();
-  const h = height - 100;
+  const h = height - 128;
 
   return (
     <>
@@ -27,7 +27,7 @@ function ImageView({ image }) {
   );
 }
 
-ImageView.propTypes = {
+View.propTypes = {
   image: PropTypes.shape({
     basename: PropTypes.string.isRequired,
     detail: PropTypes.string.isRequired,
@@ -40,4 +40,4 @@ ImageView.propTypes = {
   }).isRequired,
 };
 
-export default ImageView;
+export default View;
