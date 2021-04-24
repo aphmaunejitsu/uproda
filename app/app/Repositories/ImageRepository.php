@@ -82,4 +82,14 @@ class ImageRepository implements ImageRepositoryInterface
 
         return $image;
     }
+
+    public function deleteByBasename(string $basename)
+    {
+        if (!($image = $this->model->where('basename', $basename)->first())) {
+            return null;
+        }
+
+        $image->delete();
+        return $image;
+    }
 }
