@@ -11,4 +11,5 @@ interface ImageRepositoryInterface
     public function updateGeometry(int $id, int $width, int $height);
 
     public function getByIds(?array $ids);
+    public function deleteByBasename(string $basename);
 }
