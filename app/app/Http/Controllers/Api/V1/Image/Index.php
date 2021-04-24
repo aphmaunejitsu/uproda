@@ -25,6 +25,7 @@ class Index extends Controller
     public function __invoke(Request $request)
     {
         $result = $this->service->paginate(config('roda.pagination.perPage', 100));
+
         return ImageResource::collection($result);
     }
 }

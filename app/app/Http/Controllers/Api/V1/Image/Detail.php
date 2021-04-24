@@ -4,17 +4,16 @@ namespace App\Http\Controllers\Api\V1\Image;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Repositories\ImageRepositoryInterface;
+use App\Services\ImageService;
+use App\Http\Resources\ImageResource;
 
 class Detail extends Controller
 {
-    public $repo;
-    public $basename;
+    public $service;
 
-    public function __construct(ImageRepositoryInterface $repo, string $basename)
+    public function __construct(ImageService $service)
     {
-        $this->repo = $repo;
-        $this->basename = $basename;
+        $this->service = $service;
     }
 
     /**
@@ -23,9 +22,13 @@ class Detail extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, string $basename)
     {
-        $result = $this->repo->findByBasename();
-        return $result;
+        $result = $this->service->findByBasename($basename);
+        if (! $result) {
+            return response()->json(['message' => 'not found'], 404);
+        }
+
+        return new ImageResource($result);
     }
 }
