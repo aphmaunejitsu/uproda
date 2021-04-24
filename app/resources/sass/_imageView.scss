@@ -56,5 +56,12 @@
     @media (prefers-color-scheme: dark) {
       color: $black-dark;
     }
+
+    svg {
+      fill: $black;
+      @media (prefers-color-scheme: dark) {
+        fill: $black-dark;
+      }
+    }
   }
 }
