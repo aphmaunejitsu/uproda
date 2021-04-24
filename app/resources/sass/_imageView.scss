@@ -45,7 +45,11 @@
 
 
 
-  .footer {
+  footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 64px;
     margin-top: auto;
     padding: 0.25rem;
     color: $black;

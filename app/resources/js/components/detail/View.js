@@ -8,7 +8,7 @@ function View({ image }) {
   }
 
   const { height } = useWindowDemensions();
-  const h = height - 100;
+  const h = height - 128;
 
   return (
     <>
