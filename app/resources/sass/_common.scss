@@ -24,3 +24,10 @@ a {
     color: $black-dark;
   }
 }
+
+.loading {
+  padding: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
