@@ -12,6 +12,7 @@ use App\Repositories\ImageRepository;
 
 /**
  * @group ImageRepository
+ * @group FindByBaseNameAPi
  * @group FindByBasenameTest
  */
 class FindByBasenameTest extends TestCase

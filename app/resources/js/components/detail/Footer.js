@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import ShareIcon from '@material-ui/icons/Share';
-import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import CopyToClipBoard from 'react-copy-to-clipboard';
@@ -45,9 +45,15 @@ function Main({ image }) {
         <IconButton>
           <ShareIcon />
         </IconButton>
-        <IconButton>
-          <TrendingFlatIcon />
-        </IconButton>
+        <a
+          href={`/image/${image.basename}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <IconButton>
+            <OpenInNewIcon />
+          </IconButton>
+        </a>
         <IconButton>
           <DeleteForeverIcon />
         </IconButton>
