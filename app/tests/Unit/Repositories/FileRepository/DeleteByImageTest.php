@@ -12,6 +12,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 /**
+ * @group api/v1/image/delete
  * @group FileRepository
  * @group DeleteByImageTest
  */

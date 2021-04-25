@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Image;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\api\v1\image\DeleteRequest;
+use App\Jobs\Image\ProcessDelete;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
 
@@ -34,6 +35,8 @@ class Delete extends Controller
                 404
             );
         }
+
+        ProcessDelete::dispatch($image);
 
         return response()->json(['message' => __('response.delete.success'), 204);
     }
