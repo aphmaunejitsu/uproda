@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\Storage;
 use App\Libs\Traits\BuildImagePath;
+use App\Models\Image as ModelsImage;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 
 class FileRepository implements FileRepositoryInterface
@@ -23,5 +25,17 @@ class FileRepository implements FileRepositoryInterface
             'width' => $image->width(),
             'height' => $image->height()
         ];
+    }
+
+    public function deleteByImage(ModelsImage $image): bool
+    {
+        $storage = $this->getImageStorage();
+        $original = $this->buildImagePath($image->basename, $image->ext);
+        $thumbnail = $this->buildThumbnailPath($image->basename, $image->t_ext);
+
+        return Storage::disk($storage)->delete([
+            $original,
+            $thumbnail
+        ]);
     }
 }
