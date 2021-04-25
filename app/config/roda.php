@@ -13,5 +13,6 @@ return [
     'storage' => env('RODA_IMAGE_STORAGE', 'image'),
     'pagination' => [
         'perPage' => env('RODA_PAGINATION_PERPAGE', 100),
-    ]
+    ],
+    'delkey' => env('RODA_DELKEY', 'password'),
 ];
