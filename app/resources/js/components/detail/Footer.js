@@ -8,6 +8,15 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import CopyToClipBoard from 'react-copy-to-clipboard';
 import ToolTip from '@material-ui/core/Tooltip';
+import Dialog from '@material-ui/core/Dialog';
+import {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
 function Main({ image }) {
   if (!image) {
@@ -15,12 +24,22 @@ function Main({ image }) {
   }
 
   const [openTip, setOpenTip] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+
   const handleClose = () => {
     setOpenTip(false);
   };
 
   const handleOpenTop = () => {
     setOpenTip(true);
+  };
+
+  const openDeleteDialog = () => {
+    setOpenDelete(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setOpenDelete(false);
   };
 
   return (
@@ -54,10 +73,38 @@ function Main({ image }) {
             <OpenInNewIcon />
           </IconButton>
         </a>
-        <IconButton>
+        <IconButton onClick={openDeleteDialog}>
           <DeleteForeverIcon />
         </IconButton>
       </footer>
+      <Dialog
+        open={openDelete}
+        onClose={closeDeleteDialog}
+        aria-labelledby="delete-image-title"
+      >
+        <DialogTitle id="delete-image-title">Delete Image</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            この画像を削除しますか？
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="delkey"
+            label="削除キー"
+            type="text"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDeleteDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={closeDeleteDialog} color="primary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
