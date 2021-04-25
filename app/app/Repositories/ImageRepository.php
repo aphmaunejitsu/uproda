@@ -83,9 +83,14 @@ class ImageRepository implements ImageRepositoryInterface
         return $image;
     }
 
-    public function deleteByBasename(string $basename)
+    public function deleteByBasename(string $basename, string $password)
     {
         if (!($image = $this->model->where('basename', $basename)->first())) {
+            return null;
+        }
+
+        $delkey = $image->delkey ?? config('roda.delkey');
+        if ($delkey !== $password) {
             return null;
         }
 
