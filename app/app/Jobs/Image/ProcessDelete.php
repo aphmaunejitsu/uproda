@@ -39,5 +39,6 @@ class ProcessDelete implements ShouldQueue
     public function handle(FileService $file)
     {
         //
+        $file->deleteFile($this->image);
     }
 }

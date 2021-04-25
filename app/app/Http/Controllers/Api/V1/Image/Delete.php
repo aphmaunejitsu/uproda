@@ -7,6 +7,7 @@ use App\Http\Requests\api\v1\image\DeleteRequest;
 use App\Jobs\Image\ProcessDelete;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class Delete extends Controller
 {
@@ -27,7 +28,7 @@ class Delete extends Controller
         $param = $request->validated();
         extract($param);
 
-        if (($deletedImage = $this->service->deleteImage($basename, $delkey))) {
+        if (!($deletedImage = $this->service->deleteImage($basename, $delkey))) {
             return response()->json(
                 [
                     'message' => __('response.delete.failed'),
@@ -36,8 +37,8 @@ class Delete extends Controller
             );
         }
 
-        ProcessDelete::dispatch($image);
+        ProcessDelete::dispatch($deletedImage);
 
-        return response()->json(['message' => __('response.delete.success'), 204);
+        return response()->json(['message' => __('response.delete.success')], 204);
     }
 }

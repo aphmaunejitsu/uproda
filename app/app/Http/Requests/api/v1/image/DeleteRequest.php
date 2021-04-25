@@ -25,7 +25,7 @@ class DeleteRequest extends FormRequest
     {
         return [
             'delkey'   => 'required|alpha_dash',
-            'basename' => 'required|exists:image,basename',
+            'basename' => 'required|exists:images,basename',
         ];
     }
 }
