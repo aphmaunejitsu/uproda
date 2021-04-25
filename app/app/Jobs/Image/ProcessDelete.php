@@ -2,6 +2,8 @@
 
 namespace App\Jobs\Image;
 
+use App\Models\Image;
+use App\Services\FileService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,16 +13,22 @@ use Illuminate\Queue\SerializesModels;
 
 class ProcessDelete implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+
+    public $image;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Image $deletedImage)
     {
         //
+        $this->image = $deletedImage;
     }
 
     /**
@@ -28,7 +36,7 @@ class ProcessDelete implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(FileService $file)
     {
         //
     }
