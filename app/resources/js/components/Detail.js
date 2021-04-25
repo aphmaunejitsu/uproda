@@ -14,28 +14,19 @@ function Detail() {
   const [isError, setIsError] = React.useState(false);
 
   useEffect(() => {
-    let unmounted = false;
     const getImage = async () => {
       await axios.get(`/api/v1/image/${hash}`)
         .then((response) => {
           const { data } = response.data;
-          if (!unmounted) {
-            setImage(data);
-            setIsLoaded(true);
-          }
+          setImage(data);
+          setIsLoaded(true);
         })
         .catch(() => {
-          if (!unmounted) {
-            setIsError(true);
-            setIsLoaded(true);
-          }
+          setIsError(true);
+          setIsLoaded(true);
         });
     };
     getImage();
-    const cleanup = () => {
-      unmounted = true;
-    };
-    return cleanup;
   }, []);
 
   if (!isLoaded) {
