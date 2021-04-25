@@ -5,9 +5,7 @@ namespace Tests\Feature\Api\V1\Image;
 use App\Jobs\Image\ProcessDelete;
 use App\Libs\Traits\BuildImagePath;
 use App\Models\Image;
-use App\Services\FileService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
@@ -72,5 +70,66 @@ class DeleteTest extends TestCase
         });
 
         $response->assertStatus(204);
+    }
+
+    /**
+     *
+     * @dataProvider validateErrorProvider
+     */
+    public function testValidateError($param, $expect)
+    {
+        $image = Image::factory()->create([
+            'basename' => 'xxxxxx',
+            'ext'      => 'png',
+            't_ext'    => 'jpg',
+            'delkey'   => 'xyzabc'
+        ]);
+
+        Bus::fake();
+
+        $url = route('v1.image.delete');
+        $response = $this->deleteJson(
+            $url,
+            $param
+        );
+
+        Bus::assertNotDispatched(ProcessDelete::class);
+
+        $response->assertStatus(422)
+                 ->assertJsonValidationErrors('basename')
+                 ->assertJson([
+                     'errors' => $expect
+                 ]);
+    }
+
+    public function validateErrorProvider()
+    {
+        return [
+            [
+                [],
+                [
+                    'basename' => [
+                        'basename は必須です'
+                    ],
+                    'delkey'   => [
+                        'delkey は必須です'
+                    ]
+                ]
+            ],
+            [
+                [
+                    'basename' => 'nothing',
+                    'delkey'   => '0p;/'
+                ],
+                [
+                    'basename' => [
+                        '指定された basename は見つかりません'
+                    ],
+                    'delkey'   => [
+                        'delkey は英数字とハイフン、アンダーバーを含めることができます'
+                    ]
+                ]
+            ]
+        ];
     }
 }
