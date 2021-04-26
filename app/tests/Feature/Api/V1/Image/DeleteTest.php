@@ -5,10 +5,13 @@ namespace Tests\Feature\Api\V1\Image;
 use App\Jobs\Image\ProcessDelete;
 use App\Libs\Traits\BuildImagePath;
 use App\Models\Image;
+use App\Services\ImageService;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 /**
@@ -131,5 +134,27 @@ class DeleteTest extends TestCase
                 ]
             ]
         ];
+    }
+
+    public function test500Error()
+    {
+        $image = Image::factory()->create();
+
+        $this->mock(
+            ImageService::class,
+            function (MockInterface $m) {
+                $m->shouldReceive('deleteImage')->andThrow(Exception::class, 'test execption', 9999);
+            }
+        );
+        $url = route('v1.image.delete');
+        $response = $this->deleteJson(
+            $url,
+            [
+                'basename' => $image->basename,
+                'delkey'   => $image->delkey,
+            ]
+        );
+
+        $response->assertStatus(500);
     }
 }
