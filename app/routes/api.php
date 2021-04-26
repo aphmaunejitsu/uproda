@@ -22,5 +22,6 @@ Route::group(
     function () {
         Route::get('/', 'Index')->name('v1.image.index');
         Route::get('/{basename}', 'Detail')->name('v1.image.detail');
+        Route::delete('/', 'Delete')->name('v1.image.delete');
     }
 );
