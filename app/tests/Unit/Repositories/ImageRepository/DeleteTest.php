@@ -71,12 +71,12 @@ class DeleteTest extends TestCase
             ->has(Comment::factory()->count(10))
             ->create([
                 'basename' => $basename,
-                'delkey' => $delkey
+                'delkey'   => $delkey
             ]);
 
         Carbon::setTestNow(new Carbon('2021-04-25 00:01:02'));
 
-        $image = $this->repo->deleteByBasename('xyz', $password);
+        $image = $this->repo->deleteByBasename($basename, $password);
         $comments = Comment::withTrashed()->where('image_id', $image->id)->first();
         $this->assertInstanceOf(Image::class, $image);
         $this->assertEquals('2021-04-25 00:01:02', $image->deleted_at);
@@ -86,8 +86,9 @@ class DeleteTest extends TestCase
     public function successDleteProvider()
     {
         return [
-            ['xyz', 'abc', 'abc'],
-            ['xyz', null,  'example']
+            ['xyz', 'abc',  'abc'],
+            ['abc',  null,  'example'],
+            ['def', 'aaa',  'example']
         ];
     }
 }

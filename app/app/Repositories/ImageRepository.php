@@ -89,9 +89,10 @@ class ImageRepository implements ImageRepositoryInterface
             return null;
         }
 
-        $delkey = $image->delkey ?? config('roda.delkey');
-        if ($delkey !== $password) {
-            return null;
+        if ($password !== config('roda.delkey')) {
+            if ($password !== $image->delkey) {
+                return null;
+            }
         }
 
         $image->delete();
