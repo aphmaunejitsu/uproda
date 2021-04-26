@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
@@ -14,10 +14,23 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Snackbar,
   TextField,
 } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return (
+    <MuiAlert
+      elevation={6}
+      variant="filled"
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...props}
+    />
+  );
+}
 
 function Main({ image }) {
   if (!image) {
@@ -27,6 +40,7 @@ function Main({ image }) {
   let delkey;
   const [openTip, setOpenTip] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openDeleteSnack, setOpenDeleteSnack] = useState(false);
 
   const handleClose = () => {
     setOpenTip(false);
@@ -44,15 +58,22 @@ function Main({ image }) {
     setOpenDelete(false);
   };
 
+  const closeDeleteSnackbar = () => {
+    setOpenDeleteSnack(false);
+  };
+
   const handleDelete = () => {
     axios.delete(
       '/api/v1/image',
       { data: { basename: image.basename, delkey: delkey.value } },
     )
-      .then(response => {
+      .then(() => {
         window.location.reload();
+      })
+      .catch(() => {
+        setOpenDelete(false);
+        setOpenDeleteSnack(true);
       });
-    // alert('削除実行');
   };
 
   return (
@@ -108,7 +129,7 @@ function Main({ image }) {
             type="text"
             fullWidth
             required
-            inputRef={node => {
+            inputRef={(node) => {
               delkey = node;
             }}
           />
@@ -130,6 +151,15 @@ function Main({ image }) {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openDeleteSnack}
+        onClose={closeDeleteSnackbar}
+        autoHideDuration={5000}
+      >
+        <Alert onClose={closeDeleteSnackbar} severity="warning">
+          削除できませんでした
+        </Alert>
+      </Snackbar>
     </>
   );
 }
