@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
@@ -17,12 +17,14 @@ import {
   TextField,
 } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import axios from 'axios';
 
 function Main({ image }) {
   if (!image) {
     return null;
   }
 
+  let delkey;
   const [openTip, setOpenTip] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
@@ -40,6 +42,17 @@ function Main({ image }) {
 
   const closeDeleteDialog = () => {
     setOpenDelete(false);
+  };
+
+  const handleDelete = () => {
+    axios.delete(
+      '/api/v1/image',
+      { data: { basename: image.basename, delkey: delkey.value } },
+    )
+      .then(response => {
+        window.location.reload();
+      });
+    // alert('削除実行');
   };
 
   return (
@@ -85,7 +98,7 @@ function Main({ image }) {
         <DialogTitle id="delete-image-title">Delete Image</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            この画像を削除しますか？
+            この画像を削除しますか？削除した場合は元に戻せません
           </DialogContentText>
           <TextField
             autoFocus
@@ -94,13 +107,25 @@ function Main({ image }) {
             label="削除キー"
             type="text"
             fullWidth
+            required
+            inputRef={node => {
+              delkey = node;
+            }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDeleteDialog} color="primary">
+          <Button
+            onClick={closeDeleteDialog}
+            color="default"
+            variant="contained"
+          >
             Cancel
           </Button>
-          <Button onClick={closeDeleteDialog} color="primary">
+          <Button
+            onClick={handleDelete}
+            color="secondary"
+            variant="contained"
+          >
             Delete
           </Button>
         </DialogActions>
