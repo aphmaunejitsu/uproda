@@ -26,7 +26,6 @@ class Delete extends Controller
     public function __invoke(DeleteRequest $request)
     {
         $param = $request->validated();
-        Log::info(__METHOD__, $param);
         extract($param);
 
         if (!($deletedImage = $this->service->deleteImage($basename, $delkey))) {
