@@ -51,14 +51,15 @@ function Main({ image }) {
             </IconButton>
           </CopyToClipBoard>
         </ToolTip>
-        <IconButton>
-          <TwitterShareButton
-            url={image.imageDetail}
-            hashtags={['nejitsu']}
-          >
-            <TwitterIcon />
-          </TwitterShareButton>
-        </IconButton>
+        <TwitterShareButton
+          url={image.imageDetail}
+          hashtags={['nejitsu']}
+          style={{ padding: 12 }}
+        >
+          <TwitterIcon
+            style={{ fontSize: 24 }}
+          />
+        </TwitterShareButton>
         <IconButton>
           <ShareIcon />
         </IconButton>
