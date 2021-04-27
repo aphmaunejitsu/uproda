@@ -23,6 +23,7 @@ class ImageResource extends JsonResource
             'image'         => $this->getImageUrl($this->basename, $this->ext),
             'thumbnail'     => $this->getThumbnailUrl($this->basename, $this->t_ext),
             'detail'        => route('image', ['hash' => $this->basename], false),
+            'imageDetail'   => route('image', ['hash' => $this->basename]),
             'basename'      => $this->basename,
             'ext'           => $this->ext,
             't_ext'         => $this->t_ext,
