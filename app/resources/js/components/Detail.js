@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { LazyLoadComponent } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import { Helmet } from 'react-helmet';
 import axios from 'axios';
 import ImageDetail from './detail/Main';
 import NotFound from './NotFound';
@@ -47,6 +48,28 @@ function Detail() {
 
   return (
     <>
+      <Helmet
+        title={`${process.env.MIX_RODA_NAME} | ${image.basename}`}
+        meta={[
+          {
+            name: 'description',
+            content: `${process.env.MIX_RODA_SUBTITLE}`,
+          },
+          { property: 'og:image', content: image.thumbnail },
+          {
+            property: 'og:titie',
+            content: `${process.env.MIX_RODA_NAME} | ${image.basename}`,
+          },
+          {
+            property: 'og:description',
+            content: image.comment,
+          },
+          {
+            property: 'og:url',
+            content: image.imageDetail,
+          },
+        ]}
+      />
       <LazyLoadComponent id={image.basename}>
         <ImageDetail image={image} />
       </LazyLoadComponent>
