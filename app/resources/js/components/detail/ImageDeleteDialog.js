@@ -34,7 +34,7 @@ function ImageDeleteDialog({ image, isOpen, handleDialogClose }) {
       { data: { basename: image.basename, delkey: delkey.value } },
     )
       .then(() => {
-        window.location.reload();
+        window.location.href('/');
       })
       .catch(() => {
         handleDialogClose(false);
