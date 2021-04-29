@@ -53,12 +53,20 @@ function Detail() {
         meta={[
           {
             name: 'description',
-            content: `${process.env.MIX_RODA_SUBTITLE}`,
+            content: `${process.env.MIX_RODA_DESCRIPTION}`,
           },
           { property: 'og:image', content: image.thumbnail },
           {
             property: 'og:titie',
             content: `${process.env.MIX_RODA_NAME} | ${image.basename}`,
+          },
+          {
+            property: 'og:type',
+            content: 'article',
+          },
+          {
+            property: 'og:site_name',
+            conetnt: `${process.env.MIX_RODA_NAME}`,
           },
           {
             property: 'og:description',
@@ -67,6 +75,22 @@ function Detail() {
           {
             property: 'og:url',
             content: image.imageDetail,
+          },
+          {
+            name: 'twitter:card',
+            content: 'summary',
+          },
+          {
+            name: 'twitter:site',
+            content: `${process.env.MIX_RODA_TWITTER_ACCOUNT}`,
+          },
+          {
+            name: 'twitter:title',
+            content: `${process.env.MIX_APP_URL}`,
+          },
+          {
+            name: 'twitter:content',
+            content: `${process.env.MIX_RODA_DESCRIPTION}`,
           },
         ]}
       />
