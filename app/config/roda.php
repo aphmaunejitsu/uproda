@@ -15,4 +15,7 @@ return [
         'perPage' => env('RODA_PAGINATION_PERPAGE', 100),
     ],
     'delkey' => env('RODA_DELKEY', 'password'),
+    'upload' => [
+        'max' => env('RODA_UPLOAD_MAXSIZE', 20971520),
+    ],
 ];
