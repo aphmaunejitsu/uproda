@@ -26,7 +26,8 @@ class UploadRequest extends FormRequest
         return [
             'delkey'  => 'nullable|alpha_dash',
             'comment' => 'nullable|max:255|string',
-            'image'   => 'required|file|max:' . config('roda.upload.max'),
+            'file'    => 'required|file|max:' . config('roda.upload.max'),
+            'hash'    => 'required|uuid'
         ];
     }
 }

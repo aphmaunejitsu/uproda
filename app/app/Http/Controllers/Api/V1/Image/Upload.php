@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\V1\Image;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Image\UploadRequest;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 
 class Upload extends Controller
 {
@@ -13,25 +15,41 @@ class Upload extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request)
+    public function __invoke(UploadRequest $request)
     {
+        $data = $request->validated();
+
         // Content-Rangeのチェック
-        if (($cr = $this->checkContentRange($request)) === null) {
+        $ip = $request->ip();
+        $ua = $request->header('User-Agent');
+        $file = $request->file('file');
+        if (($cr = $this->getContentRange($request)) === null) {
             // Content-Rangeを持たないので、1回でアップロードできるサイズ
+            $result = $this->uploadSigleFile($file, $data, $ip, $ua);
         } else {
             // Content-Rangeを持つので、分割アップロード
+            $result = $this->uploadDividedFile($file, $data, $cr, $ip, $ua);
         }
     }
 
-    public function checkContentRange(Request $request)
+    public function uploadSigleFile(UploadedFile $file, array $data, string $ip, string $ua)
+    {
+
+    }
+
+    public function uploadDividedFile(UploadedFile $file, array $data, array $content_range, string $ip, string $ua)
+    {
+    }
+
+    public function getContentRange(UploadRequest $request)
     {
         if (($cr = $request->header('content-range') === null)) {
-            return [];
+            return null;
         }
 
         $content_range = $cr ?  preg_split('/[^0-9]+/', $cr) : null;
         if ($content_range === null) {
-            return [];
+            return null;
         }
 
         $size = (int)@$content_range[3];
