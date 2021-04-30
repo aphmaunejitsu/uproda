@@ -41,11 +41,11 @@ class UpdateImageSizeTest extends TestCase
         $file2->storeAs('x', 'xyz.png', 'image');
         $file3->storeAs('z', 'zzz.png', 'image');
 
-        Image::factory()->create([
+        $image1 = Image::factory()->create([
             'basename' => 'abc',
             'ext' => 'png'
         ]);
-        Image::factory()->create([
+        $image2 = Image::factory()->create([
             'basename' => 'xyz',
             'ext' => 'png'
         ]);
@@ -53,7 +53,7 @@ class UpdateImageSizeTest extends TestCase
             'basename' => 'zzz',
             'ext' => 'png'
         ]);
-        $this->artisan('image:updateSize 1 2')
+        $this->artisan('image:updateSize ' . $image1->id . ' ' . $image2->id)
              ->expectsOutput('Start Update Image Geometry')
              ->expectsOutput('Update 2 Images.')
              ->expectsOutput('Finish Update Image Geometry')

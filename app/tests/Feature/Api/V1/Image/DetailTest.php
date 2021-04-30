@@ -72,6 +72,7 @@ class DetailTest extends TestCase
     {
         $url = route('v1.image.detail', ['basename' => $this->imagesNG[1]->basename]);
         $response = $this->get($url);
+        dump($response);
 
         $response->assertStatus(404)
                  ->assertJson([
