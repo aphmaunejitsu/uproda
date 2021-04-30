@@ -41,10 +41,12 @@ class IndexTest extends TestCase
 
         $response->assertStatus(200)
                  ->assertJson([
-                     'total'        => 201,
-                     'current_page' => 1,
-                     'from'         => 1,
-                     'to'           => 100
+                     'meta' => [
+                         'total'        => 201,
+                         'current_page' => 1,
+                         'from'         => 1,
+                         'to'           => 100
+                     ]
                  ]);
     }
 
@@ -60,10 +62,12 @@ class IndexTest extends TestCase
 
         $response->assertStatus(200)
                  ->assertJson([
-                     'total'        => $total,
-                     'current_page' => $current,
-                     'from'         => $from,
-                     'to'           => $to
+                     'meta' => [
+                         'total'        => $total,
+                         'current_page' => $current,
+                         'from'         => $from,
+                         'to'           => $to
+                     ],
                  ]);
     }
 

@@ -24,7 +24,7 @@ class ImageFactory extends Factory
     {
         return [
             'image_hash_id' => ImageHash::factory(),
-            'basename'      => $this->faker->firstNameFemale,
+            'basename'      => $this->faker->unique()->firstNameFemale,
             'ext'           => 'jpg',
             't_ext'         => 'jpg',
             'original'      => $this->faker->lastName,
