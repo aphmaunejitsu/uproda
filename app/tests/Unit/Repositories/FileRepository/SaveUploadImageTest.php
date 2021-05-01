@@ -5,8 +5,6 @@ namespace Tests\Unit\Repositories\FileRepository;
 use Tests\TestCase;
 use App\Repositories\FileRepositoryInterface;
 use App\Repositories\FileRepository;
-use App\Services\Contents\Uploading;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -34,7 +32,7 @@ class SaveUploadImageTest extends TestCase
         Storage::fake('image');
         $file = UploadedFile::fake()->image('abc.png', 200, 300);
 
-        $result = $this->repo->saveUploadImage($file, 'abc', 'png');
-        Storage::assertExists('/a/abc.png');
+        $result = $this->repo->saveUploadImage($file, 'xyz', 'png');
+        Storage::disk('image')->assertExists('/x/xyz.png');
     }
 }
