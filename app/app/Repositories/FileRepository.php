@@ -54,7 +54,6 @@ class FileRepository implements FileRepositoryInterface
     {
         $storage = $this->getImageStorage();
         $original = $this->buildImagePath($basename, $ext);
-
         return Storage::disk($storage)->put(
             $original,
             $file
