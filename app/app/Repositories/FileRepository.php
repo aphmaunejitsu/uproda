@@ -49,4 +49,15 @@ class FileRepository implements FileRepositoryInterface
             $thumbnail
         ]);
     }
+
+    public function saveUploadImage(UploadedFile $file, string $basename, string $ext)
+    {
+        $storage = $this->getImageStorage();
+        $original = $this->buildImagePath($basename, $ext);
+
+        return Storage::disk($storage)->put(
+            $original,
+            $file
+        );
+    }
 }
