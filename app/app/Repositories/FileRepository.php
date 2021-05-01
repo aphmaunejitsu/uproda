@@ -5,6 +5,7 @@ namespace App\Repositories;
 use Illuminate\Support\Facades\Storage;
 use App\Libs\Traits\BuildImagePath;
 use App\Models\Image as ModelsImage;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 
@@ -24,6 +25,16 @@ class FileRepository implements FileRepositoryInterface
         return [
             'width' => $image->width(),
             'height' => $image->height()
+        ];
+    }
+
+    public function getGeometryByFile(UploadedFile $file)
+    {
+        $image = Image::make($file);
+
+        return [
+            'width'  => $image->width(),
+            'height' => $image->height(),
         ];
     }
 
