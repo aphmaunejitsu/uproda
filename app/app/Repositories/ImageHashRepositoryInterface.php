@@ -4,5 +4,10 @@ namespace App\Repositories;
 
 interface ImageHashRepositoryInterface
 {
-    public function firstOrCreate(string $hash, bool $ng = false, ?string $comment = null);
+    public function firstOrCreateWithImage(
+        string $hash,
+        array $image,
+        bool $ng,
+        ?string $comment,
+    );
 }

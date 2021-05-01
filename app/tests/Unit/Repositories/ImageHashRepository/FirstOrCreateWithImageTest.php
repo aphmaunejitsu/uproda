@@ -2,6 +2,8 @@
 
 namespace Tests\Unit\Repositories\ImageHashRepository;
 
+use App\Exceptions\ImageHashException;
+use App\Models\Image;
 use App\Models\ImageHash;
 use App\Repositories\ImageHashRepository;
 use App\Repositories\ImageHashRepositoryInterface;
@@ -12,9 +14,9 @@ use Tests\TestCase;
 /**
  * @group upload
  * @group ImageHashRepository
- * @group FirstOrCreateTest
+ * @group FirstOrCreateWithImageTest
  */
-class FirstOrCreateTest extends TestCase
+class FirstOrCreateWithImageTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -41,9 +43,12 @@ class FirstOrCreateTest extends TestCase
     {
         Carbon::setTestNow(new Carbon('2021-05-01 00:01:02'));
 
-        $imageHash = $this->repo->firstOrCreate('abc', false, 'test');
+        $image = Image::factory()->make();
+
+        $imageHash = $this->repo->firstOrCreateWithImage('abc', $image->toArray(), false, 'test');
 
         $this->assertInstanceOf(ImageHash::class, $imageHash);
+        $this->assertInstanceOf(Image::class, $imageHash->images[0]);
         $this->assertEquals('abc', $imageHash->hash);
         $this->assertFalse($imageHash->ng);
         $this->assertEquals('test', $imageHash->comment);
@@ -51,19 +56,33 @@ class FirstOrCreateTest extends TestCase
         $this->assertEquals('2021-05-01 00:01:02', $imageHash->updated_at);
     }
 
-    public function testAlredyExists()
+    public function testExceptionNg()
     {
-        Carbon::setTestNow(new Carbon('2020-05-01 00:01:02'));
+        $this->expectException(ImageHashException::class);
         ImageHash::factory()->create([
             'hash'    => 'xyz',
             'ng'      => true,
             'comment' => 'already',
         ]);
-        $imageHash = $this->repo->firstOrCreate('xyz', false, 'test');
+        $image = Image::factory()->make();
+        $imageHash = $this->repo->firstOrCreateWithImage('xyz', $image->toArray(), false, 'test');
+    }
+
+    public function testAlredyExists()
+    {
+        Carbon::setTestNow(new Carbon('2020-05-01 00:01:02'));
+        ImageHash::factory()->create([
+            'hash'    => 'xyz',
+            'ng'      => false,
+            'comment' => 'already',
+        ]);
+        $image = Image::factory()->make();
+        $imageHash = $this->repo->firstOrCreateWithImage('xyz', $image->toArray(), false, 'test');
 
         $this->assertInstanceOf(ImageHash::class, $imageHash);
+        $this->assertInstanceOf(Image::class, $imageHash->images[0]);
         $this->assertEquals('xyz', $imageHash->hash);
-        $this->assertTrue($imageHash->ng);
+        $this->assertFalse($imageHash->ng);
         $this->assertEquals('already', $imageHash->comment);
         $this->assertEquals('2020-05-01 00:01:02', $imageHash->created_at);
         $this->assertEquals('2020-05-01 00:01:02', $imageHash->updated_at);
