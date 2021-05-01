@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\ImageHash;
+use App\Exceptions\ImageHashException;
 
 class ImageHashRepository implements ImageHashRepositoryInterface
 {
@@ -12,17 +13,25 @@ class ImageHashRepository implements ImageHashRepositoryInterface
         $this->repo = $imageHash;
     }
 
-    public function firstOrCreate(
+    public function firstOrCreateWithImage(
         string $hash,
+        array $image,
         bool $ng = false,
         ?string $comment = null
     ) {
-        return $this->repo->firstOrCreate(
+        $imageHash = $this->repo->firstOrCreate(
             ['hash' => $hash],
             [
                 'ng'      => $ng,
                 'comment' => $comment
             ]
         );
+
+        if ($imageHash->ng) {
+            throw new ImageHashException('could not save image', 10000);
+        }
+
+        $imageHash->images()->create($image);
+        return $imageHash;
     }
 }
