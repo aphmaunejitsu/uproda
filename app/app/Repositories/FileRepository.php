@@ -5,9 +5,7 @@ namespace App\Repositories;
 use Illuminate\Support\Facades\Storage;
 use App\Libs\Traits\BuildImagePath;
 use App\Models\Image as ModelsImage;
-use Exception;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Imagick;
 use App\Exceptions\FileRepositoryException;
@@ -63,23 +61,30 @@ class FileRepository implements FileRepositoryInterface
         );
     }
 
-    public function generateThumbnailJPG(UploadedFile $file, string $basename, string $ext)
+    public function generateThumbnail(UploadedFile $file, string $basename)
     {
-        if (strtolower($file->getClientOriginalExtension()) === 'gif') {
-            throw new Exception('can not read gif file', 9999);
+        if (strtolower($file->getMimeType()) === 'image/gif') {
+            throw new FileRepositoryException('can not read gif file', 9999);
         }
 
         $storage = $this->getImageStorage();
-        $thumbnail = $this->buildThumbnailPath($basename, $ext);
+        $path = $this->buildThumbnailPath($basename, 'jpg');
+        $image = Image::make($file);
+        $image->crop(config('roda.thumbnail.width', 400), config('roda.thumbnail.height', 400));
+
+        return Storage::disk($this->getImageStorage())->put(
+            $path,
+            $image->stream()
+        );
     }
 
-    public function generateThumbnailGif(UploadedFile $file, string $basename, string $ext)
+    public function generateThumbnailGif(UploadedFile $file, string $basename)
     {
-        if (strtolower($file->getClientOriginalExtension()) !== 'gif') {
-            throw new FileRepositoryException('read gif file', 9999);
+        if (strtolower($file->getMimeType()) !== 'image/gif') {
+            throw new FileRepositoryException('read only gif file', 9999);
         }
 
-        $path = $this->buildThumbnailPath($basename, $ext);
+        $path = $this->buildThumbnailPath($basename, 'gif');
 
         $image = new Imagick($file->getRealPath());
 
@@ -89,8 +94,6 @@ class FileRepository implements FileRepositoryInterface
         } while ($image->nextImage());
 
         $image->optimizeimagelayers();
-        $path = $this->buildThumbnailPath($basename, $ext);
-
 
         return Storage::disk($this->getImageStorage())->put(
             $path,
