@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name'       => env('RODA_NAME', 'ネ実うpろだ'),
+    'name' => env('RODA_NAME', 'ネ実うpろだ'),
     'service' => [
         'cache' => env('RODA_SERVICE_CACHE', 60),
     ],
@@ -17,5 +17,9 @@ return [
     'delkey' => env('RODA_DELKEY', 'password'),
     'upload' => [
         'max' => env('RODA_UPLOAD_MAXSIZE', 20971520),
+    ],
+    'thumbnail' => [
+        'width'  => env('RODA_THUMBNAIL_WIDTH', 400),
+        'height' => env('RODA_THUMBNAIL_HEIGHT', 400),
     ],
 ];

@@ -13,9 +13,9 @@ use Intervention\Image\Facades\Image;
 /**
  * @group upload
  * @group FileRepository
- * @group GenerateThumbnailGIFTest
+ * @group GenerateThumbnailTest
  */
-class GenerateThumbnailGifTest extends TestCase
+class GenerateThumbnailTest extends TestCase
 {
     public function setUp(): void
     {
@@ -34,15 +34,15 @@ class GenerateThumbnailGifTest extends TestCase
      *
      * @return void
      */
-    public function testGenerateThumbnailGif()
+    public function testGenerateThumbnail()
     {
         Storage::fake('image');
-        $file = UploadedFile::fake()->image('abc.gif', 500, 500);
+        $file = UploadedFile::fake()->image('abc.png', 500, 500);
 
-        $result = $this->repo->generateThumbnailGif($file, 'xyz');
+        $result = $this->repo->generateThumbnail($file, 'xyz');
 
-        $image = Image::make(Storage::disk('image')->readStream('/x/thumbnail/xyz.gif'));
-        Storage::disk('image')->assertExists('/x/thumbnail/xyz.gif');
+        $image = Image::make(Storage::disk('image')->readStream('/x/thumbnail/xyz.jpg'));
+        Storage::disk('image')->assertExists('/x/thumbnail/xyz.jpg');
         $this->assertEquals(config('roda.thumbnail.height'), $image->height());
         $this->assertEquals(config('roda.thumbnail.width'), $image->width());
     }
@@ -50,7 +50,7 @@ class GenerateThumbnailGifTest extends TestCase
     public function testException()
     {
         $this->expectException(FileRepositoryException::class);
-        $file = UploadedFile::fake()->image('abc.jpg', 500, 500);
-        $result = $this->repo->generateThumbnailGif($file, 'xyz');
+        $file = UploadedFile::fake()->image('abc.gif', 500, 500);
+        $result = $this->repo->generateThumbnail($file, 'xyz');
     }
 }
