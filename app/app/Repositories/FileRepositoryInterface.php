@@ -11,4 +11,6 @@ interface FileRepositoryInterface
     public function getGeometryByFile(UploadedFile $file);
     public function deleteByImage(Image $image): bool;
     public function saveUploadImage(UploadedFile $file, string $basename, string $ext);
+    public function generateThumbnailJPG(UploadedFile $file, string $basename, string $ext);
+    public function generateThumbnailGif(UploadedFile $file, string $basename, string $ext);
 }
