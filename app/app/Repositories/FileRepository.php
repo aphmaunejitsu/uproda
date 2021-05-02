@@ -10,6 +10,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Imagick;
+use App\Exceptions\FileRepositoryException;
 
 class FileRepository implements FileRepositoryInterface
 {
@@ -75,7 +76,7 @@ class FileRepository implements FileRepositoryInterface
     public function generateThumbnailGif(UploadedFile $file, string $basename, string $ext)
     {
         if (strtolower($file->getClientOriginalExtension()) !== 'gif') {
-            throw new Exception('read gif file', 9999);
+            throw new FileRepositoryException('read gif file', 9999);
         }
 
         $path = $this->buildThumbnailPath($basename, $ext);

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Repositories\FileRepository;
 
+use App\Exceptions\FileRepositoryException;
 use Tests\TestCase;
 use App\Repositories\FileRepositoryInterface;
 use App\Repositories\FileRepository;
@@ -44,5 +45,12 @@ class GenerateThumbnailGifTest extends TestCase
         Storage::disk('image')->assertExists('/x/thumbnail/xyz.gif');
         $this->assertEquals(config('roda.thumbnail.height'), $image->height());
         $this->assertEquals(config('roda.thumbnail.width'), $image->width());
+    }
+
+    public function testException()
+    {
+        $this->expectException(FileRepositoryException::class);
+        $file = UploadedFile::fake()->image('abc.jpg', 500, 500);
+        $result = $this->repo->generateThumbnailGif($file, 'xyz', 'gif');
     }
 }
