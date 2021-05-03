@@ -9,6 +9,14 @@ use Illuminate\Http\UploadedFile;
 use Intervention\Image\Facades\Image;
 use Imagick;
 use App\Exceptions\FileRepositoryException;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use lsolesen\pel\PelEntryAscii;
+use lsolesen\pel\PelEntryByte;
+use lsolesen\pel\PelEntryRational;
+use lsolesen\pel\PelIfd;
+use lsolesen\pel\PelJpeg;
+use lsolesen\pel\PelTag;
 
 class FileRepository implements FileRepositoryInterface
 {
@@ -100,5 +108,84 @@ class FileRepository implements FileRepositoryInterface
             $thumbnail,
             $image
         );
+    }
+
+    public function orientate(string $path): bool
+    {
+        try {
+            $image = Image::make($path);
+            $image->orientate();
+            return $image->save();
+        } catch (Exception $e) {
+            // エラーは全て無視
+            Log::warning(__METHOD__, $e);
+            return false;
+        }
+    }
+
+    public function changeLocation(string $path, float $latitude, float $logitude, float $altitude)
+    {
+        try {
+            $im = new PelJpeg($path);
+
+            if (! ($exif = $im->getExif())) {
+                return false;
+            }
+
+            if (! ($tiff = $exif->getTiff())) {
+                return false;
+            }
+
+            if (! ($ifd = $tiff->getIfd())) {
+                return false;
+            }
+
+
+            $gps = new PelIfd(PelIfd::GPS);
+            $ifd->addSubIfd($gps);
+
+            list($hours, $minutes, $seconds) = $this->convertDecimalToDMS($latitude);
+            $lati_ref = ($latitude < 0) ? 'S' : 'N';
+
+            $gps->addEntry(new PelEntryAscii(PelTag::GPS_LATITUDE_REF, $lati_ref));
+            $gps->addEntry(new PelEntryRational(PelTag::GPS_LATITUDE, $hours, $minutes, $seconds));
+
+            list($hours, $minutes, $seconds) = $this->convertDecimalToDMS($logitude);
+            $long_ref = ($logitude < 0) ? 'W' : 'E';
+            $gps->addEntry(new PelEntryAscii(PelTag::GPS_LONGITUDE_REF, $long_ref));
+            $gps->addEntry(new PelEntryRational(PelTag::GPS_LONGITUDE, $hours, $minutes, $seconds));
+
+            $gps->addEntry(new PelEntryRational(PelTag::GPS_ALTITUDE, [abs($altitude), 1]));
+            $gps->addEntry(new PelEntryByte(PelTag::GPS_ALTITUDE_REF, (int)($altitude < 0)));
+
+            return file_put_contents($path, $im->getBytes());
+        } catch (Exception $e) {
+            // エラーは全て無視
+            Log::warning(__METHOD__, $e);
+            return false;
+        }
+    }
+
+    public function convertDecimalToDMS($degree)
+    {
+        if ($degree > 100 || $degree < -180) {
+            return false;
+        }
+
+        $d = abs($degree);
+
+        $seconds = $d * 3600;
+        $degrees = floor($d);
+        $seconds -= $degrees * 3600;
+
+        $minutes = floor($seconds / 60);
+        $seconds -= $minutes * 60;
+        $seconds = round($seconds * 100, 0);
+
+        return [
+            [$degrees,   1],
+            [$minutes,   1],
+            [$seconds, 100]
+        ];
     }
 }
