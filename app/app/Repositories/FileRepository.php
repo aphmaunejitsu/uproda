@@ -51,42 +51,43 @@ class FileRepository implements FileRepositoryInterface
         ]);
     }
 
-    public function saveUploadImage(UploadedFile $file, string $basename, string $ext)
+    public function saveUploadImage(string $path, string $basename, string $ext)
     {
         $storage = $this->getImageStorage();
         $original = $this->buildImagePath($basename, $ext);
         return Storage::disk($storage)->put(
             $original,
-            $file
+            file_get_contents($path)
         );
     }
 
-    public function generateThumbnail(UploadedFile $file, string $basename)
+    public function generateThumbnail(string $path, string $basename)
     {
-        if (strtolower($file->getMimeType()) === 'image/gif') {
+        $storage = $this->getImageStorage();
+        $image = Image::make($path);
+        if (strtolower($image->mime()) === 'image/gif') {
             throw new FileRepositoryException('can not read gif file', 9999);
         }
 
-        $storage = $this->getImageStorage();
-        $path = $this->buildThumbnailPath($basename, 'jpg');
-        $image = Image::make($file);
-        $image->crop(config('roda.thumbnail.width', 400), config('roda.thumbnail.height', 400));
+        $thumbnail = $this->buildThumbnailPath($basename, 'jpg');
+        $image->crop(
+            config('roda.thumbnail.width', 400),
+            config('roda.thumbnail.height', 400)
+        );
 
         return Storage::disk($this->getImageStorage())->put(
-            $path,
+            $thumbnail,
             $image->stream()
         );
     }
 
-    public function generateThumbnailGif(UploadedFile $file, string $basename)
+    public function generateThumbnailGif(string $path, string $basename)
     {
-        if (strtolower($file->getMimeType()) !== 'image/gif') {
+        $image = new Imagick($path);
+        if (strtolower($image->getImageMimeType()) !== 'image/gif') {
             throw new FileRepositoryException('read only gif file', 9999);
         }
 
-        $path = $this->buildThumbnailPath($basename, 'gif');
-
-        $image = new Imagick($file->getRealPath());
 
         $image->setFirstIterator();
         do {
@@ -95,8 +96,9 @@ class FileRepository implements FileRepositoryInterface
 
         $image->optimizeimagelayers();
 
+        $thumbnail = $this->buildThumbnailPath($basename, 'gif');
         return Storage::disk($this->getImageStorage())->put(
-            $path,
+            $thumbnail,
             $image
         );
     }
