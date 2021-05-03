@@ -42,9 +42,10 @@ class GenerateThumbnailGifTest extends TestCase
         $im = imagecreatetruecolor(500, 600);
         $path = Storage::disk('tmp')->path('test.gif');
         imagegif($im, $path);
+        $file = UploadedFile::fake()->createWithContent('gif.gif', file_get_contents($path));
 
         $result = $this->repo->generateThumbnailGif(
-            $path,
+            $file,
             'xyz'
         );
 
@@ -63,7 +64,7 @@ class GenerateThumbnailGifTest extends TestCase
         Storage::fake('image');
         $file = UploadedFile::fake()->image('abc.jpg', 500, 500);
         $result = $this->repo->generateThumbnailGif(
-            $file->getRealPath(),
+            $file,
             'xyz'
         );
     }
