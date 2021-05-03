@@ -40,7 +40,7 @@ class GenerateThumbnailTest extends TestCase
         $file = UploadedFile::fake()->image('abc.png', 500, 500);
 
         $result = $this->repo->generateThumbnail(
-            $file->getRealPath(),
+            $file,
             'xyz'
         );
 

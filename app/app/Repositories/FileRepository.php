@@ -61,10 +61,10 @@ class FileRepository implements FileRepositoryInterface
         );
     }
 
-    public function generateThumbnail(string $path, string $basename)
+    public function generateThumbnail(UploadedFile $file, string $basename)
     {
         $storage = $this->getImageStorage();
-        $image = Image::make($path);
+        $image = Image::make($file->getRealPath());
         if (strtolower($image->mime()) === 'image/gif') {
             throw new FileRepositoryException('can not read gif file', 9999);
         }
@@ -81,13 +81,12 @@ class FileRepository implements FileRepositoryInterface
         );
     }
 
-    public function generateThumbnailGif(string $path, string $basename)
+    public function generateThumbnailGif(UploadedFile $file, string $basename)
     {
-        $image = new Imagick($path);
+        $image = new Imagick($file->getRealPath());
         if (strtolower($image->getImageMimeType()) !== 'image/gif') {
             throw new FileRepositoryException('read only gif file', 9999);
         }
-
 
         $image->setFirstIterator();
         do {
