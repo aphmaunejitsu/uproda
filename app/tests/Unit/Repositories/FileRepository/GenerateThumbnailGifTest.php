@@ -42,7 +42,6 @@ class GenerateThumbnailGifTest extends TestCase
         $im = imagecreatetruecolor(500, 600);
         $path = Storage::disk('tmp')->path('test.gif');
         imagegif($im, $path);
-        dump($path);
 
         $result = $this->repo->generateThumbnailGif(
             $path,
