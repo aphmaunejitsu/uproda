@@ -2,23 +2,11 @@
 
 namespace Tests\Unit\Repositories\FileRepository;
 
-use App\Exceptions\FileRepositoryException;
 use Tests\TestCase;
 use App\Repositories\FileRepositoryInterface;
 use App\Repositories\FileRepository;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
-use lsolesen\pel\PelDataWindow;
-use lsolesen\pel\PelEntryAscii;
-use lsolesen\pel\PelEntryByte;
-use lsolesen\pel\PelEntryRational;
-use lsolesen\pel\PelEntryUserComment;
-use lsolesen\pel\PelExif;
-use lsolesen\pel\PelIfd;
-use lsolesen\pel\PelJpeg;
-use lsolesen\pel\PelTag;
-use lsolesen\pel\PelTiff;
 
 /**
  * @group upload
