@@ -60,8 +60,7 @@ class GenerateThumbnailTest extends TestCase
         $file = UploadedFile::fake()->createWithContent('gif.gif', file_get_contents($path));
         $result = $this->repo->generateThumbnail(
             $file,
-            'xyz',
-            $file->getClientMimeType()
+            'xyz'
         );
     }
 }
