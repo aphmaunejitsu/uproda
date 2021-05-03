@@ -9,7 +9,6 @@ use App\Repositories\FileRepository;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
-use Imagick;
 
 /**
  * @group upload
