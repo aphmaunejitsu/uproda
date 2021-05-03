@@ -9,6 +9,7 @@ use App\Repositories\FileRepository;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Imagick;
 
 /**
  * @group upload
@@ -37,9 +38,16 @@ class GenerateThumbnailGifTest extends TestCase
     public function testGenerateThumbnailGif()
     {
         Storage::fake('image');
-        $file = UploadedFile::fake()->image('abc.gif', 500, 500);
+        Storage::fake('tmp');
+        $im = imagecreatetruecolor(500, 600);
+        $path = Storage::disk('tmp')->path('test.gif');
+        imagegif($im, $path);
+        dump($path);
 
-        $result = $this->repo->generateThumbnailGif($file, 'xyz');
+        $result = $this->repo->generateThumbnailGif(
+            $path,
+            'xyz'
+        );
 
         $image = Image::make(Storage::disk('image')->readStream('/x/thumbnail/xyz.gif'));
         Storage::disk('image')->assertExists('/x/thumbnail/xyz.gif');
@@ -50,7 +58,14 @@ class GenerateThumbnailGifTest extends TestCase
     public function testException()
     {
         $this->expectException(FileRepositoryException::class);
+        $this->expectExceptionCode(9999);
+        $this->getExpectedExceptionMessage('read only gif file');
+
+        Storage::fake('image');
         $file = UploadedFile::fake()->image('abc.jpg', 500, 500);
-        $result = $this->repo->generateThumbnailGif($file, 'xyz');
+        $result = $this->repo->generateThumbnailGif(
+            $file->getRealPath(),
+            'xyz'
+        );
     }
 }

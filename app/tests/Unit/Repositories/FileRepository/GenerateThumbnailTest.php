@@ -39,7 +39,10 @@ class GenerateThumbnailTest extends TestCase
         Storage::fake('image');
         $file = UploadedFile::fake()->image('abc.png', 500, 500);
 
-        $result = $this->repo->generateThumbnail($file, 'xyz');
+        $result = $this->repo->generateThumbnail(
+            $file->getRealPath(),
+            'xyz'
+        );
 
         $image = Image::make(Storage::disk('image')->readStream('/x/thumbnail/xyz.jpg'));
         Storage::disk('image')->assertExists('/x/thumbnail/xyz.jpg');
@@ -50,7 +53,11 @@ class GenerateThumbnailTest extends TestCase
     public function testException()
     {
         $this->expectException(FileRepositoryException::class);
-        $file = UploadedFile::fake()->image('abc.gif', 500, 500);
-        $result = $this->repo->generateThumbnail($file, 'xyz');
+        $file = UploadedFile::fake()->create('abc.gif', 1024, 'image/gif');
+        $result = $this->repo->generateThumbnail(
+            $file->getRealPath(),
+            'xyz',
+            $file->getClientMimeType()
+        );
     }
 }
