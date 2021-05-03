@@ -161,14 +161,14 @@ class FileRepository implements FileRepositoryInterface
             return file_put_contents($path, $im->getBytes());
         } catch (Exception $e) {
             // エラーは全て無視
-            Log::warning(__METHOD__, $e);
+            Log::warning(__METHOD__, ['message' => $e->getMessage()]);
             return false;
         }
     }
 
     public function convertDecimalToDMS($degree)
     {
-        if ($degree > 100 || $degree < -180) {
+        if ($degree > 180 || $degree < -180) {
             return false;
         }
 
