@@ -56,12 +56,12 @@ class PaginateTest extends TestCase
     {
         Image::factory()
             ->has(Comment::factory()->count(10))
-            ->count(51)->forImageHash(['ng' => 0 ])->create();
-        Image::factory()->count(51)->forImageHash(['ng' => 1 ])->create();
-        $result = $this->repo->paginate(50);
+            ->count(6)->forImageHash(['ng' => 0 ])->create();
+        Image::factory()->count(1)->forImageHash(['ng' => 1 ])->create();
+        $result = $this->repo->paginate(5);
 
-        $this->assertEquals(51, $result->total());
-        $this->assertEquals(50, $result->perPage());
+        $this->assertEquals(6, $result->total());
+        $this->assertEquals(5, $result->perPage());
         $this->assertTrue($result->hasMorePages());
         $this->assertInstanceOf(Image::class, $result[0]);
         $this->assertInstanceOf(ImageHash::class, $result[0]->imageHash);
@@ -75,8 +75,8 @@ class PaginateTest extends TestCase
      */
     public function testPaginateNg()
     {
-        Image::factory()->count(51)->forImageHash(['ng' => 1 ])->create();
-        $result = $this->repo->paginate(50);
+        Image::factory()->count(1)->forImageHash(['ng' => 1 ])->create();
+        $result = $this->repo->paginate();
 
 
         $this->assertEquals(0, $result->total());

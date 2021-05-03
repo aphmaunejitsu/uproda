@@ -35,7 +35,7 @@ class CreateTest extends TestCase
             }
         );
 
-        $result = (new ImageService())->create($data);
+        $result = (new ImageService())->create($data->toArray());
         $this->assertInstanceOf(Image::class, $result);
     }
 }
