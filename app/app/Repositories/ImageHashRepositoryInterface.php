@@ -10,4 +10,6 @@ interface ImageHashRepositoryInterface
         bool $ng,
         ?string $comment,
     );
+
+    public function isNg($hash): bool;
 }

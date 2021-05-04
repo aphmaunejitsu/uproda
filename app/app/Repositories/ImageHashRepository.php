@@ -7,10 +7,16 @@ use App\Exceptions\ImageHashException;
 
 class ImageHashRepository implements ImageHashRepositoryInterface
 {
-    private $repo;
+    private $model;
     public function __construct(ImageHash $imageHash)
     {
-        $this->repo = $imageHash;
+        $this->model = $imageHash;
+    }
+
+    public function isNg($hash): bool
+    {
+        $imageHash = $this->model->where('hash', $hash)->first();
+        return ($imageHash) ? ($imageHash->ng) : false;
     }
 
     public function firstOrCreateWithImage(
@@ -19,7 +25,7 @@ class ImageHashRepository implements ImageHashRepositoryInterface
         bool $ng = false,
         ?string $comment = null
     ) {
-        $imageHash = $this->repo->firstOrCreate(
+        $imageHash = $this->model->firstOrCreate(
             ['hash' => $hash],
             [
                 'ng'      => $ng,
