@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\UploadService;
+namespace App\Services\UploadServices;
 
 use App\Libs\Traits\BuildImagePath;
 use App\Repositories\FileRepositoryInterface;
@@ -9,6 +9,7 @@ use App\Services\Traits\ImageTrait;
 use App\Services\TransactionInterface;
 use App\Services\UploadService;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class UploadSingleFile extends UploadService implements TransactionInterface
 {
@@ -30,7 +31,7 @@ class UploadSingleFile extends UploadService implements TransactionInterface
     {
         $imageData = [
             'basename' => $this->generateBasename(),
-            'ext'      => strtolower($file->getClientOriginalName()),
+            'ext'      => strtolower($file->clientExtension()),
             'original' => $file->getClientOriginalName(),
             'mimetype' => $file->getClientMimeType(),
             'size'     => $file->getSize(),
@@ -45,7 +46,8 @@ class UploadSingleFile extends UploadService implements TransactionInterface
         $imageData += $geo;
 
         // save tmp
-        $tmp = $file->store('tmp');
+        $tmp = $file->store('', 'tmp');
+        $tmp = Storage::disk('tmp')->path($tmp);
 
         // Fixed Rotation
         $this->file->orientate($tmp);
@@ -62,7 +64,7 @@ class UploadSingleFile extends UploadService implements TransactionInterface
         $this->file->saveUploadImage($tmp, $imageData['basename'], $imageData['ext']);
 
         // save thumbnail
-        if (strtolower($imageData['mimtype']) === 'image/gif') {
+        if (strtolower($imageData['mimetype']) === 'image/gif') {
             $this->file->generateThumbnailGif($file, $imageData['basename']);
             $imageData['t_ext'] = 'gif';
         } else {

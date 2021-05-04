@@ -178,6 +178,7 @@ return [
 
         // costom
         App\Providers\ImageRepositoryProvider::class,
+        App\Providers\ImageHashRepositoryProvider::class,
         App\Providers\FileRepositoryProvider::class,
 
     ],
