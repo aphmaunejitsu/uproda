@@ -17,8 +17,8 @@ class ImageHashRepositoryProvider extends ServiceProvider
     {
         //
         $this->app->bind(
-            ImageHashRepositoryInterface,
-            ImageHashRepository
+            ImageHashRepositoryInterface::class,
+            ImageHashRepository::class
         );
     }
 

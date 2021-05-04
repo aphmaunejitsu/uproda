@@ -118,7 +118,7 @@ class FileRepository implements FileRepositoryInterface
             return $image->save();
         } catch (Exception $e) {
             // エラーは全て無視
-            Log::warning(__METHOD__, $e);
+            Log::warning(__METHOD__, ['message' => $e]);
             return false;
         }
     }
