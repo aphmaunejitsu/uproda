@@ -42,14 +42,12 @@ class OrientateTest extends TestCase
         $path = Storage::disk('tmp')->path('gps.jpg');
 
         $original = Image::make($test)->exif();
-        dump($original);
         $this->repo->orientate($path);
 
         $changed = Image::make($path)->exif();
-        dump($changed);
 
+        $this->assertNotEquals($changed['Orientation'], $original['Orientation']);
         Storage::disk('tmp')->assertExists('gps.jpg');
-
         @unlink($path);
     }
 }
