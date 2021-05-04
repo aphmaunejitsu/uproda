@@ -2,9 +2,12 @@
 
 namespace Tests\Unit\Services\UploadService;
 
+use App\Exceptions\ImageHashException;
+use App\Exceptions\ServiceException;
 use App\Libs\Traits\BuildImagePath;
 use App\Models\Image;
 use App\Models\ImageHash;
+use App\Services\Traits\ImageTrait;
 use App\Services\UploadService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -23,6 +26,7 @@ class UploadSingleFileTest extends TestCase
 {
     use RefreshDatabase;
     use BuildImagePath;
+    use ImageTrait;
 
     private $service;
 
@@ -69,5 +73,21 @@ class UploadSingleFileTest extends TestCase
         $this->assertNotEquals($old['GPSLongitude'][0], $exif['GPSLongitude'][0]);
         $this->assertNotEquals($old['GPSLongitude'][1], $exif['GPSLongitude'][1]);
         $this->assertNotEquals($old['GPSLongitude'][2], $exif['GPSLongitude'][2]);
+    }
+
+    public function testUploadNgFile()
+    {
+        $this->expectException(ServiceException::class);
+        Storage::fake('image');
+        Storage::fake('tmp');
+        $file = UploadedFile::fake()->image('test.jpg');
+
+        $hash = $this->getHash($file);
+        ImageHash::factory()->create([
+            'hash' => $hash,
+            'ng'   => true
+        ]);
+
+        $result = $this->service->uploadSingleFile($file, ['delkey' => 'test']);
     }
 }
