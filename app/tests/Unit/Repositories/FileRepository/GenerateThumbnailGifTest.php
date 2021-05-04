@@ -52,6 +52,7 @@ class GenerateThumbnailGifTest extends TestCase
         Storage::disk('image')->assertExists('/x/thumbnail/xyz.gif');
         $this->assertEquals(config('roda.thumbnail.height'), $image->height());
         $this->assertEquals(config('roda.thumbnail.width'), $image->width());
+        @unlink($path);
     }
 
     public function testException()

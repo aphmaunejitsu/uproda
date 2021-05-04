@@ -22,4 +22,11 @@ return [
         'width'  => env('RODA_THUMBNAIL_WIDTH', 400),
         'height' => env('RODA_THUMBNAIL_HEIGHT', 400),
     ],
+    'fake' => [
+        'location' => [
+            'latitude'  => env('RODA_LATITUDE', 35.8385569),
+            'longitude' => env('RODA_LONGITUDE', 0),
+            'altitude'  => env('RODA_ALTITUDE', 3),
+        ]
+    ],
 ];

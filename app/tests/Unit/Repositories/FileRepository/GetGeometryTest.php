@@ -51,5 +51,6 @@ class GetGeometryTest extends TestCase
         $this->assertArrayHasKey('height', $result);
         $this->assertEquals(200, $result['width']);
         $this->assertEquals(300, $result['height']);
+        @unlink($file->getRealPath());
     }
 }
