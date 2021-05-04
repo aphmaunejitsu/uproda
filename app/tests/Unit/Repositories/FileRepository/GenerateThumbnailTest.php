@@ -48,6 +48,7 @@ class GenerateThumbnailTest extends TestCase
         Storage::disk('image')->assertExists('/x/thumbnail/xyz.jpg');
         $this->assertEquals(config('roda.thumbnail.height'), $image->height());
         $this->assertEquals(config('roda.thumbnail.width'), $image->width());
+        @unlink($file->getRealPath());
     }
 
     public function testException()
@@ -62,5 +63,6 @@ class GenerateThumbnailTest extends TestCase
             $file,
             'xyz'
         );
+        @unlink($path);
     }
 }

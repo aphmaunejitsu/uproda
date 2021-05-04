@@ -110,7 +110,7 @@ class FileRepository implements FileRepositoryInterface
         );
     }
 
-    public function orientate(string $path): bool
+    public function orientate(string $path)
     {
         try {
             $image = Image::make($path);

@@ -16,6 +16,6 @@ interface FileRepositoryInterface
     public function generateThumbnail(UploadedFile $file, string $basename);
     public function generateThumbnailGif(UploadedFile $file, string $basename);
 
-    public function orientate(string $path): bool;
+    public function orientate(string $path);
     public function changeLocation(string $path, float $latitude, float $logitude, float $altitude);
 }
