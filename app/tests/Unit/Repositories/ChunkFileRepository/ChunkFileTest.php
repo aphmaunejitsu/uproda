@@ -40,7 +40,6 @@ class ChunkFileTest extends TestCase
         $score = Redis::zscore('aaa', 'bbb');
         $this->assertEquals(1, $result);
         $this->assertEquals(100, $score);
-        Redis::del('aaa');
     }
 
     /**
@@ -55,7 +54,6 @@ class ChunkFileTest extends TestCase
         $this->repo->addChunk('test', 200, 'aaa');
         $scores = $this->repo->getChunks('test');
         $this->assertCount(3, $scores);
-        Redis::del('test');
     }
 
     /**
@@ -69,6 +67,6 @@ class ChunkFileTest extends TestCase
         $this->repo->addChunk('test-del', 100, 'ccc');
         $this->repo->addChunk('test-del', 200, 'aaa');
         $result = $this->repo->remove('test-del');
-        $this->assertEquals(1, $result);
+        $this->assertEquals(3, $result);
     }
 }
