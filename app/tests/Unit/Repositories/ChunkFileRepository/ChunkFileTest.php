@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Redis;
  * @group upload
  * @group Repository
  * @group ChunkFileRepository
- * @group AddChunkTest
+ * @group ChunkFileTEst
  */
-class AddChunkTest extends TestCase
+class ChunkFileTest extends TestCase
 {
     public $repo;
 
@@ -41,5 +41,34 @@ class AddChunkTest extends TestCase
         $this->assertEquals(1, $result);
         $this->assertEquals(100, $score);
         Redis::del('aaa');
+    }
+
+    /**
+     * A basic unit test example.
+     *
+     * @return void
+     */
+    public function testGetChunk()
+    {
+        $result = $this->repo->addChunk('test', 0, 'bbb');
+        $result = $this->repo->addChunk('test', 100, 'ccc');
+        $result = $this->repo->addChunk('test', 200, 'aaa');
+        $scores = $this->repo->getChunks('test');
+        $this->assertCount(3, $scores);
+        Redis::del('test');
+    }
+
+    /**
+     * A basic unit test example.
+     *
+     * @return void
+     */
+    public function testRemove()
+    {
+        $this->repo->addChunk('test-del', 0, 'bbb');
+        $this->repo->addChunk('test-del', 100, 'ccc');
+        $this->repo->addChunk('test-del', 200, 'aaa');
+        $result = $this->repo->remove('test-del');
+        $this->assertEquals(1, $result);
     }
 }
