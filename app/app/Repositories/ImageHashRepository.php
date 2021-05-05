@@ -37,7 +37,6 @@ class ImageHashRepository implements ImageHashRepositoryInterface
             throw new ImageHashException('could not save image', 10000);
         }
 
-        $imageHash->images()->create($image);
-        return $imageHash;
+        return $imageHash->images()->create($image);
     }
 }

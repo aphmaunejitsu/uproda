@@ -45,15 +45,15 @@ class FirstOrCreateWithImageTest extends TestCase
 
         $image = Image::factory()->make();
 
-        $imageHash = $this->repo->firstOrCreateWithImage('abc', $image->toArray(), false, 'test');
+        $result = $this->repo->firstOrCreateWithImage('abc', $image->toArray(), false, 'test');
 
-        $this->assertInstanceOf(ImageHash::class, $imageHash);
-        $this->assertInstanceOf(Image::class, $imageHash->images[0]);
-        $this->assertEquals('abc', $imageHash->hash);
-        $this->assertFalse($imageHash->ng);
-        $this->assertEquals('test', $imageHash->comment);
-        $this->assertEquals('2021-05-01 00:01:02', $imageHash->created_at);
-        $this->assertEquals('2021-05-01 00:01:02', $imageHash->updated_at);
+        $this->assertInstanceOf(ImageHash::class, $result->imageHash);
+        $this->assertInstanceOf(Image::class, $result);
+        $this->assertEquals('abc', $result->imageHash->hash);
+        $this->assertFalse($result->imageHash->ng);
+        $this->assertEquals('test', $result->imageHash->comment);
+        $this->assertEquals('2021-05-01 00:01:02', $result->created_at);
+        $this->assertEquals('2021-05-01 00:01:02', $result->updated_at);
     }
 
     public function testExceptionNg()
@@ -77,14 +77,14 @@ class FirstOrCreateWithImageTest extends TestCase
             'comment' => 'already',
         ]);
         $image = Image::factory()->make();
-        $imageHash = $this->repo->firstOrCreateWithImage('xyz', $image->toArray(), false, 'test');
+        $result = $this->repo->firstOrCreateWithImage('xyz', $image->toArray(), false, 'test');
 
-        $this->assertInstanceOf(ImageHash::class, $imageHash);
-        $this->assertInstanceOf(Image::class, $imageHash->images[0]);
-        $this->assertEquals('xyz', $imageHash->hash);
-        $this->assertFalse($imageHash->ng);
-        $this->assertEquals('already', $imageHash->comment);
-        $this->assertEquals('2020-05-01 00:01:02', $imageHash->created_at);
-        $this->assertEquals('2020-05-01 00:01:02', $imageHash->updated_at);
+        $this->assertInstanceOf(ImageHash::class, $result->imageHash);
+        $this->assertInstanceOf(Image::class, $result);
+        $this->assertEquals('xyz', $result->imageHash->hash);
+        $this->assertFalse($result->imageHash->ng);
+        $this->assertEquals('already', $result->imageHash->comment);
+        $this->assertEquals('2020-05-01 00:01:02', $result->imageHash->created_at);
+        $this->assertEquals('2020-05-01 00:01:02', $result->imageHash->updated_at);
     }
 }
