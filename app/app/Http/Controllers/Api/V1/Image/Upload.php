@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Image;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Image\UploadRequest;
+use App\Http\Resources\ImageResource;
 use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -26,17 +27,33 @@ class Upload extends Controller
     {
         $data = $request->validated();
 
-        // Content-Rangeのチェック
         $ip = $request->ip();
         $ua = $request->header('User-Agent');
         $file = $request->file('file');
+
+        // have content-range ?
         if (($cr = $this->getContentRange($request)) === null) {
-            // Content-Rangeを持たないので、1回でアップロードできるサイズ
-            $result = $this->uploadSigleFile($file, $data, $ip, $ua);
-        } else {
-            // Content-Rangeを持つので、分割アップロード
-            $result = $this->uploadDividedFile($file, $data, $cr, $ip, $ua);
+            // have no content-range
+            $result = $this->service->uploadSingleFile(
+                $file,
+                $data + ['ip' => $ip]
+            );
+
+            if ($result) {
+                return (new ImageResource($result))
+                    ->response()
+                    ->setStatusCode(201);
+            } else {
+                return response()->json([
+                    'message' => 'アップロードできませんでした'
+                ])->setStatusCode(400);
+            }
         }
+
+
+
+        // Content-Rangeを持つので、分割アップロード
+        $result = $this->uploadDividedFile($file, $data, $cr, $ip, $ua);
     }
 
     public function uploadSigleFile(UploadedFile $file, array $data, string $ip, string $ua)
