@@ -50,9 +50,9 @@ class ChunkFileTest extends TestCase
      */
     public function testGetChunk()
     {
-        $result = $this->repo->addChunk('test', 0, 'bbb');
-        $result = $this->repo->addChunk('test', 100, 'ccc');
-        $result = $this->repo->addChunk('test', 200, 'aaa');
+        $this->repo->addChunk('test', 0, 'bbb');
+        $this->repo->addChunk('test', 100, 'ccc');
+        $this->repo->addChunk('test', 200, 'aaa');
         $scores = $this->repo->getChunks('test');
         $this->assertCount(3, $scores);
         Redis::del('test');

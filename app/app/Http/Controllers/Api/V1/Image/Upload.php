@@ -50,19 +50,14 @@ class Upload extends Controller
             }
         }
 
-
-
-        // Content-Rangeを持つので、分割アップロード
-        $result = $this->uploadDividedFile($file, $data, $cr, $ip, $ua);
-    }
-
-    public function uploadSigleFile(UploadedFile $file, array $data, string $ip, string $ua)
-    {
-        return $this->service->uploadSingleFile($file, $data + ['ip' => $ip]);
-    }
-
-    public function uploadDividedFile(UploadedFile $file, array $data, array $content_range, string $ip, string $ua)
-    {
+        // have content range
+        extract($cr);
+        if ($is_last) {
+        } else {
+            if ($this->service->chunkUpload($file, $data, $cr)) {
+            } else {
+            }
+        }
     }
 
     public function getContentRange(UploadRequest $request)
@@ -76,10 +71,12 @@ class Upload extends Controller
             return null;
         }
 
-        $size = (int)@$content_range[3];
+        $size     = (int)@$content_range[3];
         $is_first = (int)@$content_range[1] === 0 ? true : false;
-        $is_last = ((int)@$content_range[2] + 1) === $size ? true : false;
+        $is_last  = ((int)@$content_range[2] + 1) === $size ? true : false;
+        $start    = (int)@content_range[1];
+        $end      = (int)@content_range[2];
 
-        return compact('size', 'is_first', 'is_last');
+        return compact('size', 'start', 'end', 'is_first', 'is_last');
     }
 }
