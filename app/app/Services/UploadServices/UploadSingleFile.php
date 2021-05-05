@@ -19,16 +19,13 @@ class UploadSingleFile extends UploadService implements TransactionInterface
 
     private $file;
     private $imageHash;
-    private $image;
 
     public function __construct(
         ImageHashRepositoryInterface $imageHash,
-        ImageRepositoryInterface $image,
         FileRepositoryInterface $file
     ) {
         $this->file = $file;
         $this->imageHash = $imageHash;
-        $this->image = $image;
     }
 
     public function __invoke(UploadedFile $file, array $data)

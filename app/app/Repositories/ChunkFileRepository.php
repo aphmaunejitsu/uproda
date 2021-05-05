@@ -1,6 +1,6 @@
 <?php
 
-namespace APp\Repositories;
+namespace App\Repositories;
 
 use App\Repositories\ChunkFileRepositoryInterface;
 use Illuminate\Support\Facades\Redis;
