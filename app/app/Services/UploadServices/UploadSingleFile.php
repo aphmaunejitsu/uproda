@@ -5,6 +5,7 @@ namespace App\Services\UploadServices;
 use App\Libs\Traits\BuildImagePath;
 use App\Repositories\FileRepositoryInterface;
 use App\Repositories\ImageHashRepositoryInterface;
+use App\Repositories\ImageRepositoryInterface;
 use App\Services\Traits\ImageTrait;
 use App\Services\TransactionInterface;
 use App\Services\UploadService;
@@ -18,13 +19,16 @@ class UploadSingleFile extends UploadService implements TransactionInterface
 
     private $file;
     private $imageHash;
+    private $image;
 
     public function __construct(
         ImageHashRepositoryInterface $imageHash,
+        ImageRepositoryInterface $image,
         FileRepositoryInterface $file
     ) {
         $this->file = $file;
         $this->imageHash = $imageHash;
+        $this->image = $image;
     }
 
     public function __invoke(UploadedFile $file, array $data)
@@ -35,8 +39,8 @@ class UploadSingleFile extends UploadService implements TransactionInterface
             'original' => $file->getClientOriginalName(),
             'mimetype' => $file->getClientMimeType(),
             'size'     => $file->getSize(),
-            'delkey'   => $data['delkey'],
-            'ip'       => $data['ip'],
+            'delkey'   => $data['delkey'] ?? null,
+            'ip'       => $data['ip'] ?? null,
         ];
 
         // get hash
@@ -76,10 +80,10 @@ class UploadSingleFile extends UploadService implements TransactionInterface
         @unlink($file->getRealPath());
         @unlink($tmp);
 
-        if (! ($imageHash = $this->imageHash->firstOrCreateWithImage($hash, $imageData))) {
+        if (! ($image = $this->imageHash->firstOrCreateWithImage($hash, $imageData))) {
             return null;
         }
 
-        return $imageHash;
+        return $image;
     }
 }

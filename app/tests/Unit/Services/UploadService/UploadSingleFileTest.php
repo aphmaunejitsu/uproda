@@ -10,6 +10,7 @@ use App\Models\ImageHash;
 use App\Services\Traits\ImageTrait;
 use App\Services\UploadService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image as FacadesImage;
@@ -27,6 +28,7 @@ class UploadSingleFileTest extends TestCase
     use RefreshDatabase;
     use BuildImagePath;
     use ImageTrait;
+    use WithFaker;
 
     private $service;
 
@@ -52,18 +54,16 @@ class UploadSingleFileTest extends TestCase
 
         $old = $image->exif();
 
-        $result = $this->service->uploadSingleFile($file, ['delkey' => 'test']);
+        $result = $this->service->uploadSingleFile($file, ['delkey' => 'test', 'ip' => $this->faker->ipv4]);
 
-        $im = $result->images[0];
-
-        $path = $this->buildImagePath($im->basename, $im->ext);
-        $thumb = $this->buildThumbnailPath($im->basename, $im->t_ext);
+        $path = $this->buildImagePath($result->basename, $result->ext);
+        $thumb = $this->buildThumbnailPath($result->basename, $result->t_ext);
         $up = FacadesImage::make(Storage::disk('image')->path($path));
 
         $exif = $up->exif();
 
-        $this->assertInstanceOf(ImageHash::class, $result);
-        $this->assertInstanceOf(Image::class, $result->images[0]);
+        $this->assertInstanceOf(ImageHash::class, $result->imageHash);
+        $this->assertInstanceOf(Image::class, $result);
         Storage::disk('image')->assertExists($path);
         Storage::disk('image')->assertExists($thumb);
         $this->assertEquals(0, $exif['Orientation']);
