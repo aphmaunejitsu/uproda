@@ -7,10 +7,11 @@ RUN apt-get update --fix-missing --no-install-recommends \
         libonig-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
+        libwebp-dev \
         imagemagick \
         libmagickwand-dev \
         supervisor --no-install-recommends \
-    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
+    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ --with-webp=/usr/include \
     && docker-php-ext-install -j$(nproc) gd exif iconv pdo pdo_mysql mbstring pcntl \
     && pecl install redis \
     && docker-php-ext-enable redis \

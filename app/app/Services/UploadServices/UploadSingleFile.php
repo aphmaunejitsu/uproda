@@ -36,6 +36,7 @@ class UploadSingleFile extends UploadService implements TransactionInterface
             'mimetype' => $file->getClientMimeType(),
             'size'     => $file->getSize(),
             'delkey'   => $data['delkey'],
+            'ip'       => $data['ip'],
         ];
 
         // get hash

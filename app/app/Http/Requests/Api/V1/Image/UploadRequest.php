@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests\Api\V1\Image;
 
+use App\Models\ImageHash;
+use App\Repositories\ImageHashRepository;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\CheckImageHash;
+use Illuminate\Support\Facades\Log;
 
 class UploadRequest extends FormRequest
 {
@@ -13,7 +17,7 @@ class UploadRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,7 +30,12 @@ class UploadRequest extends FormRequest
         return [
             'delkey'  => 'nullable|alpha_dash',
             'comment' => 'nullable|max:255|string',
-            'file'    => 'required|file|max:' . config('roda.upload.max'),
+            'file'    =>  [
+                'required',
+                'mimes:jpg,png,gif,bmp,webp',
+                'max:' . config('roda.upload.max'),
+                new CheckImageHash(),
+            ],
             'hash'    => 'required|uuid'
         ];
     }

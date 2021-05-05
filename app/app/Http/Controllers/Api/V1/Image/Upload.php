@@ -4,11 +4,18 @@ namespace App\Http\Controllers\Api\V1\Image;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Image\UploadRequest;
+use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 
 class Upload extends Controller
 {
+    private $service;
+    public function __construct(UploadService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Handle the incoming request.
      *
@@ -34,7 +41,7 @@ class Upload extends Controller
 
     public function uploadSigleFile(UploadedFile $file, array $data, string $ip, string $ua)
     {
-
+        return $this->service->uploadSingleFile($file, $data + ['ip' => $ip]);
     }
 
     public function uploadDividedFile(UploadedFile $file, array $data, array $content_range, string $ip, string $ua)
