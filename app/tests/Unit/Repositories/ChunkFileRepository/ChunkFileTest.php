@@ -2,9 +2,12 @@
 
 namespace Tests\Unit\Repositories\ChunkFileRepository;
 
+use App\Models\ChunkFile;
 use Tests\TestCase;
 use App\Repositories\ChunkFileRepositoryInterface;
 use App\Repositories\ChunkFileRepository;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Redis;
 
 /**
@@ -15,6 +18,9 @@ use Illuminate\Support\Facades\Redis;
  */
 class ChunkFileTest extends TestCase
 {
+    use RefreshDatabase;
+    use WithFaker;
+
     public $repo;
 
     public function setUp(): void
@@ -68,5 +74,22 @@ class ChunkFileTest extends TestCase
         $this->repo->addChunk('test-del', 200, 'aaa');
         $result = $this->repo->remove('test-del');
         $this->assertEquals(3, $result);
+    }
+
+    public function testGetByUuid()
+    {
+        $cf = ChunkFile::factory()->create([
+            'uuid' => 'abc'
+        ]);
+
+        $result = $this->repo->getByUuid('abc');
+        $this->assertEquals('abc', $result->uuid);
+    }
+
+    public function testCreate()
+    {
+        $uuid = $this->faker->uuid;
+        $result = $this->repo->createByUuid($uuid);
+        $this->assertEquals($uuid, $result->uuid);
     }
 }
