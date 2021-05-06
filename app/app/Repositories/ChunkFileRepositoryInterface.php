@@ -8,6 +8,8 @@ interface ChunkFileRepositoryInterface
     public function getChunks(string $uuid);
     public function remove(string $uuid);
 
+    public function mergeChunks(string $uuid);
+
     public function createByUuid(string $uuid);
     public function getByUuid(string $uuid);
 }
