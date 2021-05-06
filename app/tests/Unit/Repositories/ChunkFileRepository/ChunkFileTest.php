@@ -55,11 +55,12 @@ class ChunkFileTest extends TestCase
      */
     public function testGetChunk()
     {
-        $this->repo->addChunk('test', 0, 'bbb');
+        $this->repo->addChunk('test', 300, 'bbb');
         $this->repo->addChunk('test', 100, 'ccc');
         $this->repo->addChunk('test', 200, 'aaa');
         $scores = $this->repo->getChunks('test');
         $this->assertCount(3, $scores);
+        $this->assertEquals('ccc', $scores[0]);
     }
 
     /**
@@ -78,7 +79,7 @@ class ChunkFileTest extends TestCase
 
     public function testGetByUuid()
     {
-        $cf = ChunkFile::factory()->create([
+        ChunkFile::factory()->create([
             'uuid' => 'abc'
         ]);
 

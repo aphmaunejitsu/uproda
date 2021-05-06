@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\ChunkFile;
 use App\Repositories\ChunkFileRepositoryInterface;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Storage;
 
 class ChunkFileRepository implements ChunkFileRepositoryInterface
 {
@@ -41,5 +42,22 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
         return $this->model
                     ->where('uuid', $uuid)
                     ->first();
+    }
+
+    public function mergeChunks(string $uuid)
+    {
+        $chunks = $this->getChunks($uuid);
+        $content = null;
+        foreach ($chunks as $chunk) {
+            $content .= Storage::disk('chunk')->get($chunk);
+        }
+
+        if ($content === null) {
+            return null;
+        }
+
+        Storage::disk('chunk')->deleteDirectory($uuid);
+
+        return Storage::disk('chunk')->put($uuid, $content);
     }
 }
