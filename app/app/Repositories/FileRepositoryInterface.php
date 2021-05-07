@@ -13,8 +13,8 @@ interface FileRepositoryInterface
 
     public function saveUploadImage(string $path, string $basename, string $ext);
 
-    public function generateThumbnail(UploadedFile $file, string $basename);
-    public function generateThumbnailGif(UploadedFile $file, string $basename);
+    public function generateThumbnail(string $file, string $basename);
+    public function generateThumbnailGif(string $file, string $basename);
 
     public function orientate(string $path);
     public function changeLocation(string $path, float $latitude, float $logitude, float $altitude);
