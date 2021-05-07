@@ -57,7 +57,17 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
         }
 
         Storage::disk('chunk')->deleteDirectory($uuid);
+        $this->remove($uuid);
 
-        return Storage::disk('chunk')->put($uuid, $content);
+        if (Storage::disk('chunk')->put($uuid, $content)) {
+            $size = Storage::disk('chunk')->size($uuid);
+            return [
+                'size' => $size,
+                'uuid' => $uuid,
+                'path' => Storage::disk('chunk')->path($uuid),
+            ];
+        } else {
+            return null;
+        }
     }
 }
