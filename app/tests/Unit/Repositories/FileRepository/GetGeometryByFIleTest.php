@@ -5,10 +5,7 @@ namespace Tests\Unit\Repositories\FileRepository;
 use Tests\TestCase;
 use App\Repositories\FileRepositoryInterface;
 use App\Repositories\FileRepository;
-use App\Services\Contents\Uploading;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @group upload
@@ -34,7 +31,7 @@ class GetGeometryByFileTest extends TestCase
         $file = UploadedFile::fake()->image('abc.png', 200, 300);
 
 
-        $result = $this->repo->getGeometryByFile($file);
+        $result = $this->repo->getGeometryByFile($file->getRealPath());
         $this->assertArrayHasKey('width', $result);
         $this->assertArrayHasKey('height', $result);
         $this->assertEquals(200, $result['width']);
