@@ -37,7 +37,7 @@ class FileRepository implements FileRepositoryInterface
         ];
     }
 
-    public function getGeometryByFile(UploadedFile $file)
+    public function getGeometryByFile(string $file)
     {
         $image = Image::make($file);
 

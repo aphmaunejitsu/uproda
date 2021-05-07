@@ -8,7 +8,7 @@ use Illuminate\Http\UploadedFile;
 interface FileRepositoryInterface
 {
     public function getGeometry(string $basename, ?string $ext);
-    public function getGeometryByFile(UploadedFile $file);
+    public function getGeometryByFile(string $file);
     public function deleteByImage(Image $image): bool;
 
     public function saveUploadImage(string $path, string $basename, string $ext);
