@@ -44,7 +44,7 @@ class GenerateThumbnailGifTest extends TestCase
         $file = UploadedFile::fake()->createWithContent('gif.gif', file_get_contents($path));
 
         $result = $this->repo->generateThumbnailGif(
-            $file,
+            $file->getRealPath(),
             'xyz'
         );
 
@@ -52,7 +52,6 @@ class GenerateThumbnailGifTest extends TestCase
         Storage::disk('image')->assertExists('/x/thumbnail/xyz.gif');
         $this->assertEquals(config('roda.thumbnail.height'), $image->height());
         $this->assertEquals(config('roda.thumbnail.width'), $image->width());
-        @unlink($path);
     }
 
     public function testException()
@@ -64,7 +63,7 @@ class GenerateThumbnailGifTest extends TestCase
         Storage::fake('image');
         $file = UploadedFile::fake()->image('abc.jpg', 500, 500);
         $result = $this->repo->generateThumbnailGif(
-            $file,
+            $file->getRealPath(),
             'xyz'
         );
     }
