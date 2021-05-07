@@ -46,6 +46,8 @@ class MergeChunksTest extends TestCase
     {
         $test = Storage::disk('local')->get('test.jpg');
 
+        $size = Storage::disk('local')->size('test.jpg');
+        $md5  = md5($test);
         Storage::fake('chunk');
         Storage::fake('tmp');
         $bytes = 1024;
@@ -69,7 +71,9 @@ class MergeChunksTest extends TestCase
 
         $result = $this->repo->mergeChunks($uuid);
 
-        $this->assertTrue($result);
         Storage::disk('chunk')->assertExists($uuid);
+        $this->assertEquals($uuid, $result['uuid']);
+        $this->assertEquals($size, $result['size']);
+        $this->assertEquals($md5, md5_file(Storage::disk('chunk')->path($uuid)));
     }
 }
