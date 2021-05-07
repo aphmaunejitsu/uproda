@@ -7,7 +7,9 @@ use App\Services\Traits\ImageTrait;
 use Illuminate\Http\UploadedFile;
 
 /**
+ * @group Service
  * @group ImageTraitTest
+ *
  */
 class ImageTraitTest extends TestCase
 {
@@ -22,7 +24,8 @@ class ImageTraitTest extends TestCase
     public function testGetHash()
     {
         $thumb = UploadedFile::fake()->image('test.png', 1, 1);
-        $result = $this->trait->getHash($thumb);
+        $file = $thumb->getRealPath();
+        $result = $this->trait->getHash($file);
         $this->assertIsString($result);
         $this->assertEquals('4VN09ERNHB3LEQOE4MDN9893E2', $result);
     }
