@@ -143,6 +143,9 @@ class UploadTest extends TestCase
                  ]);
     }
 
+    /**
+     * @group testSingleupload
+     */
     public function testSingleUpload()
     {
         Storage::fake('image');
@@ -174,7 +177,7 @@ class UploadTest extends TestCase
         $this->mock(
             UploadService::class,
             function (MockInterface $m) {
-                $m->shouldReceive('uploadSingleFile')->andReturn(
+                $m->shouldReceive('uploaded')->andReturn(
                     null
                 );
             }

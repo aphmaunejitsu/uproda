@@ -31,18 +31,29 @@ class Upload extends Controller
         $ua = $request->header('User-Agent');
         $file = $request->file('file');
 
-        // have content-range ?
-        if (($cr = $this->getContentRange($request)) === null) {
-            // have no content-range
-            $result = $this->service->uploadSingleFile(
-                $file,
-                $data + ['ip' => $ip]
-            );
+        $imageData = [
+            'ext'      => strtolower($file->clientExtension()),
+            'original' => $file->getClientOriginalName(),
+            'mimetype' => $file->getClientMimeType(),
+            'size'     => $file->getSize(),
+            'delkey'   => $data['delkey'] ?? null,
+            'ip'       => $ip ?? null,
+        ];
 
-            if ($result) {
-                return (new ImageResource($result))
-                    ->response()
-                    ->setStatusCode(201);
+        // save to tmp
+        $tmpPath = $file->store('', 'tmp');
+
+        // have content-range ?
+        $result = null;
+        if (($cr = $this->getContentRange($request))) {
+            // have content range
+            if (($result = $this->service->chunkUpload($tmpPath, $imageData, $cr))) {
+                if (!$result['complete']) {
+                    return response()->json([
+                        'message' => 'uploading image',
+                        'size'    => $result['size']
+                    ]);
+                }
             } else {
                 return response()->json([
                     'message' => 'アップロードできませんでした'
@@ -50,12 +61,16 @@ class Upload extends Controller
             }
         }
 
-        // have content range
-        extract($cr);
-        if ($is_last) {
-        } else {
-            if ($this->service->chunkUpload($file, $data, $cr)) {
+        // have no content-range
+        if (($cr === null) or $result) {
+            if (($image = $this->service->uploaded($tmpPath, $imageData))) {
+                return (new ImageResource($image))
+                    ->response()
+                    ->setStatusCode(201);
             } else {
+                return response()->json([
+                    'message' => 'アップロードできませんでした'
+                ])->setStatusCode(400);
             }
         }
     }
