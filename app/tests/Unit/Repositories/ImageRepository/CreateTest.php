@@ -49,5 +49,6 @@ class CreateTest extends TestCase
         $this->assertEquals($image->mimetype, $result->mimetype);
         $this->assertEquals($image->width, $result->width);
         $this->assertEquals($image->height, $result->height);
+        $this->assertNotEmpty($result->id);
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Exception;
 
 class Service
 {
@@ -35,7 +36,7 @@ class Service
             );
 
             $service = App::make($class);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::info(sprintf('[End service] %s', $class), $user + ['class' => $class, 'error' => $e->getMessage()]);
             throw new ServiceException('not found service', 9000, $e);
         }
@@ -75,14 +76,15 @@ class Service
             }
 
             Log::info(sprintf('[End Service] %s', $class), $user + ['class' => $class, 'result' => $result]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($service instanceof TransactionInterface) {
                 Log::debug('rollback');
                 $service->rollback();
             }
 
             Log::info(sprintf('[End Service] %s, raised exception', $class), $user + ['class' => $class, 'error' => $e->getMessage()]);
-            throw new ServiceException('raise execption', 10000, $e);
+            // throw new ServiceException('raise execption', 10000, $e);
+            throw $e;
         }
 
         return $result;

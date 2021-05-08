@@ -19,13 +19,13 @@ class IndexTest extends TestCase
     {
         parent::setUp();
         Image::factory()
-            ->count(201)
+            ->count(11)
             ->forImageHash([
                 'ng' => 0,
             ])
             ->create();
         Image::factory()
-            ->count(201)
+            ->count(1)
             ->forImageHash([
                 'ng' => 1,
             ])
@@ -41,10 +41,12 @@ class IndexTest extends TestCase
 
         $response->assertStatus(200)
                  ->assertJson([
-                     'total'        => 201,
-                     'current_page' => 1,
-                     'from'         => 1,
-                     'to'           => 100
+                     'meta' => [
+                         'total'        => 11,
+                         'current_page' => 1,
+                         'from'         => 1,
+                         'to'           => 5
+                     ]
                  ]);
     }
 
@@ -60,19 +62,21 @@ class IndexTest extends TestCase
 
         $response->assertStatus(200)
                  ->assertJson([
-                     'total'        => $total,
-                     'current_page' => $current,
-                     'from'         => $from,
-                     'to'           => $to
+                     'meta' => [
+                         'total'        => $total,
+                         'current_page' => $current,
+                         'from'         => $from,
+                         'to'           => $to
+                     ],
                  ]);
     }
 
     public function paginateProvider()
     {
         return [
-            ['page' => 1,  'current' => 1, 'from' =>   1, 'to' => 100, 'total' => 201],
-            ['page' => 2,  'current' => 2, 'from' => 101, 'to' => 200, 'total' => 201],
-            ['page' => 3,  'current' => 3, 'from' => 201, 'to' => 201, 'total' => 201],
+            ['page' => 1,  'current' => 1, 'from' =>  1, 'to' =>  5, 'total' => 11],
+            ['page' => 2,  'current' => 2, 'from' =>  6, 'to' => 10, 'total' => 11],
+            ['page' => 3,  'current' => 3, 'from' => 11, 'to' => 11, 'total' => 11],
         ];
     }
 }

@@ -8,8 +8,6 @@ use App\Services\TransactionInterface;
 
 class DeleteImage extends ImageService implements TransactionInterface
 {
-    private $file;
-
     public function __construct(ImageRepositoryInterface $image)
     {
         $this->repo = $image;
