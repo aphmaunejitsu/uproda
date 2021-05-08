@@ -16,7 +16,7 @@ return [
     ],
     'delkey' => env('RODA_DELKEY', 'password'),
     'upload' => [
-        'max' => env('RODA_UPLOAD_MAXSIZE', 20971520),
+        'max' => env('RODA_UPLOAD_MAXSIZE', 20480),
     ],
     'thumbnail' => [
         'width'  => env('RODA_THUMBNAIL_WIDTH', 400),

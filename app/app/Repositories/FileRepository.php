@@ -72,21 +72,17 @@ class FileRepository implements FileRepositoryInterface
     public function generateThumbnail(string $file, string $basename)
     {
         $storage = $this->getImageStorage();
-        $image = Image::make($file);
-        if (strtolower($image->mime()) === 'image/gif') {
+        $image = new Imagick($file);
+        if (strtolower($image->getImageMimeType()) === 'image/gif') {
             throw new FileRepositoryException('can not read gif file', 9999);
         }
 
         $thumbnail = $this->buildThumbnailPath($basename, 'jpg');
-        $image->crop(
-            config('roda.thumbnail.width', 400),
-            config('roda.thumbnail.height', 400)
-        );
+        $width = config('roda.thumbnail.width', 400);
+        $height = config('roda.thumbnail.height', 400);
+        $image->cropThumbnailImage($width, $height);
 
-        return Storage::disk($this->getImageStorage())->put(
-            $thumbnail,
-            $image->stream()
-        );
+        return Storage::disk($this->getImageStorage())->put($thumbnail, $image);
     }
 
     public function generateThumbnailGif(string $file, string $basename)
@@ -96,18 +92,18 @@ class FileRepository implements FileRepositoryInterface
             throw new FileRepositoryException('read only gif file', 9999);
         }
 
+        $width = config('roda.thumbnail.width', 400);
+        $height = config('roda.thumbnail.height', 400);
+
         $image->setFirstIterator();
         do {
-            $image->cropThumbnailImage(config('roda.thumbnail.width', 400), config('roda.thumbnail.height', 400));
+            $image->cropThumbnailImage($width, $height);
         } while ($image->nextImage());
 
         $image->optimizeimagelayers();
 
         $thumbnail = $this->buildThumbnailPath($basename, 'gif');
-        return Storage::disk($this->getImageStorage())->put(
-            $thumbnail,
-            $image
-        );
+        return Storage::disk($this->getImageStorage())->put($thumbnail, $image);
     }
 
     public function orientate(string $path)

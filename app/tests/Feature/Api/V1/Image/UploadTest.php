@@ -96,7 +96,8 @@ class UploadTest extends TestCase
     public function testValidateImageSize()
     {
         $file = UploadedFile::fake()->image('test.jpg');
-        $file->size(6);
+        $kbytes = config('roda.upload.max');
+        $file->size($kbytes + 1);
         $delkey = 'colibri';
         $comment = 'test';
         $hash = $this->faker->uuid;
@@ -111,13 +112,17 @@ class UploadTest extends TestCase
                  ])
                  ->assertJson([
                      'errors' => [
-                         'file' => ['アップロードできる画像サイズは 5 KB までです']
+                         'file' => ["アップロードできる画像サイズは {$kbytes} KB までです"]
                      ]
                  ]);
     }
 
     public function testValidateImageNgHash()
     {
+        Storage::fake('chunk');
+        Storage::fake('image');
+        Storage::fake('tmp');
+
         $file = UploadedFile::fake()->image('test.jpg');
         $delkey = 'colibri';
         $comment = 'test';
@@ -150,6 +155,7 @@ class UploadTest extends TestCase
     {
         Storage::fake('image');
         Storage::fake('tmp');
+        Storage::fake('chunk');
 
         $file = UploadedFile::fake()->image('test.jpg');
         $file->size(1);
@@ -174,6 +180,10 @@ class UploadTest extends TestCase
 
     public function testFailedSingleUpload()
     {
+        Storage::fake('image');
+        Storage::fake('tmp');
+        Storage::fake('chunk');
+
         $this->mock(
             UploadService::class,
             function (MockInterface $m) {
@@ -199,6 +209,10 @@ class UploadTest extends TestCase
 
     public function testSparateUpload()
     {
+        Storage::fake('image');
+        Storage::fake('tmp');
+        Storage::fake('chunk');
+
         $test = Storage::disk('local')->get('test.jpg');
 
         $size = Storage::disk('local')->size('test.jpg');

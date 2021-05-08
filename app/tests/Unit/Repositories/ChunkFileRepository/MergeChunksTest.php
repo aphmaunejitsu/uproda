@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Repositories\ChunkFileRepository;
 
+use App\Exceptions\ChunkFileRepositoryException;
 use App\Models\ChunkFile;
 use Tests\TestCase;
 use App\Repositories\ChunkFileRepositoryInterface;
@@ -35,6 +36,70 @@ class MergeChunksTest extends TestCase
         );
 
         $this->repo = $this->app->make(ChunkFileRepositoryInterface::class);
+    }
+
+    public function testMergeExceptionExt()
+    {
+        $this->expectException(ChunkFileRepositoryException::class);
+        $this->expectExceptionMessage('アップロードできないタイプのファイルです');
+        $file = UploadedFile::fake()->createWithContent('test', str_repeat('t', 1024 * 20));
+
+        $uuid = $this->faker->uuid;
+        Storage::fake('chunk');
+        Storage::fake('tmp');
+        $content = $file->getContent();
+        $bytes = 1024;
+        $start = 0;
+
+        while (true) {
+            $split = substr($content, $start, $bytes);
+            if (empty($split)) {
+                break;
+            }
+
+            $file = UploadedFile::fake()->createWithContent('test', $split);
+
+            $path = $file->store($uuid, 'chunk');
+            $this->repo->addChunk($uuid, $start, $path);
+
+            $start += $bytes;
+        }
+
+        $result = $this->repo->mergeChunks($uuid, 'tmp');
+    }
+
+    public function testMergeExceptionSize()
+    {
+        $this->expectException(ChunkFileRepositoryException::class);
+        $kbytes = config('roda.upload.max');
+        $this->expectExceptionMessage('アップロードできるサイズは {$kbytes}KB までです');
+
+        $test = Storage::disk('local')->get('test.jpg');
+        $content = null;
+        for ($i = 0; $i < 10; $i++) {
+            $content .= $test;
+        }
+        $uuid = $this->faker->uuid;
+        Storage::fake('chunk');
+        Storage::fake('tmp');
+        $bytes = 1024;
+        $start = 0;
+
+        while (true) {
+            $split = substr($content, $start, $bytes);
+            if (empty($split)) {
+                break;
+            }
+
+            $file = UploadedFile::fake()->createWithContent('test', $split);
+
+            $path = $file->store($uuid, 'chunk');
+            $this->repo->addChunk($uuid, $start, $path);
+
+            $start += $bytes;
+        }
+
+        $result = $this->repo->mergeChunks($uuid, 'tmp');
     }
 
     /**

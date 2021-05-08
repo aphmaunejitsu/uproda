@@ -2,13 +2,17 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\ChunkFileRepositoryException;
 use App\Models\ChunkFile;
 use App\Repositories\ChunkFileRepositoryInterface;
+use App\Services\Traits\ImageTrait;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 
 class ChunkFileRepository implements ChunkFileRepositoryInterface
 {
+    use ImageTrait;
+
     private $model;
 
     public function __construct(ChunkFile $model)
@@ -60,13 +64,25 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
         $this->remove($uuid);
 
         if (Storage::disk($storage)->put($uuid, $content)) {
-            $size = Storage::disk($storage)->size($uuid);
             $mimetype = Storage::disk($storage)->mimeType($uuid);
+            $ext = $this->mimeTypeToExtension($mimetype, false);
+
+            if ($ext === null) {
+                throw new ChunkFileRepositoryException('アップロードできないタイプのファイルです', 10000);
+            }
+
+            $size = Storage::disk($storage)->size($uuid);
+            $kbytes = config('roda.upload.max');
+            if ($size > ($kbytes * 1024)) {
+                throw new ChunkFileRepositoryException("アップロードできるサイズは {$kbytes}KB までです", 10002);
+            }
+
             return [
                 'size'     => $size,
                 'uuid'     => $uuid,
                 'path'     => $uuid,
                 'mimetype' => $mimetype,
+                'ext'      => $ext,
             ];
         } else {
             return null;
