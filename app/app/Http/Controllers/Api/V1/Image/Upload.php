@@ -6,8 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Image\UploadRequest;
 use App\Http\Resources\ImageResource;
 use App\Services\UploadService;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
+use Exception;
 
 class Upload extends Controller
 {
@@ -44,37 +43,43 @@ class Upload extends Controller
         // save to tmp
         $tmpPath = $file->store('', 'tmp');
 
-        // have content-range ?
-        $result = null;
-        if (($cr = $this->getContentRange($request))) {
-            // have content range
-            if (($result = $this->service->chunkedUpload($file, $imageData, $cr))) {
-                if (!$result['complete']) {
+        try {
+            // have content-range ?
+            $result = null;
+            if (($cr = $this->getContentRange($request))) {
+                // have content range
+                if (($result = $this->service->chunkedUpload($file, $imageData, $cr))) {
+                    if (!$result['complete']) {
+                        return response()->json([
+                            'message' => 'uploading image',
+                            'size'    => $result['size']
+                        ]);
+                    }
+
+                    $tmpPath = $result['path'];
+                } else {
                     return response()->json([
-                        'message' => 'uploading image',
-                        'size'    => $result['size']
-                    ]);
+                        'message' => 'アップロードできませんでした'
+                    ])->setStatusCode(400);
                 }
-
-                $tmpPath = $result['path'];
-            } else {
-                return response()->json([
-                    'message' => 'アップロードできませんでした'
-                ])->setStatusCode(400);
             }
-        }
 
-        // have no content-range
-        if (($cr === null) or $result) {
-            if (($image = $this->service->uploaded($tmpPath, $imageData))) {
-                return (new ImageResource($image))
-                    ->response()
-                    ->setStatusCode(201);
-            } else {
-                return response()->json([
-                    'message' => 'アップロードできませんでした'
-                ])->setStatusCode(400);
+            // have no content-range
+            if (($cr === null) or $result) {
+                if (($image = $this->service->uploaded($tmpPath, $imageData))) {
+                    return (new ImageResource($image))
+                        ->response()
+                        ->setStatusCode(201);
+                } else {
+                    return response()->json([
+                        'message' => 'アップロードできませんでした'
+                    ])->setStatusCode(400);
+                }
             }
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'アップロードできませんでした'
+            ])->setStatusCode(400);
         }
     }
 

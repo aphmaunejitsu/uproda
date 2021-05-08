@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services\UploadService;
 
 use App\Exceptions\ImageHashException;
+use App\Exceptions\ImageUploadServiceException;
 use App\Exceptions\ServiceException;
 use App\Libs\Traits\BuildImagePath;
 use App\Models\Image;
@@ -99,6 +100,29 @@ class UploadedTest extends TestCase
             'hash' => $hash,
             'ng'   => true
         ]);
+
+        $tmp = $file->store('', 'tmp');
+
+        $imageData = [
+            'ext'      => strtolower($file->clientExtension()),
+            'original' => $file->getClientOriginalName(),
+            'mimetype' => $file->getClientMimeType(),
+            'size'     => $file->getSize(),
+            'delkey' => 'test',
+            'ip' => $this->faker->ipv4
+        ];
+
+
+        $result = $this->service->uploaded($tmp, $imageData);
+    }
+
+    public function testUploadWrongFileType()
+    {
+        $this->expectException(ImageUploadServiceException::class);
+        Storage::fake('image');
+        Storage::fake('tmp');
+        $file = UploadedFile::fake()->image('test.txt');
+        $hash = $this->getHash($file->getRealPath());
 
         $tmp = $file->store('', 'tmp');
 

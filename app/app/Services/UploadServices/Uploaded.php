@@ -2,6 +2,7 @@
 
 namespace App\Services\UploadServices;
 
+use App\Exceptions\ImageUploadServiceException;
 use App\Libs\Traits\BuildImagePath;
 use App\Repositories\FileRepositoryInterface;
 use App\Repositories\ImageHashRepositoryInterface;
@@ -33,6 +34,13 @@ class Uploaded extends UploadService implements TransactionInterface
 
         // get hash
         $hash = $this->getHash($tmp);
+
+        // get extension
+        if (($ext = $this->mimeTypeToExtension($imageData['mimetype'], false)) === null) {
+            throw new ImageUploadServiceException('アップロードできないタイプのファイルです', 10000);
+        }
+
+        $imageData['ext'] = $ext;
 
         // get width and height
         $geo = $this->file->getGeometryByFile($tmp);

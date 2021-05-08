@@ -71,28 +71,6 @@ class UploadTest extends TestCase
                  ]);
     }
 
-    public function testValidateImageMimes()
-    {
-        $file = UploadedFile::fake()->create('test.mp4', 2);
-        $delkey = 'colibri';
-        $comment = 'test';
-        $hash = $this->faker->uuid;
-        $json = compact('delkey', 'comment', 'hash', 'file');
-
-
-        $response = $this->postJson($this->url, $json);
-
-        $response->assertStatus(422)
-                 ->assertJsonValidationErrors([
-                     'file',
-                 ])
-                 ->assertJson([
-                     'errors' => [
-                         'file' => ['アップロードできる画像は jpg, png, gif, bmp, webp です']
-                     ]
-                 ]);
-    }
-
     public function testValidateImageSize()
     {
         $file = UploadedFile::fake()->image('test.jpg');
