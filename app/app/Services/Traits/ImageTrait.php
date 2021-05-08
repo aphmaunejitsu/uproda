@@ -69,20 +69,16 @@ trait ImageTrait
                 $type = 'bmp';
                 break;
 
-            case 'image/tiff':
-                $type = 'tif';
-                break;
+            // case 'image/heic':
+            // case 'image/heic-sequence':
+            // case 'image/heif':
+            // case 'image/heif-sequence':
+            //     $type = 'heic';
+            //     break;
 
-            case 'image/heic':
-            case 'image/heic-sequence':
-            case 'image/heif':
-            case 'image/heif-sequence':
-                $type = 'heic';
-                break;
-
-            case 'video/mp4':
-                $type = 'mp4';
-                break;
+            // case 'video/mp4':
+            //     $type = 'mp4';
+            //     break;
 
             default:
                 $type = null;

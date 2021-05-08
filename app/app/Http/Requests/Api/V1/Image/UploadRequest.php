@@ -32,7 +32,6 @@ class UploadRequest extends FormRequest
             'comment' => 'nullable|max:255|string',
             'file'    =>  [
                 'required',
-                'mimes:jpg,png,gif,bmp,webp',
                 'max:' . config('roda.upload.max'),
                 new CheckImageHash(),
             ],

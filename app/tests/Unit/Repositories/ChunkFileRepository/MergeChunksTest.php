@@ -72,7 +72,7 @@ class MergeChunksTest extends TestCase
     {
         $this->expectException(ChunkFileRepositoryException::class);
         $kbytes = config('roda.upload.max');
-        $this->expectExceptionMessage('アップロードできるサイズは {$kbytes}KB までです');
+        $this->expectExceptionMessage("アップロードできるサイズは {$kbytes}KB までです");
 
         $test = Storage::disk('local')->get('test.jpg');
         $content = null;
