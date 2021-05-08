@@ -89,6 +89,43 @@ class UploadedTest extends TestCase
         $this->assertNotEquals($old['GPSLongitude'][2], $exif['GPSLongitude'][2]);
     }
 
+    /**
+     * @group testUploadAGif
+     */
+    public function testUploadAGif()
+    {
+        $test = Storage::disk('local')->get('test.gif');
+        Storage::fake('image');
+        Storage::fake('tmp');
+        $file = UploadedFile::fake()->createWithContent('lua.gif', $test);
+
+        $file->store('', 'image');
+        $tmp = $file->store('', 'tmp');
+
+        $imageData = [
+            'ext'      => strtolower($file->clientExtension()),
+            'original' => $file->getClientOriginalName(),
+            'mimetype' => $file->getClientMimeType(),
+            'size'     => $file->getSize(),
+            'delkey'   => 'test',
+            'ip'       => $this->faker->ipv4
+        ];
+
+        $result = $this->service->uploaded(
+            $tmp,
+            $imageData
+        );
+
+        $path = $this->buildImagePath($result->basename, $result->ext);
+        $thumb = $this->buildThumbnailPath($result->basename, $result->t_ext);
+        $up = FacadesImage::make(Storage::disk('image')->path($path));
+
+        $this->assertInstanceOf(ImageHash::class, $result->imageHash);
+        $this->assertInstanceOf(Image::class, $result);
+        Storage::disk('image')->assertExists($path);
+        Storage::disk('image')->assertExists($thumb);
+    }
+
     public function testUploadNgFile()
     {
         $this->expectException(ImageHashException::class);
