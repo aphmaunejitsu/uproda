@@ -5,14 +5,12 @@ namespace App\Services\UploadServices;
 use App\Libs\Traits\BuildImagePath;
 use App\Repositories\FileRepositoryInterface;
 use App\Repositories\ImageHashRepositoryInterface;
-use App\Repositories\ImageRepositoryInterface;
 use App\Services\Traits\ImageTrait;
 use App\Services\TransactionInterface;
 use App\Services\UploadService;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-class UploadSingleFile extends UploadService implements TransactionInterface
+class Uploaded extends UploadService implements TransactionInterface
 {
     use ImageTrait;
     use BuildImagePath;
@@ -28,28 +26,17 @@ class UploadSingleFile extends UploadService implements TransactionInterface
         $this->imageHash = $imageHash;
     }
 
-    public function __invoke(UploadedFile $file, array $data)
+    public function __invoke(string $file, array $imageData)
     {
-        $imageData = [
-            'basename' => $this->generateBasename(),
-            'ext'      => strtolower($file->clientExtension()),
-            'original' => $file->getClientOriginalName(),
-            'mimetype' => $file->getClientMimeType(),
-            'size'     => $file->getSize(),
-            'delkey'   => $data['delkey'] ?? null,
-            'ip'       => $data['ip'] ?? null,
-        ];
+        $imageData['basename'] = $this->generateBasename();
+        $tmp = Storage::disk('tmp')->path($file);
 
         // get hash
-        $hash = $this->getHash($file);
+        $hash = $this->getHash($tmp);
 
         // get width and height
-        $geo = $this->file->getGeometryByFile($file);
+        $geo = $this->file->getGeometryByFile($tmp);
         $imageData += $geo;
-
-        // save tmp
-        $tmp = $file->store('', 'tmp');
-        $tmp = Storage::disk('tmp')->path($tmp);
 
         // Fixed Rotation
         $this->file->orientate($tmp);
@@ -67,14 +54,13 @@ class UploadSingleFile extends UploadService implements TransactionInterface
 
         // save thumbnail
         if (strtolower($imageData['mimetype']) === 'image/gif') {
-            $this->file->generateThumbnailGif($file, $imageData['basename']);
+            $this->file->generateThumbnailGif($tmp, $imageData['basename']);
             $imageData['t_ext'] = 'gif';
         } else {
-            $this->file->generateThumbnail($file, $imageData['basename']);
+            $this->file->generateThumbnail($tmp, $imageData['basename']);
             $imageData['t_ext'] = 'jpg';
         }
 
-        @unlink($file->getRealPath());
         @unlink($tmp);
 
         if (! ($image = $this->imageHash->firstOrCreateWithImage($hash, $imageData))) {

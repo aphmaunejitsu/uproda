@@ -20,10 +20,10 @@ use Tests\TestCase;
  * @group Service
  * @group upload
  * @group UploadService
- * @group UploadSingleFileTest
+ * @group UploadedTest
  *
  */
-class UploadSingleFileTest extends TestCase
+class UploadedTest extends TestCase
 {
     use RefreshDatabase;
     use BuildImagePath;
@@ -44,7 +44,7 @@ class UploadSingleFileTest extends TestCase
      *
      * @return void
      */
-    public function testUploadSingleFile()
+    public function testUpload()
     {
         $test = Storage::disk('local')->path('test.jpg');
         Storage::fake('image');
@@ -53,8 +53,21 @@ class UploadSingleFileTest extends TestCase
         $file = UploadedFile::fake()->createWithContent('lua.jpg', $image->stream());
 
         $old = $image->exif();
+        $tmp = $file->store('', 'tmp');
 
-        $result = $this->service->uploadSingleFile($file, ['delkey' => 'test', 'ip' => $this->faker->ipv4]);
+        $imageData = [
+            'ext'      => strtolower($file->clientExtension()),
+            'original' => $file->getClientOriginalName(),
+            'mimetype' => $file->getClientMimeType(),
+            'size'     => $file->getSize(),
+            'delkey' => 'test',
+            'ip' => $this->faker->ipv4
+        ];
+
+        $result = $this->service->uploaded(
+            $tmp,
+            $imageData
+        );
 
         $path = $this->buildImagePath($result->basename, $result->ext);
         $thumb = $this->buildThumbnailPath($result->basename, $result->t_ext);
@@ -77,17 +90,28 @@ class UploadSingleFileTest extends TestCase
 
     public function testUploadNgFile()
     {
-        $this->expectException(ServiceException::class);
+        $this->expectException(ImageHashException::class);
         Storage::fake('image');
         Storage::fake('tmp');
         $file = UploadedFile::fake()->image('test.jpg');
-
-        $hash = $this->getHash($file);
+        $hash = $this->getHash($file->getRealPath());
         ImageHash::factory()->create([
             'hash' => $hash,
             'ng'   => true
         ]);
 
-        $result = $this->service->uploadSingleFile($file, ['delkey' => 'test']);
+        $tmp = $file->store('', 'tmp');
+
+        $imageData = [
+            'ext'      => strtolower($file->clientExtension()),
+            'original' => $file->getClientOriginalName(),
+            'mimetype' => $file->getClientMimeType(),
+            'size'     => $file->getSize(),
+            'delkey' => 'test',
+            'ip' => $this->faker->ipv4
+        ];
+
+
+        $result = $this->service->uploaded($tmp, $imageData);
     }
 }
