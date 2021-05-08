@@ -196,4 +196,42 @@ class UploadTest extends TestCase
         $response->assertStatus(400)
             ->assertJson(['message' => 'アップロードできませんでした']);
     }
+
+    public function testSparateUpload()
+    {
+        $test = Storage::disk('local')->get('test.jpg');
+
+        $size = Storage::disk('local')->size('test.jpg');
+        $mimetype = Storage::disk('local')->mimeType('test.jpg');
+        $md5  = md5($test);
+        Storage::fake('chunk');
+        Storage::fake('image');
+        Storage::fake('tmp');
+        $bytes = 2048;
+        $start = 0;
+
+        $hash = $this->faker->uuid;
+
+        while (true) {
+            $split = substr($test, $start, $bytes);
+            if (empty($split)) {
+                break;
+            }
+
+            $file = UploadedFile::fake()->createWithContent("test_{$start}.jpg", $split);
+            $json = compact('hash', 'file');
+            $end = $start + ($file->getSize() - 1);
+            $response = $this->withHeaders(['Content-Range' => "bytes {$start}-{$end}/{$size}"])
+                             ->postJson($this->url, $json);
+            $start += $bytes;
+            sleep(1);
+        }
+
+        $result = $response->getContent();
+        $res = json_decode($result);
+        $image = $this->buildImagePath($res->data->basename, $res->data->ext);
+        $thumbnail = $this->buildThumbnailPath($res->data->basename, $res->data->t_ext);
+        Storage::disk('image')->assertExists($image);
+        Storage::disk('image')->assertExists($thumbnail);
+    }
 }

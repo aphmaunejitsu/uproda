@@ -38,6 +38,7 @@ class Upload extends Controller
             'size'     => $file->getSize(),
             'delkey'   => $data['delkey'] ?? null,
             'ip'       => $ip ?? null,
+            'uuid'     => $data['hash']
         ];
 
         // save to tmp
@@ -47,13 +48,15 @@ class Upload extends Controller
         $result = null;
         if (($cr = $this->getContentRange($request))) {
             // have content range
-            if (($result = $this->service->chunkUpload($tmpPath, $imageData, $cr))) {
+            if (($result = $this->service->chunkedUpload($file, $imageData, $cr))) {
                 if (!$result['complete']) {
                     return response()->json([
                         'message' => 'uploading image',
                         'size'    => $result['size']
                     ]);
                 }
+
+                $tmpPath = $result['path'];
             } else {
                 return response()->json([
                     'message' => 'アップロードできませんでした'
@@ -77,7 +80,7 @@ class Upload extends Controller
 
     public function getContentRange(UploadRequest $request)
     {
-        if (($cr = $request->header('content-range') === null)) {
+        if (($cr = $request->header('content-range')) === null) {
             return null;
         }
 
@@ -89,8 +92,8 @@ class Upload extends Controller
         $size     = (int)@$content_range[3];
         $is_first = (int)@$content_range[1] === 0 ? true : false;
         $is_last  = ((int)@$content_range[2] + 1) === $size ? true : false;
-        $start    = (int)@content_range[1];
-        $end      = (int)@content_range[2];
+        $start    = (int)@$content_range[1];
+        $end      = (int)@$content_range[2];
 
         return compact('size', 'start', 'end', 'is_first', 'is_last');
     }

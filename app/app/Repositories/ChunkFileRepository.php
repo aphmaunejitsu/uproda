@@ -65,7 +65,7 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
             return [
                 'size'     => $size,
                 'uuid'     => $uuid,
-                'path'     => Storage::disk($storage)->path($uuid),
+                'path'     => $uuid,
                 'mimetype' => $mimetype,
             ];
         } else {
