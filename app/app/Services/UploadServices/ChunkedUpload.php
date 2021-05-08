@@ -45,7 +45,7 @@ class ChunkedUpload extends UploadService
             ];
         }
 
-        if (! ($merged = $this->chunk->mergeChunks($chunk->uuid))) {
+        if (! ($merged = $this->chunk->mergeChunks($chunk->uuid, 'tmp'))) {
             return null;
         }
 

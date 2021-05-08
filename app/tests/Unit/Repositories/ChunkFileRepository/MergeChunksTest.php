@@ -40,9 +40,10 @@ class MergeChunksTest extends TestCase
     /**
      * A basic unit test example.
      *
+     * @dataProvider mergeProvider
      * @return void
      */
-    public function testMerge()
+    public function testMerge($toStorage)
     {
         $test = Storage::disk('local')->get('test.jpg');
 
@@ -70,12 +71,20 @@ class MergeChunksTest extends TestCase
             $start += $bytes;
         }
 
-        $result = $this->repo->mergeChunks($uuid);
+        $result = $this->repo->mergeChunks($uuid, $toStorage);
 
-        Storage::disk('chunk')->assertExists($uuid);
+        Storage::disk($toStorage)->assertExists($uuid);
         $this->assertEquals($uuid, $result['uuid']);
         $this->assertEquals($size, $result['size']);
         $this->assertEquals($mimetype, $result['mimetype']);
-        $this->assertEquals($md5, md5_file(Storage::disk('chunk')->path($uuid)));
+        $this->assertEquals($md5, md5_file(Storage::disk($toStorage)->path($uuid)));
+    }
+
+    public function mergeProvider()
+    {
+        return [
+            ['chunk'],
+            ['tmp']
+        ];
     }
 }

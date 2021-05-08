@@ -44,7 +44,7 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
                     ->first();
     }
 
-    public function mergeChunks(string $uuid)
+    public function mergeChunks(string $uuid, string $storage = 'chunk')
     {
         $chunks = $this->getChunks($uuid);
         $content = null;
@@ -59,13 +59,13 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
         Storage::disk('chunk')->deleteDirectory($uuid);
         $this->remove($uuid);
 
-        if (Storage::disk('chunk')->put($uuid, $content)) {
-            $size = Storage::disk('chunk')->size($uuid);
-            $mimetype = Storage::disk('chunk')->mimeType($uuid);
+        if (Storage::disk($storage)->put($uuid, $content)) {
+            $size = Storage::disk($storage)->size($uuid);
+            $mimetype = Storage::disk($storage)->mimeType($uuid);
             return [
                 'size'     => $size,
                 'uuid'     => $uuid,
-                'path'     => Storage::disk('chunk')->path($uuid),
+                'path'     => Storage::disk($storage)->path($uuid),
                 'mimetype' => $mimetype,
             ];
         } else {
