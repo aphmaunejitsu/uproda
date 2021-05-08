@@ -69,7 +69,7 @@ class Uploaded extends UploadService implements TransactionInterface
             $imageData['t_ext'] = 'jpg';
         }
 
-        @unlink($tmp);
+        // @unlink($tmp);
 
         if (! ($image = $this->imageHash->firstOrCreateWithImage($hash, $imageData))) {
             return null;

@@ -82,7 +82,7 @@ class FileRepository implements FileRepositoryInterface
         $height = config('roda.thumbnail.height', 400);
         $image->cropThumbnailImage($width, $height);
 
-        return Storage::disk($this->getImageStorage())->put($thumbnail, $image);
+        return Storage::disk($this->getImageStorage())->put($thumbnail, $image->getImageBlob());
     }
 
     public function generateThumbnailGif(string $file, string $basename)
@@ -96,6 +96,7 @@ class FileRepository implements FileRepositoryInterface
         $height = config('roda.thumbnail.height', 400);
 
         $image->setFirstIterator();
+        $image = $image->coalesceImages();
         do {
             $image->cropThumbnailImage($width, $height);
         } while ($image->nextImage());
@@ -103,13 +104,17 @@ class FileRepository implements FileRepositoryInterface
         $image->optimizeimagelayers();
 
         $thumbnail = $this->buildThumbnailPath($basename, 'gif');
-        return Storage::disk($this->getImageStorage())->put($thumbnail, $image);
+        return Storage::disk($this->getImageStorage())->put($thumbnail, $image->getImagesBlob());
     }
 
     public function orientate(string $path)
     {
         try {
             $image = Image::make($path);
+            if (! $image->exif()) {
+                Log::debug('have no exif');
+                return false;
+            }
             $image->orientate();
             return $image->save();
         } catch (Exception $e) {
