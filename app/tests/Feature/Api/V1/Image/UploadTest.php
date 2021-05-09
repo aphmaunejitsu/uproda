@@ -183,7 +183,7 @@ class UploadTest extends TestCase
         $response->assertStatus(201);
     }
 
-    public function testFailedSingleUpload()
+    public function testFailedUploaded()
     {
         Storage::fake('image');
         Storage::fake('tmp');
@@ -212,6 +212,45 @@ class UploadTest extends TestCase
             ->assertJson(['message' => 'アップロードできませんでした']);
     }
 
+    /**
+     * @group testWrongTypeSeparatUpload
+     */
+    public function testWrongTypeSeparatUpload()
+    {
+        Storage::fake('image');
+        Storage::fake('tmp');
+        Storage::fake('chunk');
+
+        $test = UploadedFile::fake()->createWithContent('test', str_repeat('t', 1024 * 20));
+
+        $bytes = 2048;
+        $start = 0;
+
+        $hash = $this->faker->uuid;
+
+        $content = $test->getContent();
+        $size = $test->getSize();
+        dump($content);
+
+        while (true) {
+            $split = substr($content, $start, $bytes);
+            if (empty($split)) {
+                break;
+            }
+
+            $file = UploadedFile::fake()->createWithContent("test_{$start}", $split);
+            $json = compact('hash', 'file');
+            $end = $start + ($file->getSize() - 1);
+            $response = $this->withHeaders(['Content-Range' => "bytes {$start}-{$end}/{$size}"])
+                             ->postJson($this->url, $json);
+            $start += $bytes;
+            sleep(1);
+        }
+
+        $response->assertStatus(400)
+            ->assertJson(['message' => 'アップロードできないタイプのファイルです']);
+    }
+
     public function testSparateUpload()
     {
         Storage::fake('image');
@@ -223,9 +262,6 @@ class UploadTest extends TestCase
         $size = Storage::disk('local')->size('test.jpg');
         $mimetype = Storage::disk('local')->mimeType('test.jpg');
         $md5  = md5($test);
-        Storage::fake('chunk');
-        Storage::fake('image');
-        Storage::fake('tmp');
         $bytes = 2048;
         $start = 0;
 

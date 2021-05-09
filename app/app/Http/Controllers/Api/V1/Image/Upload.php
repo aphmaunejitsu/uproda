@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Image;
 
+use App\Exceptions\ChunkFileRepositoryException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Image\UploadRequest;
 use App\Http\Resources\ImageResource;
@@ -76,6 +77,11 @@ class Upload extends Controller
                     ])->setStatusCode(400);
                 }
             }
+        } catch (ChunkFileRepositoryException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code'    => $e->getCode()
+            ])->setStatusCode(400);
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'アップロードできませんでした'
