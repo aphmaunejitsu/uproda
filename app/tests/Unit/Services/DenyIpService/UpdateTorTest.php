@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 /**
  * @group Service
- * @group make:tor
+ * @group tor:update
  * @group DenyIpService
  * @group UpdateTorTest
  */

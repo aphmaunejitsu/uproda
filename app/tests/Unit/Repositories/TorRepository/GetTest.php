@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 /**
  * @group Repository
- * @group make:tor
+ * @group tor:update
  * @group TorRepository
  * @group GetTest
  */
