@@ -8,7 +8,8 @@ return [
     'url'        => [
         'image' => [
             'thumbnail' => env('RODA_THUMBNAIL_DIR', 'thumbnail')
-        ]
+        ],
+        'tor' => env('RODA_TOR_URL', 'https://check.torproject.org/exit-addresses'),
     ],
     'storage' => env('RODA_IMAGE_STORAGE', 'image'),
     'pagination' => [

@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class DenyIp extends Model
 {
     use HasFactory;
+
+    public $fillable = [
+        'ip',
+        'is_tor'
+    ];
+
+    protected $casts = [
+        'is_tor' => 'boolean'
+    ];
 }
