@@ -42,7 +42,7 @@ class MergeChunksTest extends TestCase
     {
         $this->expectException(ChunkFileRepositoryException::class);
         $this->expectExceptionMessage('アップロードできないタイプのファイルです');
-        $file = UploadedFile::fake()->createWithContent('test', str_repeat('t', 1024 * 20));
+        $file = UploadedFile::fake()->createWithContent('test', str_repeat('t', 1024 * 5));
 
         $uuid = $this->faker->uuid;
         Storage::fake('chunk');
