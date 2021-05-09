@@ -36,8 +36,7 @@ class CheckNgWord implements Rule
         $v = trim($value);
 
         foreach ($denyWords as $denyWord) {
-            Log::debug(__METHOD__, compact('value', 'denyWord'));
-            if (mb_strpos($value, $denyWord->word) !== false) {
+            if (mb_strpos($v, $denyWord->word) !== false) {
                 return false;
             }
         }
