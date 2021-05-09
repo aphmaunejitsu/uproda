@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests\Api\V1\Image;
 
+use App\Models\DenyWord;
 use App\Models\ImageHash;
 use App\Repositories\ImageHashRepository;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\CheckImageHash;
+use App\Rules\CheckNgWord;
 use Illuminate\Support\Facades\Log;
 
 class UploadRequest extends FormRequest
@@ -29,7 +31,12 @@ class UploadRequest extends FormRequest
     {
         return [
             'delkey'  => 'nullable|alpha_dash',
-            'comment' => 'nullable|max:255|string',
+            'comment' => [
+                'nullable',
+                'max:255',
+                'string',
+                new CheckNgWord(),
+            ],
             'file'    =>  [
                 'required',
                 'max:' . config('roda.upload.max'),
