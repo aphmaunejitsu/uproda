@@ -182,6 +182,8 @@ return [
         App\Providers\FileRepositoryProvider::class,
         App\Providers\ChunkFileRepositoryProvider::class,
         App\Providers\DenyWordRepositoryProvider::class,
+        App\Providers\DenyIpRepositoryProvider::class,
+        App\Providers\TorRepositoryProvider::class
 
     ],
 
