@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 /**
  * @group Repository
- * @group upload
+ * @group make:tor
  * @group DenyIpRepository
  * @group UpdateOrCreateTest
  */

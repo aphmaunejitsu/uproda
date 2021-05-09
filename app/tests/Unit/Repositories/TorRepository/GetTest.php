@@ -9,6 +9,7 @@ use Tests\TestCase;
 
 /**
  * @group Repository
+ * @group make:tor
  * @group TorRepository
  * @group GetTest
  */
@@ -40,6 +41,7 @@ class GetTest extends TestCase
         $result = $this->repo->get();
         $this->assertNotEmpty($result);
         $this->assertCount(2, $result);
+        $this->assertEquals('10.11.12.13', $result[0]);
     }
 
     public function testNotGet()
