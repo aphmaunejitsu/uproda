@@ -230,7 +230,6 @@ class UploadTest extends TestCase
 
         $content = $test->getContent();
         $size = $test->getSize();
-        dump($content);
 
         while (true) {
             $split = substr($content, $start, $bytes);
@@ -249,6 +248,52 @@ class UploadTest extends TestCase
 
         $response->assertStatus(400)
             ->assertJson(['message' => 'アップロードできないタイプのファイルです']);
+    }
+
+    /**
+     * @group testOverMaxSizeSeparatUpload
+     */
+    public function testOverMaxSizeSeparatUpload()
+    {
+        Storage::fake('image');
+        Storage::fake('tmp');
+        Storage::fake('chunk');
+
+        $kbytes = config('roda.upload.max');
+
+
+        $test = Storage::disk('local')->get('test.jpg');
+        $content = null;
+        for ($i = 0; $i < 5; $i++) {
+            $content .= $test;
+        }
+
+        $bytes = 2048;
+        $start = 0;
+
+        $hash = $this->faker->uuid;
+        $image = UploadedFile::fake()->createWithContent('image', $content);
+        $size = $image->getSize();
+
+        while (true) {
+            $split = substr($content, $start, $bytes);
+            if (empty($split)) {
+                break;
+            }
+
+            $file = UploadedFile::fake()->createWithContent("test_{$start}", $split);
+            $json = compact('hash', 'file');
+            $end = $start + ($file->getSize() - 1);
+            $response = $this->withHeaders(['Content-Range' => "bytes {$start}-{$end}/{$size}"])
+                             ->postJson($this->url, $json);
+            $start += $bytes;
+            sleep(1);
+        }
+
+        $response->assertStatus(400)
+                 ->assertJson([
+                     'message' => "アップロードできるサイズは {$kbytes}KB までです"
+                 ]);
     }
 
     public function testSparateUpload()
