@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class DenyWord extends Model
 {
     use HasFactory;
+
+    public $fillable = [
+        'word',
+    ];
 }

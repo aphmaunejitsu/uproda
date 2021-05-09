@@ -181,6 +181,7 @@ return [
         App\Providers\ImageHashRepositoryProvider::class,
         App\Providers\FileRepositoryProvider::class,
         App\Providers\ChunkFileRepositoryProvider::class,
+        App\Providers\DenyWordRepositoryProvider::class,
 
     ],
 
