@@ -19,6 +19,8 @@ class Service
     protected $namespace = 'App\Services';
     protected $service   = null;
     protected $model = null;
+
+    protected $cache_key = null;
     protected $expire = null;
 
     protected $repo;
@@ -37,21 +39,31 @@ class Service
 
             $service = App::make($class);
         } catch (Exception $e) {
-            Log::info(sprintf('[End service] %s', $class), $user + ['class' => $class, 'error' => $e->getMessage()]);
-            throw new ServiceException('not found service', 9000, $e);
+            Log::info(
+                sprintf('[End service] %s', $class),
+                $user + ['class' => $class, 'error' => $e->getMessage()]
+            );
+            throw new ServiceException("not found service: {$class}", 9000, $e);
         }
 
         try {
-            Log::info(sprintf('[Start Service] %s', $class), compact('user', 'class', 'arguments'));
+            Log::info(
+                sprintf('[Start Service] %s', $class),
+                compact('user', 'class', 'arguments')
+            );
 
-            $cache_key = $class . '-' . md5(json_encode($arguments));
+            $cache_key = null;
+
             if ($service instanceof CacheInterface) {
+                $key = $class . '-' . md5(json_encode($arguments));
+                $cache_key = $service->cache_key ?? $key;
+
                 if (($result = Cache::get($cache_key))) {
                     Log::info(sprintf('[Using Cache Service] %s', $class), $user + [
                         'class'  => $class,
-                        'result' => $result,
                         'cache'  => true,
-                        'key'    => $cache_key
+                        'key'    => $cache_key,
+                        'result' => $result,
                     ]);
                     return $result;
                 }
@@ -70,20 +82,33 @@ class Service
             }
 
             if ($service instanceof CacheInterface) {
-                $expire = $service->expire ? $service->expire : config('roda.service.cache', 60);
+                $expire = $service->expire ?? config('roda.service.cache', 60);
                 Cache::put($cache_key, $result, $expire);
-                Log::debug('cached', compact('cache_key', 'result', 'expire'));
+                Log::debug(
+                    'cached',
+                    compact(
+                        'cache_key',
+                        'result',
+                        'expire'
+                    )
+                );
             }
 
-            Log::info(sprintf('[End Service] %s', $class), $user + ['class' => $class, 'result' => $result]);
+            Log::info(
+                sprintf('[End Service] %s', $class),
+                $user + ['class' => $class, 'result' => $result]
+            );
         } catch (Exception $e) {
             if ($service instanceof TransactionInterface) {
                 Log::debug('rollback');
                 $service->rollback();
             }
 
-            Log::info(sprintf('[End Service] %s, raised exception', $class), $user + ['class' => $class, 'error' => $e->getMessage()]);
-            // throw new ServiceException('raise execption', 10000, $e);
+            Log::info(
+                sprintf('[End Service] %s, raised exception', $class),
+                $user + ['class' => $class, 'error' => $e->getMessage()]
+            );
+
             throw $e;
         }
 
