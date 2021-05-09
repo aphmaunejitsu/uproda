@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api\V1\Image;
 
 use App\Libs\Traits\BuildImagePath;
+use App\Models\DenyWord;
 use App\Models\Image;
 use App\Models\ImageHash;
 use App\Services\Traits\ImageTrait;
@@ -47,6 +48,32 @@ class UploadTest extends TestCase
                  ->assertJsonValidationErrors([
                      'file',
                      'hash'
+                 ]);
+    }
+
+    /**
+     * @group testValidateComment
+     */
+    public function testValidateComment()
+    {
+        $file = UploadedFile::fake()->image('test.jpg');
+        DenyWord::factory()->create(['word' => 'FF14']);
+        DenyWord::factory()->create(['word' => '女子高生']);
+        $delkey  = null;
+        $comment = 'FF14';
+        $hash = $this->faker->uuid;
+        $json = compact('delkey', 'comment', 'hash', 'file');
+
+        $response = $this->postJson($this->url, $json);
+
+        $response->assertStatus(422)
+                 ->assertJsonValidationErrors([
+                     'comment',
+                 ])
+                 ->assertJson([
+                     'errors' => [
+                         'comment' => ['comment に禁止ワードが含まれています']
+                     ]
                  ]);
     }
 
