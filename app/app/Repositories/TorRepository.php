@@ -21,7 +21,7 @@ class TorRepository implements TorRepositoryInterface
         foreach ($lines as $line) {
             if (strpos($line, 'ExitAddress') !== false) {
                 $columns = explode(' ', $line);
-                $ips[] = ['ip' => $columns[1], 'is_tor' => true];
+                $ips[] = $columns[1];
             }
         }
 
