@@ -26,6 +26,14 @@ class UpdateTor extends DenyIpService implements TransactionInterface
             return false;
         }
 
+        if (($denyIps = $this->denyIp->getAll())) {
+            foreach ($denyIps as $ip) {
+                if (! $tor_list->search($ip->ip)) {
+                    $this->denyIp->deleteTorByIp($ip->ip);
+                }
+            }
+        }
+
         $results = [];
         foreach ($tor_list as $tor) {
             $results[] = $this->denyIp->updateOrCreate($tor);

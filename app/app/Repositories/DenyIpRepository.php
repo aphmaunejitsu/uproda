@@ -17,6 +17,13 @@ class DenyIpRepository implements DenyIpRepositoryInterface
         return $this->model->where('ip', $ip)->first();
     }
 
+    public function deleteTorByIp(string $ip)
+    {
+        return $this->model
+                    ->where('ip', $ip)
+                    ->delete();
+    }
+
     public function updateOrCreate(string $ip, bool $is_tor = true)
     {
         return $this->model
@@ -27,5 +34,10 @@ class DenyIpRepository implements DenyIpRepositoryInterface
                             'is_tor' => $is_tor
                         ]
                     );
+    }
+
+    public function getAll()
+    {
+        return $this->model->get();
     }
 }
