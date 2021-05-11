@@ -50,6 +50,13 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof DenyIpException) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+                'code'    => $exception->getCode()
+            ], 403);
+        }
+
         return parent::render($request, $exception);
     }
 }
