@@ -34,6 +34,9 @@ class UploadTest extends TestCase
     {
         parent::setUp();
         $this->url = route('v1.image.upload');
+        DenyIp::factory()->create([
+            'ip' => '10.11.12.13'
+        ]);
     }
 
     /**
@@ -43,10 +46,6 @@ class UploadTest extends TestCase
      */
     public function testDenyIp()
     {
-        DenyIp::factory()->create([
-            'ip' => '10.11.12.13'
-        ]);
-
         $response = $this->call(
             'post',
             $this->url,
