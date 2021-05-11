@@ -28,7 +28,6 @@ class Upload extends Controller
         $data = $request->validated();
 
         $ip = $request->ip();
-        $ua = $request->header('User-Agent');
         $file = $request->file('file');
 
         $imageData = [

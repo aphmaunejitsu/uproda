@@ -23,6 +23,6 @@ Route::group(
         Route::get('/', 'Index')->name('v1.image.index');
         Route::get('/{basename}', 'Detail')->name('v1.image.detail');
         Route::delete('/', 'Delete')->name('v1.image.delete');
-        Route::post('/', 'Upload')->name('v1.image.upload');
+        Route::middleware(['deny.ip'])->post('/', 'Upload')->name('v1.image.upload');
     }
 );
