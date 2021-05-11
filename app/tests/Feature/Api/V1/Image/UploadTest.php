@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api\V1\Image;
 
 use App\Libs\Traits\BuildImagePath;
+use App\Models\DenyIp;
 use App\Models\DenyWord;
 use App\Models\Image;
 use App\Models\ImageHash;
@@ -33,6 +34,33 @@ class UploadTest extends TestCase
     {
         parent::setUp();
         $this->url = route('v1.image.upload');
+    }
+
+    /**
+     * @group testDenyIp
+     *
+     * @return void
+     */
+    public function testDenyIp()
+    {
+        DenyIp::factory()->create([
+            'ip' => '10.11.12.13'
+        ]);
+
+        $response = $this->call(
+            'post',
+            $this->url,
+            [],
+            [],
+            [],
+            ['REMOTE_ADDR' => '10.11.12.13']
+        );
+
+        $response->assertStatus(403)
+                 ->assertJson([
+                     'message' => 'アップロードできません',
+                     'code'    => 10000
+                 ]);
     }
 
     /**
