@@ -53,7 +53,7 @@ function Main({ image }) {
         <ShareTwitterButton image={image} />
         <ShareButton image={image} />
         <a
-          href={`/image/${image.basename}`}
+          href={`${image.image}`}
           target="_blank"
           rel="noopener noreferrer"
         >
