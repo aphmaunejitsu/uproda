@@ -1,7 +1,7 @@
 import React from 'react';
 import Nav from './header/Nav';
 import SiteLogo from './header/SiteLogo';
-import UpDialog from './header/UpDialog';
+import UpButton from './header/UpButton';
 import NavMobile from './header/NavMobile';
 
 function HeaderBar() {
@@ -10,7 +10,7 @@ function HeaderBar() {
       <NavMobile />
       <SiteLogo />
       <Nav />
-      <UpDialog />
+      <UpButton />
     </header>
   );
 }
