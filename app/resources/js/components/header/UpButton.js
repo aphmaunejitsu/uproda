@@ -5,13 +5,19 @@ import UpDialog from './UpDialog';
 
 function UpButton() {
   const [open, setOpen] = React.useState(false);
+  const [isOpenUpload, setIsOpenUpload] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
+    setIsOpenUpload(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+
+  React.useEffect(() => {
+    document.body.classList.toggle('is-fixed', isOpenUpload);
+  }, [isOpenUpload]);
 
   return (
     <>
