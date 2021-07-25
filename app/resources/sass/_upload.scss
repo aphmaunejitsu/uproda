@@ -9,7 +9,8 @@
       width: 100%;
       padding: 0.5rem;
       border: 1px $silver dotted;
-      text-align: center;
+      display: flex;
+      justify-content: center;
       @media (prefers-color-scheme: dark) {
         border-color: $silver-dark;
       }
@@ -29,31 +30,34 @@
     display: flex;
     justify-content: center;
     border: 1px $silver dotted;
-    position: relative;
     @media (prefers-color-scheme: dark) {
       border-color: $silver-dark;
     }
 
-    img {
-      height: 160px;
-      filter: drop-shadow(1px 1px 1px rgba($black, 0.2));
-      @media (prefers-color-scheme: dark) {
-        filter: drop-shadow(1px 1px 1px rgba($black-dark, 0.2));
-      }
-      object-fit: scale-down;
+    .preview {
+      position: relative;
 
-      @include mq(md) {
-        height: 360px;
-      }
-      @include mq(lg) {
-        height: 480px;
-      }
-    }
+      img {
+        height: 160px;
+        filter: drop-shadow(1px 1px 1px rgba($black, 0.2));
+        @media (prefers-color-scheme: dark) {
+          filter: drop-shadow(1px 1px 1px rgba($black-dark, 0.2));
+        }
+        object-fit: scale-down;
 
-    .cancel-image-button {
-      position: absolute;
-      right: 0;
-      top: 0;
+        @include mq(md) {
+          height: 360px;
+        }
+        @include mq(lg) {
+          height: 480px;
+        }
+      }
+
+      .cancel-image-button {
+        position: absolute;
+        right: 0;
+        top: -1;
+      }
     }
   }
 }
