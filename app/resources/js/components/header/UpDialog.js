@@ -50,30 +50,31 @@ function UpDialog({ isOpen, handleClose }) {
               onChange={(event) => handleFileOnChange(event)}
               ref={inputFile}
             />
-            <p>
+            <span>
               画像を選択
               <br />
-              [max filesize:
+              max filesize:
               {process.env.MIX_RODA_UPLOAD_MAXSIZE}
-              MB]
-            </p>
+              MB
+            </span>
           </label>
         </div>
         <div className="roda-image">
           {
             file
               ? (
-                <>
+                <div className="preview">
                   <img src={file} alt="Upload" />
                   <IconButton
                     onClick={() => handleCancelImage()}
                     aria-label="close"
                     color="inherit"
+                    size="small"
                     className="cancel-image-button"
                   >
                     <CancelIcon />
                   </IconButton>
-                </>
+                </div>
               )
               : <span>No Image</span>
           }
