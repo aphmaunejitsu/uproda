@@ -8,6 +8,7 @@ use App\Services\ImageService;
 
 class Paginate extends ImageService implements CacheInterface
 {
+    protected $expire = 5;
     public function __construct(ImageRepositoryInterface $image)
     {
         $this->repo = $image;
