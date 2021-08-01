@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import CancelIcon from '@material-ui/icons/Cancel';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import axios from 'axios';
+import UUID from 'uuidjs';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,9 +24,23 @@ const useStyles = makeStyles((theme) => ({
 function Main() {
   const classes = useStyles();
   const inputFile = React.useRef(null);
+
   const [file, setFile] = React.useState(false);
+  const [delkey, setDelkey] = React.useState('');
+  const [comment, setComment] = React.useState('');
+  const [image, setImage] = React.useState(false);
+  const [fileSize, setFileSize] = React.useState(0);
+  const [mimetype, setMimetype] = React.useState(null);
+  const [chunkPos, setChunkPos] = React.useState(0);
+  const [chunkCount, setChunkCount] = React.useState(0);
+  const [uuid, setUuid] = React.useState(null);
+  const [completedUpload, setCompletedUpload] = React.useState(false);
+
   const [snackOpen, setSnackOpen] = React.useState(false);
   const [snackMessage, setSnackMessage] = React.useState(null);
+
+  const chunkSize = process.env.MIX_RODA_UPLOAD_CHUNK;
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleFileOnChange = (e) => {
     if (e.target.files.length > 0) {
@@ -32,6 +49,9 @@ function Main() {
         setSnackMessage(`フィルサイズは${process.env.MIX_RODA_UPLOAD_MAXSIZE}MBまでです`);
         setSnackOpen(true);
       } else {
+        setImage(f);
+        setMimetype(f.type);
+        setFileSize(f.size);
         setFile(URL.createObjectURL(f));
       }
     }
@@ -39,6 +59,13 @@ function Main() {
 
   const handleCancelImage = () => {
     setFile(false);
+    setImage(false);
+    setDelkey(null);
+    setComment(null);
+    setFileSize(0);
+    setMimetype(null);
+    setChunkCount(0);
+
     inputFile.current.value = null;
   };
 
@@ -46,9 +73,75 @@ function Main() {
     setSnackOpen(false);
   };
 
+  const sendImage = async () => {
+    if (image && chunkPos) {
+      const pos = chunkPos - 1;
+      const start = pos * chunkSize;
+      const upsize = (pos + 1) * chunkSize;
+      const endRange = (upsize <= fileSize) ? upsize - 1 : fileSize - 1;
+      const chunk = image.slice(start, upsize, mimetype);
+
+      const formData = new FormData();
+
+      if (delkey) {
+        formData.append('delkey', delkey);
+      }
+
+      if (comment) {
+        formData.append('comment', comment);
+      }
+      formData.append('hash', uuid);
+      formData.append('file', chunk, image.name);
+
+      const headers = {
+        'Content-Type': 'multipart/form-data',
+        'Content-Range': `bytes ${start}-${endRange}/${image.size}`,
+        Accept: 'application/json',
+      };
+
+      await axios.post(
+        '/api/v1/image',
+        formData,
+        {
+          headers,
+        },
+      )
+        .then((response) => {
+          if (chunkPos < chunkCount) {
+            sleep(750);
+            setChunkPos(chunkPos + 1);
+          } else {
+            setChunkPos(0);
+            setCompletedUpload(response.data);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (image) {
+      sendImage();
+    }
+  }, [chunkPos]);
+
+  const handleUpload = async () => {
+    if (image) {
+      setChunkCount(Math.ceil(image.size / process.env.MIX_RODA_UPLOAD_CHUNK));
+      setUuid(UUID.generate());
+      setMimetype(image.type);
+      setChunkPos(1);
+    } else {
+      setSnackMessage('画像が選択されていません');
+      setSnackOpen(true);
+    }
+  };
+
   return (
     <div className="upload-image">
-      <form>
+      <form autoComplete="off">
         <div className="upload-file">
           <label htmlFor="roda-upload">
             <input
@@ -71,6 +164,7 @@ function Main() {
           <TextField
             name="delkey"
             label="Delete key"
+            color="secondary"
             style={{ marginTop: '0.5rem' }}
             fullWidth
             margin="normal"
@@ -79,12 +173,15 @@ function Main() {
             }}
             inputProps={{
               maxLength: 20,
-              autoComplete: 'off',
+            }}
+            onChange={(e) => {
+              setDelkey(e.target.value);
             }}
           />
           <TextField
             name="comment"
             label="Comment"
+            color="secondary"
             style={{ marginTop: '0.5rem' }}
             fullWidth
             margin="normal"
@@ -92,15 +189,17 @@ function Main() {
               shrink: true,
             }}
             inputProps={{
-              maxLength: 20,
-              autoComplete: 'off',
+              maxLength: 200,
+            }}
+            onChange={(e) => {
+              setComment(e.target.value);
             }}
           />
         </div>
         <div className="roda-upload-image">
           {
             file
-              ? <Button variant="contained">Upload</Button>
+              ? <Button variant="contained" onClick={handleUpload}>Upload</Button>
               : <Button variant="contained" disabled>Upload</Button>
           }
         </div>
