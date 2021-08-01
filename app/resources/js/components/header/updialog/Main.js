@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
 import CancelIcon from '@material-ui/icons/Cancel';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -8,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import UUID from 'uuidjs';
+import UpRodaImage from './UpRodaImage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,10 +31,12 @@ function Main() {
   const [image, setImage] = React.useState(false);
   const [fileSize, setFileSize] = React.useState(0);
   const [mimetype, setMimetype] = React.useState(null);
+
   const [chunkPos, setChunkPos] = React.useState(0);
   const [chunkCount, setChunkCount] = React.useState(0);
   const [uuid, setUuid] = React.useState(null);
-  const [completedUpload, setCompletedUpload] = React.useState(false);
+  const [uploaded, setUploaded] = React.useState(null);
+  const [progress, setProgress] = React.useState(0);
 
   const [snackOpen, setSnackOpen] = React.useState(false);
   const [snackMessage, setSnackMessage] = React.useState(null);
@@ -65,6 +67,7 @@ function Main() {
     setFileSize(0);
     setMimetype(null);
     setChunkCount(0);
+    setChunkPos(0);
 
     inputFile.current.value = null;
   };
@@ -111,8 +114,7 @@ function Main() {
             sleep(750);
             setChunkPos(chunkPos + 1);
           } else {
-            setChunkPos(0);
-            setCompletedUpload(response.data);
+            setUploaded(response.data);
           }
         })
         .catch((error) => {
@@ -126,6 +128,12 @@ function Main() {
       sendImage();
     }
   }, [chunkPos]);
+
+  useEffect(() => {
+    if (uploaded) {
+      window.location = uploaded.data.detail;
+    }
+  }, [uploaded]);
 
   const handleUpload = async () => {
     if (image) {
@@ -203,26 +211,7 @@ function Main() {
               : <Button variant="contained" disabled>Upload</Button>
           }
         </div>
-        <div className="roda-image">
-          {
-            file
-              ? (
-                <>
-                  <img src={file} alt="Upload" />
-                  <IconButton
-                    onClick={() => handleCancelImage()}
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
-                    className="cancel-image-button"
-                  >
-                    <CancelIcon />
-                  </IconButton>
-                </>
-              )
-              : <span>No Image</span>
-          }
-        </div>
+        <UpRodaImage image={file} handleCancelImage={handleCancelImage} />
       </form>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}

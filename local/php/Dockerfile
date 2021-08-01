@@ -25,12 +25,6 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && docker-php-source delete \
     && apt-get clean
 
-# RUN mkdir -p /usr/local/src/imagick \
-#     && curl -fsSL https://github.com/Imagick/imagick/archive/448c1cd0d58ba2838b9b6dff71c9b7e70a401b90.tar.gz | tar -zxv -C "/usr/local/src/imagick" --strip-components 1 \
-#     && cd /usr/local/src/imagick \
-#     && phpize && ./configure \
-#     && make && make install
-
 ADD ./conf/upload.ini /usr/local/etc/php/conf.d/upload.ini
 ADD ./conf/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.ini
 ADD ./conf/imagick.ini /usr/local/etc/php/conf.d/imagick.ini

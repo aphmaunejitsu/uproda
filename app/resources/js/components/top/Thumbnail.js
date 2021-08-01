@@ -23,7 +23,7 @@ Thumbnail.propTypes = {
     detail: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
-    comment: PropTypes.string.isRequired,
+    comment: PropTypes.string,
   }).isRequired,
   handleClick: PropTypes.func.isRequired,
 };

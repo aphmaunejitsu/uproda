@@ -34,7 +34,7 @@ View.propTypes = {
     image: PropTypes.string.isRequired,
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
-    comment: PropTypes.string.isRequired,
+    comment: PropTypes.string,
     original: PropTypes.string.isRequired,
     size: PropTypes.number.isRequired,
   }).isRequired,
