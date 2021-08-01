@@ -29,6 +29,7 @@ class UploadRequest extends FormRequest
      */
     public function rules()
     {
+        $max = config('roda.upload.max') * 1024 * 1024;
         return [
             'delkey'  => 'nullable|alpha_dash',
             'comment' => [
@@ -39,7 +40,7 @@ class UploadRequest extends FormRequest
             ],
             'file'    =>  [
                 'required',
-                'max:' . config('roda.upload.max'),
+                'max:' . $max,
                 new CheckImageHash(),
             ],
             'hash'    => 'required|uuid'

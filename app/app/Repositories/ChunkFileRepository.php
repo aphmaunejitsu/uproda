@@ -72,9 +72,9 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
             }
 
             $size = Storage::disk($storage)->size($uuid);
-            $kbytes = config('roda.upload.max');
-            if ($size > ($kbytes * 1024)) {
-                throw new ChunkFileRepositoryException("アップロードできるサイズは {$kbytes}KB までです", 10002);
+            $mbytes = config('roda.upload.max') * 1024 * 1024;
+            if ($size > $mbytes) {
+                throw new ChunkFileRepositoryException("アップロードできるサイズは {$mbytes}MB までです", 10002);
             }
 
             return [
