@@ -94,7 +94,10 @@
 
     .roda-upload-image {
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;
+      div:last-child {
+        margin-left: auto;
+      }
     }
   }
 }

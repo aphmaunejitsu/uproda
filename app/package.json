@@ -55,6 +55,7 @@
         "material-ui-dropzone": "^3.5.0",
         "node-sass": "^4.14.1",
         "prop-types": "^15.7.2",
+        "rc-progress": "^3.1.4",
         "react-common-loadmore": "^1.0.2",
         "react-copy-to-clipboard": "^5.0.3",
         "react-dropzone": "^11.3.1",
