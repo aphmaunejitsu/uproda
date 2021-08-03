@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import CancelIcon from '@material-ui/icons/Cancel';
 import IconButton from '@material-ui/core/IconButton';
 
-function UpRodaImage({ image, handleCancelImage }) {
+function UpRodaImage({ image, chunkPos, handleCancelImage }) {
   return (
     <div className="roda-image">
       {
@@ -11,15 +11,20 @@ function UpRodaImage({ image, handleCancelImage }) {
           ? (
             <>
               <img src={image} alt="Upload" />
-              <IconButton
-                onClick={() => handleCancelImage()}
-                aria-label="close"
-                color="inherit"
-                size="small"
-                className="cancel-image-button"
-              >
-                <CancelIcon />
-              </IconButton>
+              {
+                !chunkPos
+                  ? (
+                    <IconButton
+                      onClick={() => handleCancelImage()}
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      className="cancel-image-button"
+                    >
+                      <CancelIcon />
+                    </IconButton>
+                  ) : null
+              }
             </>
           )
           : <span>No Image</span>
@@ -29,7 +34,8 @@ function UpRodaImage({ image, handleCancelImage }) {
 }
 
 UpRodaImage.propTypes = {
-  image: PropTypes.shape().isRequired,
+  image: PropTypes.string.isRequired,
+  chunkPos: PropTypes.number.isRequired,
   handleCancelImage: PropTypes.func.isRequired,
 };
 

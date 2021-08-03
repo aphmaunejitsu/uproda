@@ -27,8 +27,11 @@ function Alert(props) {
 function ImageDeleteDialog({ image, isOpen, handleDialogClose }) {
   let delkey;
   const [isOpenSnack, setOpenSnack] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = () => {
+    setIsDeleting(true);
+
     axios.delete(
       '/api/v1/image',
       { data: { basename: image.basename, delkey: delkey.value } },
@@ -39,6 +42,7 @@ function ImageDeleteDialog({ image, isOpen, handleDialogClose }) {
       .catch(() => {
         handleDialogClose(false);
         setOpenSnack(true);
+        setIsDeleting(false);
       });
   };
 
@@ -76,6 +80,7 @@ function ImageDeleteDialog({ image, isOpen, handleDialogClose }) {
             onClick={handleDialogClose}
             color="default"
             variant="contained"
+            disabled={isDeleting && true}
           >
             Cancel
           </Button>
@@ -83,6 +88,7 @@ function ImageDeleteDialog({ image, isOpen, handleDialogClose }) {
             onClick={handleDelete}
             color="secondary"
             variant="contained"
+            disabled={isDeleting && true}
           >
             Delete
           </Button>

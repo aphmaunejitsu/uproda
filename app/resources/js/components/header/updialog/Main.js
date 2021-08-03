@@ -4,10 +4,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import UUID from 'uuidjs';
 import UpRodaImage from './UpRodaImage';
+import UpRodaButton from './UpRodaButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,10 +25,10 @@ function Main() {
   const classes = useStyles();
   const inputFile = React.useRef(null);
 
-  const [file, setFile] = React.useState(false);
+  const [file, setFile] = React.useState('');
   const [delkey, setDelkey] = React.useState('');
   const [comment, setComment] = React.useState('');
-  const [image, setImage] = React.useState(false);
+  const [image, setImage] = React.useState(null);
   const [fileSize, setFileSize] = React.useState(0);
   const [mimetype, setMimetype] = React.useState(null);
 
@@ -37,6 +37,7 @@ function Main() {
   const [uuid, setUuid] = React.useState(null);
   const [uploaded, setUploaded] = React.useState(null);
   const [progress, setProgress] = React.useState(0);
+  const [progressBuffer, setProgressBuffer] = React.useState(0);
 
   const [snackOpen, setSnackOpen] = React.useState(false);
   const [snackMessage, setSnackMessage] = React.useState(null);
@@ -60,8 +61,8 @@ function Main() {
   };
 
   const handleCancelImage = () => {
-    setFile(false);
-    setImage(false);
+    setFile('');
+    setImage(null);
     setDelkey(null);
     setComment(null);
     setFileSize(0);
@@ -112,8 +113,13 @@ function Main() {
         .then((response) => {
           if (chunkPos < chunkCount) {
             sleep(750);
+            setProgress(Math.ceil((chunkPos / chunkCount) * 100));
+            console.log(progress);
             setChunkPos(chunkPos + 1);
           } else {
+            setProgressBuffer(100);
+            setProgress(100);
+            sleep(100);
             setUploaded(response.data);
           }
         })
@@ -125,6 +131,8 @@ function Main() {
 
   useEffect(() => {
     if (image) {
+      setProgressBuffer(Math.ceil((chunkPos / chunkCount) * 100));
+      console.log(progressBuffer);
       sendImage();
     }
   }, [chunkPos]);
@@ -204,19 +212,22 @@ function Main() {
             }}
           />
         </div>
-        <div className="roda-upload-image">
-          {
-            file
-              ? <Button variant="contained" onClick={handleUpload}>Upload</Button>
-              : <Button variant="contained" disabled>Upload</Button>
-          }
-        </div>
-        <UpRodaImage image={file} handleCancelImage={handleCancelImage} />
+        <UpRodaButton
+          chunkPos={chunkPos}
+          handleUpload={handleUpload}
+          progress={progress}
+          progressBuffer={progressBuffer}
+        />
+        <UpRodaImage
+          image={file}
+          chunkPos={chunkPos}
+          handleCancelImage={handleCancelImage}
+        />
       </form>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={snackOpen}
-        autoHideDuration={5000}
+        autoHideDuration={2000}
         onClose={handleCloseSnack}
         message={snackMessage}
         action={[
