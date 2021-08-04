@@ -48,6 +48,6 @@ class CheckImageHash implements Rule
      */
     public function message()
     {
-        return 'It is NG file';
+        return 'アップロードできないファイルです';
     }
 }
