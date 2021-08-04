@@ -29,7 +29,7 @@ class UploadRequest extends FormRequest
      */
     public function rules()
     {
-        $max = config('roda.upload.max') * 1024 * 1024;
+        $max = config('roda.upload.max') * 1024;
         return [
             'delkey'  => 'nullable|alpha_dash',
             'comment' => [

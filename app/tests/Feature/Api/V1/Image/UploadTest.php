@@ -128,7 +128,7 @@ class UploadTest extends TestCase
     public function testValidateImageSize()
     {
         $file = UploadedFile::fake()->image('test.jpg');
-        $kbytes = config('roda.upload.max');
+        $kbytes = config('roda.upload.max') * 1024;
         $file->size($kbytes + 1);
         $delkey = 'colibri';
         $comment = 'test';
@@ -175,7 +175,7 @@ class UploadTest extends TestCase
                  ])
                  ->assertJson([
                      'errors' => [
-                         'file' => ['It is NG file']
+                         'file' => ['アップロードできないファイルです']
                      ]
                  ]);
     }
@@ -319,7 +319,7 @@ class UploadTest extends TestCase
 
         $response->assertStatus(400)
                  ->assertJson([
-                     'message' => "アップロードできるサイズは {$kbytes}KB までです"
+                     'message' => "アップロードできるサイズは 50KB までです"
                  ]);
     }
 

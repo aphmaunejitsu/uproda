@@ -76,7 +76,7 @@ class MergeChunksTest extends TestCase
 
         $test = Storage::disk('local')->get('test.jpg');
         $content = null;
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 6; $i++) {
             $content .= $test;
         }
         $uuid = $this->faker->uuid;

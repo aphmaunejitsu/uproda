@@ -44,12 +44,14 @@ function Main() {
 
   const chunkSize = process.env.MIX_RODA_UPLOAD_CHUNK;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const maxMB = process.env.MIX_RODA_UPLOAD_MAXSIZE / 1024;
+  const maxByte = process.env.MIX_RODA_UPLOAD_MAXSIZE * 1024;
 
   const handleFileOnChange = (e) => {
     if (e.target.files.length > 0) {
       const f = e.target.files[0];
-      if (f.size > process.env.MIX_RODA_UPLOAD_MAXSIZE * 1024 * 1024) {
-        setSnackMessage(`フィルサイズは${process.env.MIX_RODA_UPLOAD_MAXSIZE}MBまでです`);
+      if (f.size > maxByte) {
+        setSnackMessage(`フィルサイズは${maxMB.toFixed(1)}MBまでです`);
         setSnackOpen(true);
       } else {
         setImage(f);
@@ -63,10 +65,10 @@ function Main() {
   const handleCancelImage = () => {
     setFile('');
     setImage(null);
-    setDelkey(null);
-    setComment(null);
+    setDelkey('');
+    setComment('');
     setFileSize(0);
-    setMimetype(null);
+    setMimetype('');
     setChunkCount(0);
     setChunkPos(0);
 
@@ -125,6 +127,8 @@ function Main() {
         })
         .catch((error) => {
           console.log(error);
+          setSnackMessage('アップロードに失敗したお');
+          setSnackOpen(true);
         });
     }
   };
@@ -171,7 +175,7 @@ function Main() {
               画像を選択
               <br />
               max filesize:
-              {process.env.MIX_RODA_UPLOAD_MAXSIZE}
+              {maxMB.toFixed(1)}
               MB
             </span>
           </label>
