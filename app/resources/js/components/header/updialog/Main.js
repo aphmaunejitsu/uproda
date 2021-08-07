@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import UUID from 'uuidjs';
+import { ReCaptcha } from 'react-recaptcha-v3';
 import UpRodaImage from './UpRodaImage';
 import UpRodaButton from './UpRodaButton';
 
@@ -41,6 +42,7 @@ function Main() {
 
   const [snackOpen, setSnackOpen] = React.useState(false);
   const [snackMessage, setSnackMessage] = React.useState(null);
+  const [recaptcha, setRecapcha] = React.useState(null);
 
   const chunkSize = process.env.MIX_RODA_UPLOAD_CHUNK;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -79,6 +81,11 @@ function Main() {
     setSnackOpen(false);
   };
 
+  const verifyCallback = (recapchaToken) => {
+    console.log(recapchaToken);
+    setRecapcha(recapchaToken);
+  };
+
   const sendImage = async () => {
     if (image && chunkPos) {
       const pos = chunkPos - 1;
@@ -98,6 +105,7 @@ function Main() {
       }
       formData.append('hash', uuid);
       formData.append('file', chunk, image.name);
+      formData.append('token', recaptcha);
 
       const headers = {
         'Content-Type': 'multipart/form-data',
@@ -244,6 +252,11 @@ function Main() {
             <CancelIcon />
           </IconButton>,
         ]}
+      />
+      <ReCaptcha
+        sitekey={process.env.MIX_RODA_GOOGLE_RECAPTCHA_SITEKEY}
+        action="uproda"
+        verifyCallback={verifyCallback}
       />
     </div>
   );

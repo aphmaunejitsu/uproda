@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import { loadReCaptcha } from 'react-recaptcha-v3';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 // import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -12,17 +13,21 @@ import ImageDetail from './Detail';
 import NotFoundPage from './NotFound';
 
 function App() {
-  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const isDarkMode = useWindowDarkMode();
+  const sitekey = process.env.MIX_RODA_GOOGLE_RECAPTCHA_SITEKEY;
 
   const theme = React.useMemo(() => createTheme({
     palette: { type: isDarkMode ? 'dark' : 'light' },
   }), [isDarkMode]);
 
+  useEffect(() => {
+    loadReCaptcha(sitekey);
+  });
+
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <>
+    <Router>
+      <>
+        <ThemeProvider theme={theme}>
           <HeaderBar />
           <Switch>
             <Route path="/" exact component={Top} />
@@ -30,9 +35,9 @@ function App() {
             <Route path="/image/:hash" component={ImageDetail} />
             <Route component={NotFoundPage} />
           </Switch>
-        </>
-      </Router>
-    </ThemeProvider>
+        </ThemeProvider>
+      </>
+    </Router>
   );
 }
 
