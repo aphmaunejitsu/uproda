@@ -8,6 +8,7 @@ use App\Repositories\ImageHashRepository;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\CheckImageHash;
 use App\Rules\CheckNgWord;
+use App\Services\DenyWordService;
 use Illuminate\Support\Facades\Log;
 
 class UploadRequest extends FormRequest
@@ -36,14 +37,17 @@ class UploadRequest extends FormRequest
                 'nullable',
                 'max:255',
                 'string',
-                new CheckNgWord(),
+                new CheckNgWord(new DenyWordService()),
             ],
             'file'    =>  [
                 'required',
                 'max:' . $max,
                 new CheckImageHash(),
             ],
-            'hash'    => 'required|uuid'
+            'hash'    => 'required|uuid',
+            'token'   => [
+                'required'
+            ]
         ];
     }
 }

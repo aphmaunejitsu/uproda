@@ -15,9 +15,9 @@ class CheckNgWord implements Rule
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(DenyWordService $service)
     {
-        $this->service = new DenyWordService();
+        $this->service = $service;
     }
 
     /**
