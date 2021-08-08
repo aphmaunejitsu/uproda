@@ -11,7 +11,7 @@ use Tests\TestCase;
  * @group Repository
  * @group GoogleRecaptcha
  * @group GoogleRecaptchaRepository
- * @group VerifyTest
+ * @group GoogleRecaptcha::VerifyTest
  */
 class VerifyTest extends TestCase
 {

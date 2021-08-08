@@ -176,15 +176,15 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        // costom
+        // custom
         App\Providers\ImageRepositoryProvider::class,
         App\Providers\ImageHashRepositoryProvider::class,
         App\Providers\FileRepositoryProvider::class,
         App\Providers\ChunkFileRepositoryProvider::class,
         App\Providers\DenyWordRepositoryProvider::class,
         App\Providers\DenyIpRepositoryProvider::class,
-        App\Providers\TorRepositoryProvider::class
-
+        App\Providers\TorRepositoryProvider::class,
+        App\Providers\GoogleRecaptchaRepositoryProvider::class,
     ],
 
     /*
