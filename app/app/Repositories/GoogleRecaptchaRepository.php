@@ -10,7 +10,6 @@ class GoogleRecaptchaRepository implements GoogleRecaptchaRepositoryInterface
     public function verify(string $token, string $ipaddr)
     {
         $url = config('roda.google.recaptcha.verify');
-        Log::debug($url);
         if (! $url) {
             return false;
         }
@@ -20,8 +19,6 @@ class GoogleRecaptchaRepository implements GoogleRecaptchaRepositoryInterface
             'response' => $token,
             'remoteip' => $ipaddr,
         ]);
-
-        Log::debug($response);
 
         return $response;
     }
