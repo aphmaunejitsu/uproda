@@ -58,15 +58,6 @@
     }
   }
 
-  .upload-button {
-    svg {
-      fill: $teal;
-      @media (prefers-color-scheme: dark) {
-        fill: $teal-dark;
-      }
-    }
-  }
-
   .submenu {
     svg {
       fill: $black;

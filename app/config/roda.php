@@ -30,4 +30,11 @@ return [
             'altitude'  => env('RODA_ALTITUDE', 3),
         ]
     ],
+    'google' => [
+        'recaptcha' => [
+            'verify' => env('RODA_GOOGLE_RECAPTCHA_VERIFY'),
+            'secret' => env('RODA_GOOGLE_RECAPTCHA_SECRET'),
+            'cache'  => env('RODA_GOOGLE_RECAPTCHA_CACHE'),
+        ],
+    ],
 ];

@@ -2,22 +2,29 @@
 
 namespace App\Rules;
 
-use App\Services\DenyWordService;
+use App\Services\GoogleRecaptchaService;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 
-class CheckNgWord implements Rule
+class GoogleRecaptcha implements Rule
 {
     private $service;
-
+    private $uuid;
+    private $ipaddr;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct(DenyWordService $service)
-    {
+    public function __construct(
+        ?string $uuid,
+        ?string $ipaddr,
+        GoogleRecaptchaService $service
+    ) {
+        //
         $this->service = $service;
+        $this->uuid = $uuid;
+        $this->ipaddr = $ipaddr;
     }
 
     /**
@@ -29,19 +36,12 @@ class CheckNgWord implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (! ($denyWords = $this->service->get())) {
-            return true;
-        }
-
-        $v = trim($value);
-
-        foreach ($denyWords as $denyWord) {
-            if (mb_strpos($v, $denyWord->word) !== false) {
-                return false;
-            }
-        }
-
-        return true;
+        return $this->service->verify(
+            $this->uuid,
+            $this->ipaddr,
+            $value,
+            config('roda.google.recaptcha.cache', 300),
+        );
     }
 
     /**
@@ -51,6 +51,6 @@ class CheckNgWord implements Rule
      */
     public function message()
     {
-        return ':attribute に禁止ワードが含まれています';
+        return 'BOT と判断された';
     }
 }

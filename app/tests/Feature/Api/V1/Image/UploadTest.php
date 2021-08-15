@@ -12,6 +12,7 @@ use App\Services\UploadService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use Mockery\MockInterface;
@@ -41,7 +42,6 @@ class UploadTest extends TestCase
 
     /**
      * @group testDenyIp
-     *
      * @return void
      */
     public function testDenyIp()
@@ -54,6 +54,13 @@ class UploadTest extends TestCase
             [],
             ['REMOTE_ADDR' => '10.11.12.13']
         );
+        Http::fake([
+            'www.google.com/recaptcha/*' => Http::response([
+                'success' => true,
+                'challenge_ts' => time(),
+                'hostname'     => 'xxx',
+            ], 200),
+        ]);
 
         $response->assertStatus(403)
                  ->assertJson([
@@ -64,17 +71,25 @@ class UploadTest extends TestCase
 
     /**
      * A basic feature test example.
+     * @group testNoPost
      *
      * @return void
      */
     public function testNoPost()
     {
         $response = $this->postJson($this->url);
+        Http::fake([
+            'www.google.com/recaptcha/*' => Http::response([
+                'success' => true,
+                'challenge_ts' => time(),
+                'hostname'     => 'xxx',
+            ], 200),
+        ]);
 
         $response->assertStatus(422)
                  ->assertJsonValidationErrors([
                      'file',
-                     'hash'
+                     'hash',
                  ]);
     }
 
@@ -89,7 +104,15 @@ class UploadTest extends TestCase
         $delkey  = null;
         $comment = 'FF14';
         $hash = $this->faker->uuid;
-        $json = compact('delkey', 'comment', 'hash', 'file');
+        $token = $this->faker->sentence;
+        $json = compact('delkey', 'comment', 'hash', 'file', 'token');
+        Http::fake([
+            'www.google.com/recaptcha/*' => Http::response([
+                'success' => true,
+                'challenge_ts' => time(),
+                'hostname'     => 'xxx',
+            ], 200),
+        ]);
 
         $response = $this->postJson($this->url, $json);
 
@@ -110,7 +133,15 @@ class UploadTest extends TestCase
         $delkey = '][;[';
         $comment = null;
         $hash = $this->faker->uuid;
-        $json = compact('delkey', 'comment', 'hash', 'file');
+        $token = $this->faker->sentence;
+        $json = compact('delkey', 'comment', 'hash', 'file', 'token');
+        Http::fake([
+            'www.google.com/recaptcha/*' => Http::response([
+                'success' => true,
+                'challenge_ts' => time(),
+                'hostname'     => 'xxx',
+            ], 200),
+        ]);
 
         $response = $this->postJson($this->url, $json);
 
@@ -128,12 +159,20 @@ class UploadTest extends TestCase
     public function testValidateImageSize()
     {
         $file = UploadedFile::fake()->image('test.jpg');
-        $kbytes = config('roda.upload.max');
+        $kbytes = config('roda.upload.max') * 1024;
         $file->size($kbytes + 1);
         $delkey = 'colibri';
         $comment = 'test';
         $hash = $this->faker->uuid;
-        $json = compact('delkey', 'comment', 'hash', 'file');
+        $token = $this->faker->sentence;
+        $json = compact('delkey', 'comment', 'hash', 'file', 'token');
+        Http::fake([
+            'www.google.com/recaptcha/*' => Http::response([
+                'success' => true,
+                'challenge_ts' => time(),
+                'hostname'     => 'xxx',
+            ], 200),
+        ]);
 
 
         $response = $this->postJson($this->url, $json);
@@ -149,18 +188,28 @@ class UploadTest extends TestCase
                  ]);
     }
 
+    /**
+     * @group testValidateImageNgHash`
+     */
     public function testValidateImageNgHash()
     {
         Storage::fake('chunk');
         Storage::fake('image');
         Storage::fake('tmp');
+        Http::fake([
+            'www.google.com/recaptcha/*' => Http::response([
+                'success' => true,
+                'challenge_ts' => time(),
+                'hostname'     => 'xxx',
+            ], 200),
+        ]);
 
         $file = UploadedFile::fake()->image('test.jpg');
         $delkey = 'colibri';
         $comment = 'test';
         $hash = $this->faker->uuid;
-        $hash = null;
-        $json = compact('delkey', 'comment', 'hash', 'file');
+        $token = $this->faker->sentence;
+        $json = compact('delkey', 'comment', 'hash', 'file', 'token');
 
         ImageHash::factory()->create([
             'hash' => $this->getHash($file),
@@ -175,7 +224,7 @@ class UploadTest extends TestCase
                  ])
                  ->assertJson([
                      'errors' => [
-                         'file' => ['It is NG file']
+                         'file' => ['アップロードできないファイルです']
                      ]
                  ]);
     }
@@ -188,11 +237,19 @@ class UploadTest extends TestCase
         Storage::fake('image');
         Storage::fake('tmp');
         Storage::fake('chunk');
+        Http::fake([
+            'www.google.com/recaptcha/*' => Http::response([
+                'success' => true,
+                'challenge_ts' => time(),
+                'hostname'     => 'xxx',
+            ], 200),
+        ]);
 
         $file = UploadedFile::fake()->image('test.jpg');
         $file->size(1);
         $hash = $this->faker->uuid;
-        $json = compact('hash', 'file');
+        $token = $this->faker->sentence;
+        $json = compact('hash', 'file', 'token');
         ImageHash::factory()->create([
             'hash' => $this->getHash($file),
             'ng'   => false
@@ -215,6 +272,13 @@ class UploadTest extends TestCase
         Storage::fake('image');
         Storage::fake('tmp');
         Storage::fake('chunk');
+        Http::fake([
+            'www.google.com/recaptcha/*' => Http::response([
+                'success' => true,
+                'challenge_ts' => time(),
+                'hostname'     => 'xxx',
+            ], 200),
+        ]);
 
         $this->mock(
             UploadService::class,
@@ -228,7 +292,8 @@ class UploadTest extends TestCase
         $file = UploadedFile::fake()->image('test.jpg');
         $file->size(1);
         $hash = $this->faker->uuid;
-        $json = compact('hash', 'file');
+        $token = $this->faker->sentence;
+        $json = compact('hash', 'file', 'token');
         ImageHash::factory()->create([
             'hash' => $this->getHash($file),
             'ng'   => false
@@ -247,6 +312,13 @@ class UploadTest extends TestCase
         Storage::fake('image');
         Storage::fake('tmp');
         Storage::fake('chunk');
+        Http::fake([
+            'www.google.com/recaptcha/*' => Http::response([
+                'success' => true,
+                'challenge_ts' => time(),
+                'hostname'     => 'xxx',
+            ], 200),
+        ]);
 
         $test = UploadedFile::fake()->createWithContent('test', str_repeat('t', 1024 * 20));
 
@@ -254,6 +326,7 @@ class UploadTest extends TestCase
         $start = 0;
 
         $hash = $this->faker->uuid;
+        $token = $this->faker->sentence;
 
         $content = $test->getContent();
         $size = $test->getSize();
@@ -265,7 +338,7 @@ class UploadTest extends TestCase
             }
 
             $file = UploadedFile::fake()->createWithContent("test_{$start}", $split);
-            $json = compact('hash', 'file');
+            $json = compact('hash', 'file', 'token');
             $end = $start + ($file->getSize() - 1);
             $response = $this->withHeaders(['Content-Range' => "bytes {$start}-{$end}/{$size}"])
                              ->postJson($this->url, $json);
@@ -285,6 +358,13 @@ class UploadTest extends TestCase
         Storage::fake('image');
         Storage::fake('tmp');
         Storage::fake('chunk');
+        Http::fake([
+            'www.google.com/recaptcha/*' => Http::response([
+                'success' => true,
+                'challenge_ts' => time(),
+                'hostname'     => 'xxx',
+            ], 200),
+        ]);
 
         $kbytes = config('roda.upload.max');
 
@@ -299,6 +379,7 @@ class UploadTest extends TestCase
         $start = 0;
 
         $hash = $this->faker->uuid;
+        $token = $this->faker->sentence;
         $image = UploadedFile::fake()->createWithContent('image', $content);
         $size = $image->getSize();
 
@@ -309,7 +390,7 @@ class UploadTest extends TestCase
             }
 
             $file = UploadedFile::fake()->createWithContent("test_{$start}", $split);
-            $json = compact('hash', 'file');
+            $json = compact('hash', 'file', 'token');
             $end = $start + ($file->getSize() - 1);
             $response = $this->withHeaders(['Content-Range' => "bytes {$start}-{$end}/{$size}"])
                              ->postJson($this->url, $json);
@@ -319,7 +400,7 @@ class UploadTest extends TestCase
 
         $response->assertStatus(400)
                  ->assertJson([
-                     'message' => "アップロードできるサイズは {$kbytes}KB までです"
+                     'message' => "アップロードできるサイズは 50KB までです"
                  ]);
     }
 
@@ -328,6 +409,13 @@ class UploadTest extends TestCase
         Storage::fake('image');
         Storage::fake('tmp');
         Storage::fake('chunk');
+        Http::fake([
+            'www.google.com/recaptcha/*' => Http::response([
+                'success' => true,
+                'challenge_ts' => time(),
+                'hostname'     => 'xxx',
+            ], 200),
+        ]);
 
         $test = Storage::disk('local')->get('test.jpg');
 
@@ -338,6 +426,7 @@ class UploadTest extends TestCase
         $start = 0;
 
         $hash = $this->faker->uuid;
+        $token = $this->faker->sentence;
 
         while (true) {
             $split = substr($test, $start, $bytes);
@@ -346,7 +435,7 @@ class UploadTest extends TestCase
             }
 
             $file = UploadedFile::fake()->createWithContent("test_{$start}.jpg", $split);
-            $json = compact('hash', 'file');
+            $json = compact('hash', 'file', 'token');
             $end = $start + ($file->getSize() - 1);
             $response = $this->withHeaders(['Content-Range' => "bytes {$start}-{$end}/{$size}"])
                              ->postJson($this->url, $json);

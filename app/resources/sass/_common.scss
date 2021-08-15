@@ -31,3 +31,16 @@ a {
   display: flex;
   justify-content: center;
 }
+
+.upload-button {
+  svg {
+    fill: $teal;
+    @media (prefers-color-scheme: dark) {
+      fill: $teal-dark;
+    }
+  }
+}
+
+.grecaptcha-badge {
+  display: none;
+}
