@@ -39,21 +39,6 @@
       width: calc(1200px / 4);
     }
 
-    &:after {
-      content: '';
-      display: block;
-      @include mq(md) {
-        margin-left: initial;
-        margin-right: initial;
-        width: calc(100% / 4);
-      }
-      @include mq(lg) {
-        margin-left: initial;
-        margin-right: initial;
-        width: calc(1200px / 4);
-      }
-    }
-
     & > img {
       padding: 0.25rem;
       width: 100%;
