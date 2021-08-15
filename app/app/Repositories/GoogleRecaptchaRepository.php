@@ -13,12 +13,19 @@ class GoogleRecaptchaRepository implements GoogleRecaptchaRepositoryInterface
         if (! $url) {
             return false;
         }
+        $secret = config('roda.google.recaptcha.secret');
 
-        $response = Http::post($url, [
-            'secret'   => config('roda.google.recaptcha.secret'),
+        $post = [
+            'secret'   => $secret,
             'response' => $token,
             'remoteip' => $ipaddr,
-        ]);
+        ];
+        Log::debug(__METHOD__, compact('post'));
+
+        $response = Http::asForm()
+            ->post($url, $post);
+
+        Log::debug(__METHOD__, $response->json());
 
         return $response;
     }

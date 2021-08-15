@@ -8,6 +8,7 @@ use App\Http\Requests\Api\V1\Image\UploadRequest;
 use App\Http\Resources\ImageResource;
 use App\Services\UploadService;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class Upload extends Controller
 {
@@ -26,6 +27,7 @@ class Upload extends Controller
     public function __invoke(UploadRequest $request)
     {
         $data = $request->validated();
+        Log::debug(__METHOD__, $data);
 
         $ip = $request->ip();
         $file = $request->file('file');
