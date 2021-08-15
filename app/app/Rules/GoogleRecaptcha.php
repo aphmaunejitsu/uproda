@@ -17,8 +17,8 @@ class GoogleRecaptcha implements Rule
      * @return void
      */
     public function __construct(
-        string $uuid,
-        string $ipaddr,
+        ?string $uuid,
+        ?string $ipaddr,
         GoogleRecaptchaService $service
     ) {
         //
