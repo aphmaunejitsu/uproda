@@ -36,11 +36,11 @@ class GoogleRecaptcha implements Rule
      */
     public function passes($attribute, $value)
     {
-        Log::debug(__METHOD__, compact('attribute', 'value'));
         return $this->service->verify(
             $this->uuid,
             $this->ipaddr,
-            $value
+            $value,
+            config('roda.google.recaptcha.cache', 300),
         );
     }
 
