@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 function Main() {
   const classes = useStyles();
   const inputFile = React.useRef(null);
+  const inputRecaptcha = React.useRef(null);
 
   const [file, setFile] = React.useState('');
   const [delkey, setDelkey] = React.useState('');
@@ -48,6 +49,15 @@ function Main() {
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const maxMB = process.env.MIX_RODA_UPLOAD_MAXSIZE / 1024;
   const maxByte = process.env.MIX_RODA_UPLOAD_MAXSIZE * 1024;
+
+  const verifyCallback = (recapchaToken) => {
+    setRecapcha(recapchaToken);
+    console.log(recaptcha);
+  };
+
+  const updateToken = () => {
+    inputRecaptcha.current.execute();
+  };
 
   const handleFileOnChange = (e) => {
     if (e.target.files.length > 0) {
@@ -73,17 +83,13 @@ function Main() {
     setMimetype('');
     setChunkCount(0);
     setChunkPos(0);
+    setRecapcha(null);
 
     inputFile.current.value = null;
   };
 
   const handleCloseSnack = () => {
     setSnackOpen(false);
-  };
-
-  const verifyCallback = (recapchaToken) => {
-    console.log(recapchaToken);
-    setRecapcha(recapchaToken);
   };
 
   const sendImage = async () => {
@@ -106,6 +112,7 @@ function Main() {
       formData.append('hash', uuid);
       formData.append('file', chunk, image.name);
       formData.append('token', recaptcha);
+      console.log(recaptcha);
 
       const headers = {
         'Content-Type': 'multipart/form-data',
@@ -137,6 +144,7 @@ function Main() {
           console.log(error);
           setSnackMessage('アップロードに失敗したお');
           setSnackOpen(true);
+          handleCancelImage();
         });
     }
   };
@@ -157,6 +165,7 @@ function Main() {
 
   const handleUpload = async () => {
     if (image) {
+      updateToken();
       setChunkCount(Math.ceil(image.size / process.env.MIX_RODA_UPLOAD_CHUNK));
       setUuid(UUID.generate());
       setMimetype(image.type);
@@ -254,8 +263,9 @@ function Main() {
         ]}
       />
       <ReCaptcha
+        ref={inputRecaptcha}
         sitekey={process.env.MIX_RODA_GOOGLE_RECAPTCHA_SITEKEY}
-        action="uproda"
+        action="uploda"
         verifyCallback={verifyCallback}
       />
     </div>

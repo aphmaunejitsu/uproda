@@ -11,7 +11,19 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.terser = {
+    terserOptions: {
+      compress: {
+        drop_console: true,
+      },
+    },
+  };
+}
+
+mix.options(options)
+  .js('resources/js/app.js', 'public/js')
   .react()
   .sass('resources/sass/app.scss', 'public/css')
   .copy('resources/images', 'public/images')

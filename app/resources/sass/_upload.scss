@@ -68,19 +68,29 @@
       }
 
       position: relative;
+      @include mq(md) {
+        min-width: 400px;
+      }
+      @include mq(md) {
+        min-width: 500px;
+      }
 
       img {
+        width: 160px;
         height: 160px;
         filter: drop-shadow(1px 1px 1px rgba($black, 0.8));
         @media (prefers-color-scheme: dark) {
           filter: drop-shadow(1px 1px 1px rgba($black-dark, 0.8));
         }
-        object-fit: scale-down;
+        object-fit: cover;
 
         @include mq(md) {
+          width: 360px;
           height: 360px;
         }
+
         @include mq(lg) {
+          width: 480px;
           height: 480px;
         }
       }

@@ -8,7 +8,9 @@ use App\Repositories\ImageHashRepository;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\CheckImageHash;
 use App\Rules\CheckNgWord;
+use App\Rules\GoogleRecaptcha;
 use App\Services\DenyWordService;
+use App\Services\GoogleRecaptchaService;
 use Illuminate\Support\Facades\Log;
 
 class UploadRequest extends FormRequest
@@ -31,6 +33,9 @@ class UploadRequest extends FormRequest
     public function rules()
     {
         $max = config('roda.upload.max') * 1024;
+        $uuid = $this->request->get('hash');
+        $ip   = request()->getClientIps()[0];
+
         return [
             'delkey'  => 'nullable|alpha_dash',
             'comment' => [
@@ -46,7 +51,12 @@ class UploadRequest extends FormRequest
             ],
             'hash'    => 'required|uuid',
             'token'   => [
-                'required'
+                'required',
+                new GoogleRecaptcha(
+                    $uuid,
+                    $ip,
+                    new GoogleRecaptchaService()
+                ),
             ]
         ];
     }

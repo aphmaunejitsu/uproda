@@ -15,15 +15,15 @@ class Verify extends GoogleRecaptchaService
         $this->repo = $repo;
     }
 
-    public function __invoke(string $uuid, string $ipaddr, string $token)
+    public function __invoke(string $uuid, string $ipaddr, string $token, int $expire = 300)
     {
         if (($result = Cache::get($uuid))) {
-            return $result->success;
+            return $result['success'];
         }
 
-        $response = $this->repo->verify($ipaddr, $token);
+        $response = $this->repo->verify($token, $ipaddr);
 
-        Cache::put($uuid, $response);
-        return $response->success;
+        Cache::put($uuid, $response->json(), $expire));
+        return $response->json()['success'];
     }
 }
