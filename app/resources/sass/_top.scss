@@ -63,7 +63,7 @@
   background-color: rgba($white, 0.9);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: flex-start;
 
   @media (prefers-color-scheme: dark) {
     background-color: rgba($white-dark, 0.9);

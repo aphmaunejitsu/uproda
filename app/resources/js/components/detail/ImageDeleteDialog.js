@@ -29,7 +29,8 @@ function ImageDeleteDialog({ image, isOpen, handleDialogClose }) {
   const [isOpenSnack, setOpenSnack] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDelete = () => {
+  const handleDelete = (e) => {
+    e.stopPropagation();
     setIsDeleting(true);
 
     axios.delete(

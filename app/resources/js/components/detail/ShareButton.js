@@ -5,7 +5,7 @@ import ShareIcon from '@material-ui/icons/Share';
 
 const WebApiShare = ({ image }) => {
   const handleClick = (e) => {
-    e.preventDefault();
+    e.stopPropagation();
     navigator.share({
       title: process.env.MIX_RODA_NAME,
       url: image.imageDetail,
