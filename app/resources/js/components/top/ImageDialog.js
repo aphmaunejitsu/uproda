@@ -18,7 +18,9 @@ function ImageDialog({ isOpen, setIsOpen, image }) {
   return (
     <div
       className="image-dialog"
-      role="presentation"
+      role="dialog"
+      onClick={() => setIsOpen(false)}
+      aria-hidden="true"
     >
       <header>
         <IconButton
@@ -29,9 +31,6 @@ function ImageDialog({ isOpen, setIsOpen, image }) {
         >
           <Close />
         </IconButton>
-        <div>
-          {image.comment}
-        </div>
       </header>
       <LazyLoadComponent id={image.basename}>
         <ImageDetail image={image} />

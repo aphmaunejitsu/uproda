@@ -1,9 +1,8 @@
 import React from 'react';
-import { LazyLoadComponent } from 'react-lazy-load-image-component';
-import 'react-lazy-load-image-component/src/effects/blur.css';
 import PropTypes from 'prop-types';
 import View from './View';
 import Footer from './Footer';
+import DMMAd from '../common/DMMAd';
 
 function Main({ image }) {
   if (!image) {
@@ -13,9 +12,11 @@ function Main({ image }) {
   return (
     <>
       <div className="image-detail">
-        <LazyLoadComponent effect="blur">
-          <View image={image} />
-        </LazyLoadComponent>
+        <View image={image} />
+        <DMMAd
+          dmmid={process.env.MIX_RODA_DMM_ID1}
+          bottom
+        />
         <Footer image={image} />
       </div>
     </>
