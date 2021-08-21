@@ -26,21 +26,22 @@ function App() {
 
   return (
     <Router>
-      <>
-        <ThemeProvider theme={theme}>
-          <HeaderBar />
-          <Switch>
-            <Route path="/" exact component={Top} />
-            <Route path="/about" component={About} />
-            <Route path="/image/:hash" component={ImageDetail} />
-            <Route component={NotFoundPage} />
-          </Switch>
-        </ThemeProvider>
-      </>
+      <ThemeProvider theme={theme}>
+        <HeaderBar />
+        <Switch>
+          <Route path="/" exact component={Top} />
+          <Route path="/about" component={About} />
+          <Route path="/image/:hash" component={ImageDetail} />
+          <Route component={NotFoundPage} />
+        </Switch>
+      </ThemeProvider>
     </Router>
   );
 }
 
 if (document.getElementById('root')) {
-  ReactDOM.render(<App />, document.getElementById('root'));
+  ReactDOM.render(
+    <App />,
+    document.getElementById('root'),
+  );
 }
