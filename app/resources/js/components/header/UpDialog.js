@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Header from './updialog/Header';
 import Main from './updialog/Main';
+import DMMAd from '../common/DMMAd';
 
 function UpDialog({ isOpen, handleClose }) {
   if (!isOpen) {
@@ -15,6 +16,7 @@ function UpDialog({ isOpen, handleClose }) {
     >
       <Header handleClose={handleClose} />
       <Main />
+      <DMMAd dmmid={process.env.MIX_RODA_DMM_ID2} />
     </div>
   );
 }

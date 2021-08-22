@@ -52,7 +52,6 @@ function Main() {
 
   const verifyCallback = (recapchaToken) => {
     setRecapcha(recapchaToken);
-    console.log(recaptcha);
   };
 
   const updateToken = () => {
