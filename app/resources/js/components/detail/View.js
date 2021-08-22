@@ -1,26 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import useWindowDemensions from '../hook/useWindowDimensions';
 
 function View({ image }) {
   if (!image) {
     return null;
   }
 
-  const { height } = useWindowDemensions();
-  const h = height - 128;
+  const handleNotClose = (e) => {
+    e.stopPropagation();
+  };
 
   return (
     <>
-      <div className="view">
+      <div
+        className="view"
+      >
         <div
           className="image"
-          style={{ height: `${h}px` }}
         >
           <img
             src={image.image}
             alt={image.comment ? image.comment : image.basename}
+            onClick={handleNotClose}
+            aria-hidden="true"
           />
+        </div>
+        <div className="contents">
+          {image.comment}
         </div>
       </div>
     </>

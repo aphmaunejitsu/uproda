@@ -4,6 +4,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import Thumbnail from './top/Thumbnail';
 import Loading from './common/Loading';
 import ImageDialog from './top/ImageDialog';
+import DMMAd from './common/DMMAd';
 
 function Top() {
   const [items, setItems] = React.useState([]);
@@ -66,6 +67,7 @@ function Top() {
 
   return (
     <>
+      <DMMAd dmmid={process.env.MIX_RODA_DMM_ID1} />
       <InfiniteScroll
         pageStart={0}
         loadMore={getImages}

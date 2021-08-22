@@ -18,19 +18,23 @@ function Main({ image }) {
   const [openTip, setOpenTip] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    e.stopPropagation();
     setOpenTip(false);
   };
 
-  const handleOpenTop = () => {
+  const handleOpenTop = (e) => {
+    e.stopPropagation();
     setOpenTip(true);
   };
 
-  const openDeleteDialog = () => {
+  const openDeleteDialog = (e) => {
+    e.stopPropagation();
     setOpenDelete(true);
   };
 
-  const closeDeleteDialog = () => {
+  const closeDeleteDialog = (e) => {
+    e.stopPropagation();
     setOpenDelete(false);
   };
 
