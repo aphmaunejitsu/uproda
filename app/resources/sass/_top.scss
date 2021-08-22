@@ -28,6 +28,7 @@
   span.lazy-load-image-background {
     margin-left: auto;
     margin-right: auto;
+    cursor: pointer;
     @include mq(md) {
       margin-left: initial;
       margin-right: initial;
