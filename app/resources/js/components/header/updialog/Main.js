@@ -9,6 +9,7 @@ import UUID from 'uuidjs';
 import { ReCaptcha } from 'react-recaptcha-v3';
 import UpRodaImage from './UpRodaImage';
 import UpRodaButton from './UpRodaButton';
+import RodaUploadInput from './RodaUploadInput';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,8 +25,10 @@ const useStyles = makeStyles((theme) => ({
 
 function Main() {
   const classes = useStyles();
-  const inputFile = React.useRef(null);
   const inputRecaptcha = React.useRef(null);
+
+  const waitTime = process.env.MIX_RODA_WAIT_TIME;
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const [file, setFile] = React.useState('');
   const [delkey, setDelkey] = React.useState('');
@@ -46,9 +49,6 @@ function Main() {
   const [recaptcha, setRecapcha] = React.useState(null);
 
   const chunkSize = process.env.MIX_RODA_UPLOAD_CHUNK;
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  const maxMB = process.env.MIX_RODA_UPLOAD_MAXSIZE / 1024;
-  const maxByte = process.env.MIX_RODA_UPLOAD_MAXSIZE * 1024;
 
   const verifyCallback = (recapchaToken) => {
     setRecapcha(recapchaToken);
@@ -56,21 +56,6 @@ function Main() {
 
   const updateToken = () => {
     inputRecaptcha.current.execute();
-  };
-
-  const handleFileOnChange = (e) => {
-    if (e.target.files.length > 0) {
-      const f = e.target.files[0];
-      if (f.size > maxByte) {
-        setSnackMessage(`フィルサイズは${maxMB.toFixed(1)}MBまでです`);
-        setSnackOpen(true);
-      } else {
-        setImage(f);
-        setMimetype(f.type);
-        setFileSize(f.size);
-        setFile(URL.createObjectURL(f));
-      }
-    }
   };
 
   const handleCancelImage = () => {
@@ -82,9 +67,6 @@ function Main() {
     setMimetype('');
     setChunkCount(0);
     setChunkPos(0);
-    setRecapcha(null);
-
-    inputFile.current.value = null;
   };
 
   const handleCloseSnack = () => {
@@ -128,7 +110,7 @@ function Main() {
       )
         .then((response) => {
           if (chunkPos < chunkCount) {
-            sleep(750);
+            sleep(waitTime);
             setProgress(Math.ceil((chunkPos / chunkCount) * 100));
             console.log(progress);
             setChunkPos(chunkPos + 1);
@@ -165,7 +147,7 @@ function Main() {
   const handleUpload = async () => {
     if (image) {
       updateToken();
-      setChunkCount(Math.ceil(image.size / process.env.MIX_RODA_UPLOAD_CHUNK));
+      setChunkCount(Math.ceil(image.size / chunkSize));
       setUuid(UUID.generate());
       setMimetype(image.type);
       setChunkPos(1);
@@ -178,24 +160,14 @@ function Main() {
   return (
     <div className="upload-image">
       <form autoComplete="off">
-        <div className="upload-file">
-          <label htmlFor="roda-upload">
-            <input
-              type="file"
-              id="roda-upload"
-              accept={process.env.MIX_RODA_ACCEPT_FILES}
-              onChange={(event) => handleFileOnChange(event)}
-              ref={inputFile}
-            />
-            <span>
-              画像を選択
-              <br />
-              max filesize:
-              {maxMB.toFixed(1)}
-              MB
-            </span>
-          </label>
-        </div>
+        <RodaUploadInput
+          handleSetFile={setFile}
+          handleSetImage={setImage}
+          handleSetFileSize={setFileSize}
+          handleSetMimeType={setMimetype}
+          handleSetSnackOpen={setSnackOpen}
+          handleSetSnackMessage={setSnackMessage}
+        />
         <div className={classes.root}>
           <TextField
             name="delkey"
