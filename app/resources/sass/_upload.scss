@@ -36,25 +36,6 @@
       width: 50%;
     }
 
-    .upload-file {
-      label {
-        width: 100%;
-        padding: 0.5rem;
-        border: 1px $silver dotted;
-        display: flex;
-        justify-content: center;
-        @media (prefers-color-scheme: dark) {
-          border-color: $silver-dark;
-        }
-        cursor: pointer;
-
-        input[type='file'] {
-          display: none;
-        }
-      }
-    }
-
-
     .roda-image {
       width: 100%;
       height: auto;

@@ -50,6 +50,7 @@
         "@material-ui/lab": "^4.0.0-alpha.57",
         "@material-ui/system": "^4.12.1",
         "@material/icon-button": "^10.0.0",
+        "heic-convert": "^1.2.4",
         "material-ui-dropzone": "^3.5.0",
         "node-sass": "^4.14.1",
         "prop-types": "^15.7.2",
