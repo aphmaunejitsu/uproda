@@ -41,6 +41,11 @@ function RodaUploadInput({
   const [dragCounter, setDragCounter] = React.useState(0);
   const dropDiv = React.createRef();
 
+  const handleDragStart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -69,18 +74,23 @@ function RodaUploadInput({
     console.log(files);
     if (files.length > 0) {
       const f = files[0];
-      if (f.size > maxByte) {
-        handleSetSnackMessage(`フィルサイズは${maxMB.toFixed(1)}MBまでです`);
-        handleSetSnackOpen(true);
-      } else {
-        handleSetImage(f);
-        handleSetMimeType(f.type);
-        handleSetFileSize(f.size);
-        handleSetFile(URL.createObjectURL(f));
-      }
+      if (f.type.match('^image/')) {
+        if (f.size > maxByte) {
+          handleSetSnackMessage(`フィルサイズは${maxMB.toFixed(1)}MBまでです`);
+          handleSetSnackOpen(true);
+        } else {
+          handleSetImage(f);
+          handleSetMimeType(f.type);
+          handleSetFileSize(f.size);
+          handleSetFile(URL.createObjectURL(f));
+        }
 
-      if (files.length > 1) {
-        handleSetSnackMessage('1ファイルのみアップロードできます');
+        if (files.length > 1) {
+          handleSetSnackMessage('1ファイルのみアップロードできます');
+          handleSetSnackOpen(true);
+        }
+      } else {
+        handleSetSnackMessage('画像のみアップロードできます');
         handleSetSnackOpen(true);
       }
     }
@@ -98,6 +108,7 @@ function RodaUploadInput({
   };
 
   useEffect(() => {
+    dropDiv.current.addEventListener('dragstart', handleDragStart);
     dropDiv.current.addEventListener('dragenter', handleDragIn);
     dropDiv.current.addEventListener('dragleave', handleDragOut);
     dropDiv.current.addEventListener('dragover', handleDrag);
