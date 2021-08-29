@@ -28,12 +28,27 @@ class Verify extends GoogleRecaptchaService
         }
 
         if (($result = Cache::get($uuid))) {
-            return $result['success'];
+            return $this->checkResult($result);
         }
 
         $response = $this->repo->verify($token, $ipaddr);
 
         Cache::put($uuid, $response->json(), $expire);
-        return $response->json()['success'];
+        return $this->checkResult($response->json());
+    }
+
+    private function checkResult($result)
+    {
+        if ($result['success']) {
+            return true;
+        }
+
+        foreach ($result["error-codes"] as $code) {
+            if (strcasecmp($code, 'timeout-or-duplicate') == 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
