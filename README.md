@@ -14,7 +14,7 @@
 ## 管理ユーザの初期投入
 利用する人数分投入
 FUEL_ENV=production php oil console
-\Auth::create_user('admin', 'password', 'aphmau_nejitsu@icloud.com', 100);
+\Auth::create_user('admin', 'password', 'email@example.com', 100);
 
 ## 管理ページ
 - https://yourdomain.com/admin/
