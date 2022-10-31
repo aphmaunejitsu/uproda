@@ -45,13 +45,8 @@ services:
     image: mariadb:10.5
     env_file:
       - .env
-    links:
-      - ${DB_MASTER}
-    volumes:
-      - ./db/init/secondary.sh:/docker-entrypoint-initdb.d/secondary.sh
-      - ./db/cnf/secondary.cnf:/etc/mysql/conf.d/my.cnf
     ports:
-      - "127.0.0.1:33316:3306"
+      - "127.0.0.1:53316:3306"
 
   db-test:
     image: mariadb:10.5
@@ -59,8 +54,6 @@ services:
       - .env
     ports:
       - 127.0.0.1:33307:3306
-    volumes:
-      - ./db/init/primary.sh:/docker-entrypoint-initdb.d/primary.sh
 
   redis:
     image: redis:latest

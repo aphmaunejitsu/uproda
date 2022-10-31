@@ -44,11 +44,19 @@ function Main() {
   const [progress, setProgress] = React.useState(0);
   const [progressBuffer, setProgressBuffer] = React.useState(0);
 
+  const [isDragging, setIsDragging] = React.useState(false);
+
   const [snackOpen, setSnackOpen] = React.useState(false);
   const [snackMessage, setSnackMessage] = React.useState(null);
   const [recaptcha, setRecapcha] = React.useState(null);
 
   const chunkSize = process.env.MIX_RODA_UPLOAD_CHUNK;
+  const maxByte = process.env.MIX_RODA_UPLOAD_MAXSIZE * 1024;
+  const maxMB = process.env.MIX_RODA_UPLOAD_MAXSIZE / 1024;
+
+  // Drag n Drop
+  const [dragCounter, setDragCounter] = React.useState(0);
+  const dropDiv = React.createRef();
 
   const verifyCallback = (recapchaToken) => {
     setRecapcha(recapchaToken);
@@ -57,6 +65,80 @@ function Main() {
   const updateToken = () => {
     inputRecaptcha.current.execute();
   };
+
+  const handleDragStart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragIn = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragCounter(dragCounter + 1);
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDragOut = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragCounter(dragCounter - 1);
+    if (dragCounter === 0) {
+      setIsDragging(false);
+    }
+  };
+
+  const dropFiles = (files) => {
+    console.log(files);
+    if (files.length > 0) {
+      const f = files[0];
+      if (f.type.match('^image/')) {
+        if (f.size > maxByte) {
+          setSnackMessage(`フィルサイズは${maxMB.toFixed(1)}MBまでです`);
+          setSnackOpen(true);
+        } else {
+          setImage(f);
+          setMimetype(f.type);
+          setFileSize(f.size);
+          setFile(URL.createObjectURL(f));
+        }
+
+        if (files.length > 1) {
+          setSnackMessage('1ファイルのみアップロードできます');
+          setSnackOpen(true);
+        }
+      } else {
+        setSnackMessage('画像のみアップロードできます');
+        setSnackOpen(true);
+      }
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      dropFiles(e.dataTransfer.files);
+      e.dataTransfer.clearData();
+      setDragCounter(0);
+    }
+  };
+
+  useEffect(() => {
+    dropDiv.current.addEventListener('dragstart', handleDragStart);
+    dropDiv.current.addEventListener('dragenter', handleDragIn);
+    dropDiv.current.addEventListener('dragleave', handleDragOut);
+    dropDiv.current.addEventListener('dragover', handleDrag);
+    dropDiv.current.addEventListener('drop', handleDrop);
+  }, [setIsDragging]);
 
   const handleCancelImage = () => {
     setFile('');
@@ -93,7 +175,6 @@ function Main() {
       formData.append('hash', uuid);
       formData.append('file', chunk, image.name);
       formData.append('token', recaptcha);
-      console.log(recaptcha);
 
       const headers = {
         'Content-Type': 'multipart/form-data',
@@ -158,7 +239,7 @@ function Main() {
   };
 
   return (
-    <div className="upload-image">
+    <div className="upload-image" ref={dropDiv}>
       <form autoComplete="off">
         <RodaUploadInput
           handleSetFile={setFile}
@@ -167,6 +248,8 @@ function Main() {
           handleSetMimeType={setMimetype}
           handleSetSnackOpen={setSnackOpen}
           handleSetSnackMessage={setSnackMessage}
+          handleDropFiles={dropFiles}
+          isDialogDragging={isDragging}
         />
         <div className={classes.root}>
           <TextField

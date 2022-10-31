@@ -33,7 +33,7 @@ ADD ./supervisor/conf.d/cron.conf /etc/supervisor/conf.d/cron.conf
 ADD ./supervisor/conf.d/roda.conf /etc/supervisor/conf.d/roda.conf
 
 # Node
-RUN curl -fsSL https://deb.nodesource.com/setup_15.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm@latest
 

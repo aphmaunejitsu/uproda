@@ -39,16 +39,16 @@ class Verify extends GoogleRecaptchaService
 
     private function checkResult($result)
     {
-        if ($result['success']) {
-            return true;
-        }
+        // if ($result['success']) {
+        //     return true;
+        // }
 
-        foreach ($result["error-codes"] as $code) {
-            if (strcasecmp($code, 'timeout-or-duplicate') == 0) {
-                return true;
-            }
-        }
+        // foreach ($result["error-codes"] as $code) {
+        //     if (strcasecmp($code, 'timeout-or-duplicate') == 0) {
+        //         return true;
+        //     }
+        // }
 
-        return false;
+        return $result['success'];
     }
 }

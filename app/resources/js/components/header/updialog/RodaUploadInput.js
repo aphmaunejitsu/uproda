@@ -31,6 +31,8 @@ function RodaUploadInput({
   handleSetFileSize,
   handleSetSnackMessage,
   handleSetSnackOpen,
+  handleDropFiles,
+  isDialogDragging,
 }) {
   const styles = useStyles();
   const inputFile = React.useRef(null);
@@ -70,38 +72,12 @@ function RodaUploadInput({
     }
   };
 
-  const dropFiles = (files) => {
-    console.log(files);
-    if (files.length > 0) {
-      const f = files[0];
-      if (f.type.match('^image/')) {
-        if (f.size > maxByte) {
-          handleSetSnackMessage(`フィルサイズは${maxMB.toFixed(1)}MBまでです`);
-          handleSetSnackOpen(true);
-        } else {
-          handleSetImage(f);
-          handleSetMimeType(f.type);
-          handleSetFileSize(f.size);
-          handleSetFile(URL.createObjectURL(f));
-        }
-
-        if (files.length > 1) {
-          handleSetSnackMessage('1ファイルのみアップロードできます');
-          handleSetSnackOpen(true);
-        }
-      } else {
-        handleSetSnackMessage('画像のみアップロードできます');
-        handleSetSnackOpen(true);
-      }
-    }
-  };
-
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setDragging(false);
     if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-      dropFiles(e.dataTransfer.files);
+      handleDropFiles(e.dataTransfer.files);
       e.dataTransfer.clearData();
       setDragCounter(0);
     }
@@ -135,7 +111,7 @@ function RodaUploadInput({
       <label
         ref={dropDiv}
         htmlFor="roda-upload"
-        className={`${styles.uploadFileLabel} ${dragging && styles.dragging}`}
+        className={`${styles.uploadFileLabel} ${(isDialogDragging || dragging) && styles.dragging}`}
       >
         <input
           type="file"
@@ -146,7 +122,7 @@ function RodaUploadInput({
           className={styles.intputFile}
         />
         <span>
-          画像を選択
+          {`${(isDialogDragging || dragging) ? '画像をドロップ' : '画像を選択 or ドラッグ&ドロップ'}`}
           <br />
           max filesize:
           {maxMB.toFixed(1)}
@@ -164,6 +140,8 @@ RodaUploadInput.propTypes = {
   handleSetFileSize: PropTypes.func.isRequired,
   handleSetSnackMessage: PropTypes.func.isRequired,
   handleSetSnackOpen: PropTypes.func.isRequired,
+  handleDropFiles: PropTypes.func.isRequired,
+  isDialogDragging: PropTypes.bool.isRequired,
 };
 
 export default RodaUploadInput;
