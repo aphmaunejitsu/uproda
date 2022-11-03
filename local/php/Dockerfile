@@ -17,11 +17,14 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && docker-php-ext-enable redis \
     && docker-php-ext-configure zip \
     && docker-php-ext-install zip \
-    && mkdir -p /usr/src/php/ext/imagick; \
-    curl -fsSL https://github.com/Imagick/imagick/archive/448c1cd0d58ba2838b9b6dff71c9b7e70a401b90.tar.gz | tar xvz -C "/usr/src/php/ext/imagick" --strip-components 1 \
-    && cd /usr/src/php/ext/imagick \
-    && phpize && ./configure \
-    && make && make install \
+    && pecl install -o -f imagick \
+    && docker-php-ext-enable imagick \
+    # && mkdir -p /usr/src/php/ext/imagick; \
+    # curl -fsSL https://github.com/Imagick/imagick/archive/ref/tags/3.7.0.tar.gz | tar xvz -C "/usr/src/php/ext/imagick" --strip 1 \
+    # && docker-php-ext-install imagick \
+    # && cd /usr/src/php/ext/imagick \
+    # && phpize && ./configure \
+    # && make && make install \
     && docker-php-source delete \
     && apt-get clean
 
