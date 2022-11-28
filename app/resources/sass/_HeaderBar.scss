@@ -1,0 +1,86 @@
+.headerBar {
+  z-index: 1;
+  position: sticky;
+  position: -webkit-sticky;
+
+  top: 0;
+  height: 60px;
+
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem;
+  border-bottom: 1px solid $border-color;
+
+  background-color: $white;
+  @media (prefers-color-scheme: dark) {
+    border-bottom: 1px solid $border-color-dark;
+    background-color: $white-dark;
+  }
+
+  .SiteLogo {
+    display: flex;
+    align-items: center;
+    &:after {
+      margin-left: 0.5rem;
+      content: 'ネ実onry';
+    }
+
+    img {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  Nav {
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    display: none;
+    @include mq(md) {
+      display: inline;
+    }
+
+    @include mq(lg) {
+      display: inline;
+    }
+
+    ul {
+      margin: 0;
+      list-style: none;
+      display: flex;
+      align-items: center;
+
+      li {
+        padding-right: 0.25rem;
+        padding-left: 0.25rem;
+
+      }
+    }
+  }
+
+  .submenu {
+    svg {
+      fill: $black;
+      @media (prefers-color-scheme: dark) {
+        fill: $black-dark;
+      }
+    }
+
+    @include mq(md) {
+      display: none;
+    }
+
+    @include mq(lg) {
+      display: none;
+    }
+  }
+}
+
+#site-menu {
+  .MuiPaper-root {
+    background-color: $white;
+      @media (prefers-color-scheme: dark) {
+        background-color: #101010;
+      }
+  }
+}

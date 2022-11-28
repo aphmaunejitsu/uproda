@@ -1,0 +1,96 @@
+.uproda-dialog {
+  z-index: 110;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba($white, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: rgba($white-dark, 0.9);
+  }
+
+  header {
+    height: 64px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .upload-image {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    height: 100%;
+
+    @include mq(md) {
+      margin: auto;
+      width: 50%;
+    }
+    @include mq(lg) {
+      margin: auto;
+      width: 50%;
+    }
+
+    .roda-image {
+      width: 100%;
+      height: auto;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: center;
+      border: 1px $silver dotted;
+      @media (prefers-color-scheme: dark) {
+        border-color: $silver-dark;
+      }
+
+      position: relative;
+      @include mq(md) {
+        min-width: 400px;
+      }
+      @include mq(md) {
+        min-width: 500px;
+      }
+
+      img {
+        width: 160px;
+        height: 160px;
+        filter: drop-shadow(1px 1px 1px rgba($black, 0.8));
+        @media (prefers-color-scheme: dark) {
+          filter: drop-shadow(1px 1px 1px rgba($black-dark, 0.8));
+        }
+        object-fit: cover;
+
+        @include mq(md) {
+          width: 360px;
+          height: 360px;
+        }
+
+        @include mq(lg) {
+          width: 480px;
+          height: 480px;
+        }
+      }
+
+      .cancel-image-button {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+
+    .roda-upload-image {
+      display: flex;
+      justify-content: flex-start;
+      div:last-child {
+        margin-left: auto;
+      }
+    }
+  }
+}
+

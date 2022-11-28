@@ -1,0 +1,85 @@
+.images {
+  padding-right: .25rem;
+  padding-left: .25rem;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  min-width: 320px;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  @include mq(md) {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @include mq(lg) {
+    width: 1280px;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  span.lazy-load-image-background {
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+    @include mq(md) {
+      margin-left: initial;
+      margin-right: initial;
+      width: calc(100% / 4);
+    }
+    @include mq(lg) {
+      margin-left: initial;
+      margin-right: initial;
+      width: calc(1200px / 4);
+    }
+
+    & > img {
+      padding: 0.25rem;
+      width: 100%;
+      height: auto;
+      @include border-radius(0.5rem);
+      filter: drop-shadow(1px 2px 2px rgba($black, 0.1));
+      @media (prefers-color-scheme: dark) {
+        filter: drop-shadow(1px 2px 2px rgba($black-dark, 0.1));
+      }
+
+    }
+  }
+}
+
+.image-dialog {
+  z-index: 110;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba($white, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: rgba($white-dark, 0.9);
+  }
+
+  header {
+    height: 64px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    @include mq(md) {
+      margin-left: auto;
+    }
+    @include mq(lg) {
+      margin-left: auto;
+    }
+  }
+}

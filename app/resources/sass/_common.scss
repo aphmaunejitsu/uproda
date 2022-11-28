@@ -1,0 +1,39 @@
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $white;
+  color: $black;
+  min-width: 320px;
+  @media (prefers-color-scheme: dark) {
+    background-color: $white-dark;
+    color: $black-dark;
+  }
+
+  &.is-fixed {
+    overflow: hidden;
+  }
+}
+
+a {
+  color: $black;
+  @media (prefers-color-scheme: dark) {
+    color: $black-dark;
+  }
+}
+
+.upload-button {
+  svg {
+    fill: $teal;
+    @media (prefers-color-scheme: dark) {
+      fill: $teal-dark;
+    }
+  }
+}
+
+.grecaptcha-badge {
+  display: none;
+}

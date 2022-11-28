@@ -1,23 +1,19 @@
-FROM php:7.0-fpm
-RUN apt-get update && apt-get install -y \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libmcrypt-dev \
-        libpng-dev \
-				locales \
-				libmemcached-dev \
-				curl \
-    && docker-php-ext-install -j$(nproc) iconv mcrypt pdo pdo_mysql zip mbstring exif\
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd
+FROM php:7-fpm
+RUN echo  nameserver 8.8.8.8 >> /etc/resolv.conf
+RUN apt-get update --fix-missing --no-install-recommends\
+    && apt-get install -y \
+        locales \
+        libmemcached-dev \
+        curl \
+        libzip-dev \
+        zip \
+        libonig-dev \
+    && docker-php-ext-install -j$(nproc) iconv pdo pdo_mysql mbstring exif pcntl \
+    && docker-php-ext-configure zip \
+    && docker-php-ext-install zip
 
-# Install Memcached for php 7
-RUN curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz" \
-    && mkdir -p /usr/src/php/ext/memcached \
-    && tar -C /usr/src/php/ext/memcached -zxvf /tmp/memcached.tar.gz --strip 1 \
-    && docker-php-ext-configure memcached \
-    && docker-php-ext-install memcached \
-    && rm /tmp/memcached.tar.gz
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+ && apt-get install -y nodejs
 
 #install Imagemagick & PHP Imagick ext
 RUN apt-get update && apt-get install -y \
@@ -26,12 +22,10 @@ RUN apt-get update && apt-get install -y \
 RUN pecl install imagick && docker-php-ext-enable imagick
 
 #composer
-RUN curl -sS https://getcomposer.org/installer | php && \
-    mv composer.phar /usr/local/bin/composer && \
-    chmod 777 /usr/local/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+ENV PATH $PATH:/home/root/.composer/vendor/bin
 
-RUN cd /var/www && \
-    curl https://get.fuelphp.com/oil | sh
+# RUN service supervisor start
 
 RUN locale-gen ja_JP.UTF-8
 ENV LANG ja_JP.UTF-8

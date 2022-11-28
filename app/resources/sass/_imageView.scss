@@ -1,0 +1,64 @@
+.image-detail {
+  display: flex;
+  flex-direction: column;
+  padding: 0.25rem;
+  height: 100%;
+  width: 100%;
+
+  .view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    div.image {
+      img {
+        width: auto;
+        height: auto;
+
+        margin-left: auto;
+        margin-right: auto;
+
+        max-width: 100%;
+        max-height: calc(100vh * 0.8 - 128px);
+        @include mq(md) {
+          max-height: calc(100vh * 0.9 - 128px);
+        }
+        @include mq(lg) {
+          max-height: calc(100vh * 0.9 - 128px);
+        }
+        filter: drop-shadow(1px 1px 1px rgba($black, 0.2));
+        @media (prefers-color-scheme: dark) {
+          filter: drop-shadow(1px 1px 1px rgba($black-dark, 0.2));
+        }
+      }
+    }
+
+    .contents {
+      color: $black;
+      @media (prefers-color-scheme: dark) {
+        color: $black-dark;
+      }
+    }
+  }
+
+
+
+  footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 64px;
+    padding: 0.25rem;
+    color: $black;
+    @media (prefers-color-scheme: dark) {
+      color: $black-dark;
+    }
+
+    svg {
+      fill: $black;
+      @media (prefers-color-scheme: dark) {
+        fill: $black-dark;
+      }
+    }
+  }
+}

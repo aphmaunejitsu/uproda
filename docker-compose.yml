@@ -1,0 +1,66 @@
+version: '2'
+services:
+  web:
+    image: nginx:alpine
+    volumes:
+      - "./app/public:/var/www/html/public"
+      - "./local/nginx/default.conf.template:/etc/nginx/templates/default.conf.template"
+    env_file:
+      .env
+    links:
+      - app
+    ports:
+      - 127.0.0.1:3080:80
+    networks:
+      - uproda-proxy-network
+
+  app:
+    build:
+      context: local/php
+      dockerfile: "Dockerfile"
+    volumes:
+      - ./app:/var/www/html
+    links:
+      - db-primary
+      - db-secondary
+      - redis
+    external_links:
+      - roda-storage
+    networks:
+      - default
+      - uproda-proxy-network
+
+  db-primary:
+    image: mariadb:10.5
+    env_file:
+      - .env
+    ports:
+      - 127.0.0.1:33306:3306
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./db/init/primary.sh:/docker-entrypoint-initdb.d/primary.sh
+      - ./db/cnf/primary.cnf:/etc/mysql/conf.d/my.cnf
+
+  db-secondary:
+    image: mariadb:10.5
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:53316:3306"
+
+  db-test:
+    image: mariadb:10.5
+    env_file:
+      - .env
+    ports:
+      - 127.0.0.1:33307:3306
+
+  redis:
+    image: redis:latest
+    ports:
+      - 127.0.0.1:36379:6379
+    command: redis-server
+
+networks:
+  uproda-proxy-network:
+    external: true
