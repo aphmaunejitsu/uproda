@@ -7,22 +7,18 @@
 
   min-width: 320px;
 
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(1, auto);
+  justify-content: center;
 
   @include mq(md) {
     width: 100%;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(4, calc(100%/4));
   }
 
   @include mq(lg) {
     width: 1280px;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(4, calc(100%/4));
   }
 
   span.lazy-load-image-background {
@@ -32,12 +28,10 @@
     @include mq(md) {
       margin-left: initial;
       margin-right: initial;
-      width: calc(100% / 4);
     }
     @include mq(lg) {
       margin-left: initial;
       margin-right: initial;
-      width: calc(1200px / 4);
     }
 
     & > img {
