@@ -1,3 +1,11 @@
+FROM composer:latest as vendor
+ARG GITHUB_TOKEN
+# composer
+ADD ./app/composer.json /tmp/vendor/composer.json
+ADD ./app/composer.lock /tmp/vendor/composer.lock
+RUN composer config --global github-oauth.github.com ${GITHUB_TOKEN} && \
+    cd /tmp/vendor && composer install --no-dev
+
 FROM php:8-fpm
 RUN apt-get update --fix-missing --no-install-recommends \
     && apt-get install -y \
@@ -22,20 +30,34 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && docker-php-source delete \
     && apt-get clean
 
-ADD ./conf/upload.ini /usr/local/etc/php/conf.d/upload.ini
-ADD ./conf/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.ini
-ADD ./conf/imagick.ini /usr/local/etc/php/conf.d/imagick.ini
-ADD ./cron/crontab /var/spool/cron/crontabs/root
-ADD ./supervisor/conf.d/cron.conf /etc/supervisor/conf.d/cron.conf
-ADD ./supervisor/conf.d/roda.conf /etc/supervisor/conf.d/roda.conf
+# mo
+COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
 
-# Node
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g npm@latest
+# Copy Source
+COPY --from=vendor /tmp/vendor /var/www/html
+ADD ./app /var/www/html
+ADD ./build/nginx/error /var/www/error
+RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /var/www/error
 
-# composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-ENV PATH $PATH:/home/root/.composer/vendor/bin
+# supervisor conf
+ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
+ADD ./build/supervisor/conf.d/php-fpm.conf /etc/supervisor/conf.d/php-fpm.conf
+ADD ./build/supervisor/conf.d/nginx.conf /etc/supervisor/conf.d/nginx.conf
 
+# nginx conf
+ADD ./build/nginx/conf.d/log-json-format.conf /etc/nginx/http.d/00-log-json-format.conf
+ADD ./build/nginx/conf.d/default.conf.mustache /tmp/default.conf.mustache
+
+# php conf
+ADD ./build/php/conf.d/upload.ini /usr/local/etc/php/conf.d/upload.ini
+ADD ./build/php/conf.d/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.ini
+
+# script
+ADD ./build/start.sh /start.sh
+RUN chmod +x /start.sh \
+    && mkdir -p /run/nginx
+
+EXPOSE 80
 WORKDIR /var/www/html
+CMD ["/start.sh"]
