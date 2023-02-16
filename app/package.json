@@ -52,7 +52,7 @@
         "@material/icon-button": "^10.0.0",
         "heic-convert": "^1.2.4",
         "material-ui-dropzone": "^3.5.0",
-        "node-sass": "^4.14.1",
+        "node-sass": "^7.0.0",
         "prop-types": "^15.7.2",
         "rc-progress": "^3.1.4",
         "react-common-loadmore": "^1.0.2",
