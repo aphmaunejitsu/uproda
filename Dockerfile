@@ -53,6 +53,9 @@ ADD ./build/nginx/conf.d/default.conf.mustache /tmp/default.conf.mustache
 ADD ./build/php/conf.d/upload.ini /usr/local/etc/php/conf.d/upload.ini
 ADD ./build/php/conf.d/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.ini
 
+# crontab
+ADD ./build/cron/crontab /var/spool/cron/crontabs/root
+
 # script
 ADD ./build/start.sh /start.sh
 RUN chmod +x /start.sh \
