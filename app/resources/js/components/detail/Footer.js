@@ -33,7 +33,8 @@ function Main({ image }) {
     setOpenDelete(true);
   };
 
-  const closeDeleteDialog = () => {
+  const closeDeleteDialog = (e) => {
+    e.stopPropagation();
     setOpenDelete(false);
   };
 
