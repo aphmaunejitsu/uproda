@@ -44,10 +44,12 @@ function ImageDeleteDialog({ image, isOpen, handleDialogClose }) {
         handleDialogClose(false);
         setOpenSnack(true);
         setIsDeleting(false);
+        setOpenSnack(true);
       });
   };
 
-  const closeSnackbar = () => {
+  const closeSnackbar = (e) => {
+    e.stopPropagation();
     setOpenSnack(false);
   };
 
@@ -96,9 +98,10 @@ function ImageDeleteDialog({ image, isOpen, handleDialogClose }) {
         </DialogActions>
       </Dialog>
       <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={isOpenSnack}
         onClose={closeSnackbar}
-        autoHideDuration={5000}
+        autoHideDuration={2000}
       >
         <Alert onClose={closeSnackbar} severity="warning">
           削除できませんでした
