@@ -19,12 +19,12 @@
         margin-right: auto;
 
         max-width: 100%;
-        max-height: calc(100vh * 0.8 - 140px);
+        max-height: calc(100vh * 0.8 - 200px);
         @include mq(md) {
-          max-height: calc(100vh * 0.9 - 140px);
+          max-height: calc(100vh * 0.9 - 200px);
         }
         @include mq(lg) {
-          max-height: calc(100vh * 0.9 - 140px);
+          max-height: calc(100vh * 0.9 - 200px);
         }
         filter: drop-shadow(1px 1px 1px rgba($black, 0.2));
         @media (prefers-color-scheme: dark) {

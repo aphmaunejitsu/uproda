@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
 import DMMAd from './common/DMMAd';
 
 const useStyles = makeStyles({
@@ -45,7 +44,7 @@ function About() {
           <dd>
             本規約は予告することなく変更できるものとします。
           </dd>
-          <dt>連絡はこちら</dt>
+          <dt>運営してる人</dt>
           <dd>
             <a
               href={process.env.MIX_RODA_RENRAKU_TWITTER}
@@ -55,14 +54,14 @@ function About() {
               {process.env.MIX_RODA_RENRAKU_NAME}
             </a>
           </dd>
-          <dt>開発</dt>
+          <dt>作った人</dt>
           <dd>
             <a
-              href="https://github.com/aphmaunejitsu"
+              href="https://twitter.com/shikyou1"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Aphmau_nejitsu
+              しきょういち
             </a>
           </dd>
         </dl>
