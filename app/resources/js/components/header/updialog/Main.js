@@ -193,17 +193,14 @@ function Main() {
           if (chunkPos < chunkCount) {
             sleep(waitTime);
             setProgress(Math.ceil((chunkPos / chunkCount) * 100));
-            console.log(progress);
             setChunkPos(chunkPos + 1);
           } else {
+            setUploaded(response.data);
             setProgressBuffer(100);
             setProgress(100);
-            sleep(100);
-            setUploaded(response.data);
           }
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
           setSnackMessage('アップロードに失敗したお');
           setSnackOpen(true);
           handleCancelImage();
@@ -214,16 +211,20 @@ function Main() {
   useEffect(() => {
     if (image) {
       setProgressBuffer(Math.ceil((chunkPos / chunkCount) * 100));
-      console.log(progressBuffer);
       sendImage();
     }
   }, [chunkPos]);
 
   useEffect(() => {
-    if (uploaded) {
-      window.location = uploaded.data.detail;
+    console.log(progress);
+    console.log(uploaded);
+    if (progress >= 100) {
+      sleep(1000);
+      if (uploaded) {
+        window.location = uploaded.data.detail;
+      }
     }
-  }, [uploaded]);
+  }, [progress, uploaded]);
 
   const handleUpload = async () => {
     if (image) {

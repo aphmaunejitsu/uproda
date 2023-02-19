@@ -4,7 +4,7 @@ import { LazyLoadComponent } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { Helmet } from 'react-helmet';
 import axios from 'axios';
-import ImageDetail from './detail/Main';
+import Index from './detail/Index';
 import NotFound from './NotFound';
 import Loading from './common/Loading';
 
@@ -95,7 +95,7 @@ function Detail() {
         ]}
       />
       <LazyLoadComponent id={image.basename}>
-        <ImageDetail image={image} />
+        <Index image={image} />
       </LazyLoadComponent>
     </>
   );

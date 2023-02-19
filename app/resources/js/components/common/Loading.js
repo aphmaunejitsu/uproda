@@ -6,10 +6,11 @@ const useStyles = makeStyles({
   root: {
     padding: '1rem',
     width: '100%',
-    'margin-top': 'auto',
-    'margin-button': 'auto',
-    display: 'flex',
-    'justify-content': 'center',
+  },
+  circular: {
+    position: 'fixed',
+    top: '50%',
+    left: 'calc(50% - 32px)',
   },
 });
 
@@ -18,7 +19,7 @@ function Loading() {
 
   return (
     <div className={styles.root}>
-      <CircularProgress />
+      <CircularProgress className={styles.circular} />
     </div>
   );
 }
