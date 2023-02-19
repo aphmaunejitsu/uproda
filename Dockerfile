@@ -49,7 +49,7 @@ COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
 
 # Copy Source
 COPY --from=vendor /tmp/vendor /var/www/html
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
 COPY --from=node /public /var/www/html/public
 COPY --from=node /tmp /var/www/html
 ADD ./app /var/www/html
