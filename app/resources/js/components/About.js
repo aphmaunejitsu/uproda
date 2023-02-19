@@ -1,8 +1,74 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
+import DMMAd from './common/DMMAd';
+
+const useStyles = makeStyles({
+  title: {
+    width: '100%',
+    'text-align': 'center',
+    padding: '1rem',
+  },
+  kiyaku: {
+    padding: '0.5rem',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+});
 
 function About() {
+  const classes = useStyles();
   return (
-    <h1>About</h1>
+    <>
+      <h1 className={classes.title}>About</h1>
+      <div className={classes.kiyaku}>
+        <dl>
+          <dt>利用規約への同意・免責事項</dt>
+          <dd>
+            当サービスの利用者は本規約に同意したものとします。またご使用において如何なる損失が生じた場合でも当サイト責任者は責任を負わないものとします。
+          </dd>
+          <dt>禁止行為</dt>
+          <dd>
+            以下のファイルは予告なしに削除することがあります
+            <ul>
+              <li>法律や条令、公序良俗に反するファイル</li>
+              <li>誹謗中傷するようなファイル</li>
+              <li>第三者の権利を侵害するファイル</li>
+              <li>その他、管理者が不適当と判断するファイル</li>
+            </ul>
+          </dd>
+          <dt>免責事項</dt>
+          <dd>
+            当サイトで発生したいかなる不利益も一切の責任を負わないものとします。
+          </dd>
+          <dt>規約の改変</dt>
+          <dd>
+            本規約は予告することなく変更できるものとします。
+          </dd>
+          <dt>連絡はこちら</dt>
+          <dd>
+            <a
+              href={process.env.MIX_RODA_RENRAKU_TWITTER}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {process.env.MIX_RODA_RENRAKU_NAME}
+            </a>
+          </dd>
+          <dt>開発</dt>
+          <dd>
+            <a
+              href="https://github.com/aphmaunejitsu"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Aphmau_nejitsu
+            </a>
+          </dd>
+        </dl>
+      </div>
+      <DMMAd dmmid={process.env.MIX_RODA_DMM_ID1} />
+    </>
   );
 }
 
