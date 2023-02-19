@@ -17,20 +17,6 @@
     background-color: $white-dark;
   }
 
-  .SiteLogo {
-    display: flex;
-    align-items: center;
-    &:after {
-      margin-left: 0.5rem;
-      content: 'ネ実onry';
-    }
-
-    img {
-      width: 36px;
-      height: 36px;
-    }
-  }
-
   Nav {
     margin-left: auto;
     margin-top: auto;
