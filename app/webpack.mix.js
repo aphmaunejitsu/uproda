@@ -11,7 +11,7 @@ const mix = require('laravel-mix');
  |
  */
 
-let options = {};
+const options = {};
 if (process.env.NODE_ENV === 'production') {
   options.terser = {
     terserOptions: {
