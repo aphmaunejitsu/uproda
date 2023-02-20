@@ -15,10 +15,9 @@ services:
       - uproda-proxy-network
 
   app:
-    # build:
-    #   context: local/php
-    #   dockerfile: "Dockerfile"
-    image: kumamisan/uproda:version-2.0.0
+    build:
+      context: local/php
+      dockerfile: "Dockerfile"
     volumes:
       - ./app:/var/www/html
     links:
