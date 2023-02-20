@@ -1,10 +1,17 @@
-FROM composer:latest as vendor
-ARG GITHUB_TOKEN
+FROM composer:2.4.4 as vendor
 # composer
-ADD ./app/composer.json /tmp/vendor/composer.json
-ADD ./app/composer.lock /tmp/vendor/composer.lock
-RUN composer config --global github-oauth.github.com ${GITHUB_TOKEN} && \
-    cd /tmp/vendor && composer install --no-dev
+WORKDIR /tmp
+ADD ./app ./vendor
+RUN cd vendor && composer install --optimize-autoloader --no-dev --no-scripts
+
+# node
+FROM node:14.21.3 as node
+WORKDIR /tmp
+ADD ./app ./node
+RUN cd node && \
+    npm install laravel-mix@6.0.49 --save-dev && \
+    npm run prod
+
 
 FROM php:8-fpm
 RUN apt-get update --fix-missing --no-install-recommends \
@@ -18,6 +25,7 @@ RUN apt-get update --fix-missing --no-install-recommends \
         libwebp-dev \
         imagemagick \
         libmagickwand-dev \
+        nginx \
         supervisor --no-install-recommends \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ --with-webp=/usr/include \
     && docker-php-ext-install -j$(nproc) gd exif iconv pdo pdo_mysql mbstring pcntl \
@@ -35,10 +43,13 @@ COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
 
 # Copy Source
 COPY --from=vendor /tmp/vendor /var/www/html
+COPY --from=node /tmp/node /var/www/html
+COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
 ADD ./app /var/www/html
 ADD ./build/nginx/error /var/www/error
 RUN chown -R www-data:www-data /var/www/html
 RUN chown -R www-data:www-data /var/www/error
+RUN cd /var/www/html && composer install --optimize-autoloader --no-dev
 
 # supervisor conf
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
