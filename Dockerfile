@@ -8,8 +8,9 @@ RUN cd vendor && composer install --optimize-autoloader --no-dev --no-scripts
 FROM node:14.21.3 as node
 WORKDIR /tmp
 ADD ./app ./node
-RUN npm install laravel-mix@6.0.49 --save-dev && \
-     cd node && npm run prod
+RUN cd node && \
+    npm install laravel-mix@6.0.49 --save-dev && \
+    npm run prod
 
 
 FROM php:8-fpm
