@@ -1,22 +1,15 @@
 FROM composer:2.4.4 as vendor
 # composer
 WORKDIR /tmp
-ADD ./app/composer.json ./vendor/composer.json
-ADD ./app/composer.lock ./vendor/composer.lock
-ADD ./app/database ./vendor/database
-ADD ./app/tests ./vendor/tests
-RUN cd ./vendor && composer install --optimize-autoloader --no-dev --no-scripts
+ADD ./app ./vendor
+RUN cd vendor && composer install --optimize-autoloader --no-dev --no-scripts
 
 # node
 FROM node:14.21.3 as node
 WORKDIR /tmp
-ADD ./app/package.json ./package.json
-ADD ./app/package-lock.json ./package-lock.json
-ADD ./app/resources ./resources
-ADD ./app/webpack.mix.js ./webpack.mix.js
-ADD ./app/public /public
+ADD ./app ./node/
 RUN npm install laravel-mix@6.0.49 --save-dev
-RUN npm run prod
+RUN cd node && npm run prod
 
 
 FROM php:8-fpm
@@ -49,9 +42,8 @@ COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
 
 # Copy Source
 COPY --from=vendor /tmp/vendor /var/www/html
+COPY --from=node /tmp/node /var/www/html
 COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
-COPY --from=node /public /var/www/html/public
-COPY --from=node /tmp /var/www/html
 ADD ./app /var/www/html
 ADD ./build/nginx/error /var/www/error
 RUN chown -R www-data:www-data /var/www/html
