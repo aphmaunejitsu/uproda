@@ -42,5 +42,6 @@ docker build \
     --build-arg RODA_UPLOAD_MAXSIZE="$RODA_UPLOAD_MAXSIZE" \
     --build-arg RODA_URL_IMAGE_BASE="$RODA_URL_IMAGE_BASE" \
     --build-arg RODA_WAIT_TIME="$RODA_WAIT_TIME" \
+    --build-arg RODA_404_IMG_DESCRIPTION="$RODA_404_IMG_DESCRIPTION" \
     --build-arg SESSION_DRIVER="$SESSION_DRIVER" \
     --build-arg SESSION_LIFETIMEA="$SESSION_LIFETIME" .
