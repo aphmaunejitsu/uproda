@@ -35,7 +35,7 @@ class Delete extends Controller
                     [
                         'message' => __('response.delete.failed'),
                     ],
-                    404
+                    500
                 );
             }
 
