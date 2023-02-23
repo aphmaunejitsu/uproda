@@ -35,7 +35,7 @@ function Main({ image }) {
   };
 
   const closeDeleteDialog = (e) => {
-    e.stopPropagation();
+    // e.stopPropagation();
     setOpenDelete(false);
   };
 

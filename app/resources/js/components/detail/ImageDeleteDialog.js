@@ -98,7 +98,7 @@ function ImageDeleteDialog({ image, isOpen, handleDialogClose }) {
         </DialogActions>
       </Dialog>
       <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
         open={isOpenSnack}
         onClose={closeSnackbar}
         autoHideDuration={2000}
