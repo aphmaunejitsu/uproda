@@ -19,6 +19,7 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
     {
         $this->model = $model;
     }
+
     public function addChunk(string $uuid, int $start, string $file)
     {
         return Redis::zadd($uuid, $start, $file);
@@ -27,9 +28,7 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
     public function getChunks(string $uuid)
     {
         return Redis::zrange($uuid, 0, -1);
-    }
-
-    public function remove(string $uuid)
+    } public function remove(string $uuid)
     {
         return Redis::del($uuid);
     }
@@ -46,6 +45,14 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
         return $this->model
                     ->where('uuid', $uuid)
                     ->first();
+    }
+
+    public function findOrCreate(array $chunk)
+    {
+        return $this->model->firstOrCreate(
+            ['uuid' => $chunk['uuid']],
+            $chunk
+        );
     }
 
     public function mergeChunks(string $uuid, string $storage = 'chunk')

@@ -12,4 +12,6 @@ interface ChunkFileRepositoryInterface
 
     public function createByUuid(string $uuid);
     public function getByUuid(string $uuid);
+
+    public function findOrCreate(array $chunk);
 }
