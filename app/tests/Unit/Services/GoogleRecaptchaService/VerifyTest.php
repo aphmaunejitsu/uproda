@@ -35,7 +35,15 @@ class VerifyTest extends TestCase
             GoogleRecaptchaRepositoryInterface::class,
             function (MockInterface $m) {
                 $m->shouldReceive('verify')->andReturn(
-                    (object)['success' => true],
+                    new class {
+                        public function json()
+                        {
+                            return [
+                                'success' => true,
+                                'score'   => 0.6,
+                            ];
+                        }
+                    }
                 );
             }
         );

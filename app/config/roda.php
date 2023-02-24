@@ -35,6 +35,7 @@ return [
             'verify' => env('RODA_GOOGLE_RECAPTCHA_VERIFY'),
             'secret' => env('RODA_GOOGLE_RECAPTCHA_SECRET'),
             'cache'  => env('RODA_GOOGLE_RECAPTCHA_CACHE'),
+            'score'  => env('RODA_GOOGLE_RECAPTCHA_SCORE', 0),
         ],
     ],
 ];

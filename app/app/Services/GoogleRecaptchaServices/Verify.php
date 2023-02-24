@@ -33,6 +33,7 @@ class Verify extends GoogleRecaptchaService
 
         $response = $this->repo->verify($token, $ipaddr);
 
+
         Cache::put($uuid, $response->json(), $expire);
         return $this->checkResult($response->json());
     }
@@ -48,7 +49,9 @@ class Verify extends GoogleRecaptchaService
         //         return true;
         //     }
         // }
+        $score = config('roda.google.recaptcha.score');
+        Log::debug(__METHOD__, [$result]);
 
-        return $result['success'];
+        return $result['success'] && $result['score'] > $score;
     }
 }

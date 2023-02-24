@@ -20,6 +20,7 @@ use Mockery\MockInterface;
 /**
  * @group upload
  * @group Controller
+ * @group GoogleRecaptcha
  * @group UploadTest
  */
 class UploadTest extends TestCase
@@ -57,6 +58,37 @@ class UploadTest extends TestCase
         Http::fake([
             'www.google.com/recaptcha/*' => Http::response([
                 'success' => true,
+                'score'   => 0.6,
+                'challenge_ts' => time(),
+                'hostname'     => 'xxx',
+            ], 200),
+        ]);
+
+        $response->assertStatus(403)
+                 ->assertJson([
+                     'message' => 'アップロードできません',
+                     'code'    => 10000
+                 ]);
+    }
+
+    /**
+     * @group testLessScore
+     * @return void
+     */
+    public function testLessScore()
+    {
+        $response = $this->call(
+            'post',
+            $this->url,
+            [],
+            [],
+            [],
+            ['REMOTE_ADDR' => '10.11.12.13']
+        );
+        Http::fake([
+            'www.google.com/recaptcha/*' => Http::response([
+                'success' => true,
+                'score'   => 0.1,
                 'challenge_ts' => time(),
                 'hostname'     => 'xxx',
             ], 200),
@@ -81,6 +113,7 @@ class UploadTest extends TestCase
         Http::fake([
             'www.google.com/recaptcha/*' => Http::response([
                 'success' => true,
+                'score'   => 0.6,
                 'challenge_ts' => time(),
                 'hostname'     => 'xxx',
             ], 200),
@@ -109,6 +142,7 @@ class UploadTest extends TestCase
         Http::fake([
             'www.google.com/recaptcha/*' => Http::response([
                 'success' => true,
+                'score'   => 0.6,
                 'challenge_ts' => time(),
                 'hostname'     => 'xxx',
             ], 200),
@@ -138,6 +172,7 @@ class UploadTest extends TestCase
         Http::fake([
             'www.google.com/recaptcha/*' => Http::response([
                 'success' => true,
+                'score'   => 0.6,
                 'challenge_ts' => time(),
                 'hostname'     => 'xxx',
             ], 200),
@@ -169,6 +204,7 @@ class UploadTest extends TestCase
         Http::fake([
             'www.google.com/recaptcha/*' => Http::response([
                 'success' => true,
+                'score'   => 0.6,
                 'challenge_ts' => time(),
                 'hostname'     => 'xxx',
             ], 200),
@@ -199,6 +235,7 @@ class UploadTest extends TestCase
         Http::fake([
             'www.google.com/recaptcha/*' => Http::response([
                 'success' => true,
+                'score'   => 0.6,
                 'challenge_ts' => time(),
                 'hostname'     => 'xxx',
             ], 200),
@@ -240,6 +277,7 @@ class UploadTest extends TestCase
         Http::fake([
             'www.google.com/recaptcha/*' => Http::response([
                 'success' => true,
+                'score'   => 0.6,
                 'challenge_ts' => time(),
                 'hostname'     => 'xxx',
             ], 200),
@@ -275,6 +313,7 @@ class UploadTest extends TestCase
         Http::fake([
             'www.google.com/recaptcha/*' => Http::response([
                 'success' => true,
+                'score'   => 0.6,
                 'challenge_ts' => time(),
                 'hostname'     => 'xxx',
             ], 200),
@@ -315,6 +354,7 @@ class UploadTest extends TestCase
         Http::fake([
             'www.google.com/recaptcha/*' => Http::response([
                 'success' => true,
+                'score'   => 0.6,
                 'challenge_ts' => time(),
                 'hostname'     => 'xxx',
             ], 200),
@@ -361,6 +401,7 @@ class UploadTest extends TestCase
         Http::fake([
             'www.google.com/recaptcha/*' => Http::response([
                 'success' => true,
+                'score'   => 0.6,
                 'challenge_ts' => time(),
                 'hostname'     => 'xxx',
             ], 200),
@@ -412,6 +453,7 @@ class UploadTest extends TestCase
         Http::fake([
             'www.google.com/recaptcha/*' => Http::response([
                 'success' => true,
+                'score'   => 0.6,
                 'challenge_ts' => time(),
                 'hostname'     => 'xxx',
             ], 200),
