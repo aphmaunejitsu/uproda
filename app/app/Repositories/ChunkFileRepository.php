@@ -14,7 +14,6 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
     use ImageTrait;
 
     private $model;
-
     public function __construct(ChunkFile $model)
     {
         $this->model = $model;
@@ -28,7 +27,9 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
     public function getChunks(string $uuid)
     {
         return Redis::zrange($uuid, 0, -1);
-    } public function remove(string $uuid)
+    }
+
+    public function remove(string $uuid)
     {
         return Redis::del($uuid);
     }
