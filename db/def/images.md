@@ -27,10 +27,10 @@ name|column|multi|NULL|UNIQ
 ----|----|----|----|----
 PRIMARY|id|1|NO|YES|
 images_created_at_index|created_at|1|NO|NO|
+images_image_hash_id_foreign|image_hash_id|1|YES|NO|
 images_basename_index|basename|1|NO|NO|
 images_updated_at_index|updated_at|1|NO|NO|
 images_deleted_at_index|deleted_at|1|YES|NO|
-images_image_hash_id_foreign|image_hash_id|1|YES|NO|
 
 
 ## Foreign Key
