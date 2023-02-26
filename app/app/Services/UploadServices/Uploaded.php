@@ -72,7 +72,7 @@ class Uploaded extends UploadService implements TransactionInterface
         @unlink($tmp);
 
         if (! ($image = $this->imageHash->firstOrCreateWithImage($hash, $imageData))) {
-            return null;
+            throw new ImageUploadServiceException('ファイルが生成できませんでした', 10001);
         }
 
         return $image;

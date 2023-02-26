@@ -2,6 +2,7 @@
 
 namespace App\Services\UploadServices;
 
+use App\Exceptions\ImageUploadServiceException;
 use App\Models\ChunkFile;
 use App\Repositories\ChunkFileRepositoryInterface;
 use App\Services\UploadService;
@@ -18,7 +19,10 @@ class MergeChunked extends UploadService
     public function __invoke(ChunkFile $chunkFile, string $tmpDir = 'tmp')
     {
         if (! ($merged = $this->chunk->mergeChunks($chunkFile->uuid, $tmpDir))) {
-            return null;
+            throw new ImageUploadServiceException(
+                'ファイルのマージに失敗しました',
+                20001
+            );
         }
 
         return $merged;
