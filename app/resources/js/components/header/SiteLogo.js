@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Logo from '../../../images/favicon.jpg';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     'align-items': 'center',
@@ -14,9 +14,9 @@ const useStyles = makeStyles({
   },
   span: {
     'margin-left': '0.5rem',
-    color: 'black',
+    color: theme.palette.info,
   },
-});
+}));
 
 function SiteLogo() {
   const classes = useStyles();
