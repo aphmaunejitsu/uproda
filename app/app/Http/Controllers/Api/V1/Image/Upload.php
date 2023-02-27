@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Image;
 
 use App\Exceptions\ChunkFileRepositoryException;
+use App\Exceptions\ImageUploadServiceException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Image\UploadRequest;
 use App\Http\Resources\ImageResource;
@@ -51,41 +52,71 @@ class Upload extends Controller
             if (($cr = $this->getContentRange($request))) {
                 // have content range
                 if (($result = $this->service->chunkedUpload($file, $imageData, $cr))) {
-                    if (!$result['complete']) {
-                        return response()->json([
-                            'message' => 'uploading image',
-                            'size'    => $result['size']
-                        ]);
+                    Log::debug('[result]', $result);
+                    if ($result['complete']) {
+                        $merged = $this->service->mergeChunked($result['chunk']);
+                        $merged['ip'] = $imageData['ip'];
+                        $merged['original'] = $imageData['original'];
+                        $merged['delkey'] = $imageData['delkey'];
+                        $image = $this->service->uploaded($merged['path'], $merged);
+                        return (new ImageResource($image))
+                            ->response()
+                            ->setStatusCode(201);
                     }
 
-                    $tmpPath = $result['path'];
+                    return response()->json([
+                        'message' => 'image uploading',
+                        'size'    => $result['size'],
+                        'completed' => $result['complete'],
+                    ]);
                 } else {
                     return response()->json([
-                        'message' => 'アップロードできませんでした'
+                        'message' => 'アップロードできませんでした',
+                        'code'    => 1000,
                     ])->setStatusCode(400);
                 }
-            }
-
-            // have no content-range
-            if (($cr === null) or $result) {
+            } else {
+                // have no content-range
                 if (($image = $this->service->uploaded($tmpPath, $imageData))) {
                     return (new ImageResource($image))
                         ->response()
                         ->setStatusCode(201);
                 } else {
                     return response()->json([
-                        'message' => 'アップロードできませんでした'
+                        'message' => 'アップロードできませんでした',
+                        'code'    => 1001,
                     ])->setStatusCode(400);
                 }
             }
         } catch (ChunkFileRepositoryException $e) {
+            Log::error(__METHOD__, [
+                'messege' => $e->getMessage(),
+                'code'    => $e->getCode(),
+                'trace'   => $e->getTrace(),
+            ]);
             return response()->json([
                 'message' => $e->getMessage(),
-                'code'    => $e->getCode()
+                'code'    => $e->getCode(),
+            ])->setStatusCode(400);
+        } catch (ImageUploadServiceException $e) {
+            Log::error(__METHOD__, [
+                'messege' => $e->getMessage(),
+                'code'    => $e->getCode(),
+                'trace'   => $e->getTrace(),
+            ]);
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code'    => $e->getCode(),
             ])->setStatusCode(400);
         } catch (Exception $e) {
+            Log::error(__METHOD__, [
+                'messege' => $e->getMessage(),
+                'code'    => $e->getCode(),
+                'trace'   => $e->getTrace(),
+            ]);
             return response()->json([
-                'message' => 'アップロードできませんでした'
+                'message' => 'アップロードできませんでした',
+                'code'    => 1002,
             ])->setStatusCode(400);
         }
     }

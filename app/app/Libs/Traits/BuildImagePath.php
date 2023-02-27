@@ -18,9 +18,12 @@ trait BuildImagePath
     public function getThumbnailUrl(string $basename, string $ext)
     {
         $storage = $this->getImageStorage();
-        return Storage::disk($storage)->url(
-            $this->buildThumbnailPath($basename, $ext)
-        );
+        $path = $this->buildThumbnailPath($basename, $ext);
+        if (Storage::disk($storage)->exists($path)) {
+            return Storage::disk($storage)->url($path);
+        } else {
+            return url('/images/noimage.png');
+        }
     }
 
     public function getImageStorage()

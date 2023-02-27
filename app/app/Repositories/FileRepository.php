@@ -5,14 +5,12 @@ namespace App\Repositories;
 use Illuminate\Support\Facades\Storage;
 use App\Libs\Traits\BuildImagePath;
 use App\Models\Image as ModelsImage;
-use Illuminate\Http\UploadedFile;
 use Intervention\Image\Facades\Image;
 use Imagick;
 use App\Exceptions\FileRepositoryException;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use lsolesen\pel\PelEntryAscii;
-use lsolesen\pel\PelEntryByte;
+use lsolesen\pel\PelEntryAscii; use lsolesen\pel\PelEntryByte;
 use lsolesen\pel\PelEntryRational;
 use lsolesen\pel\PelIfd;
 use lsolesen\pel\PelJpeg;
@@ -85,9 +83,58 @@ class FileRepository implements FileRepositoryInterface
         return Storage::disk($this->getImageStorage())->put($thumbnail, $image->getImageBlob());
     }
 
+    public function generateThumbnailFromStream(string $basename, string $ext)
+    {
+        $storage = $this->getImageStorage();
+        $path = $this->buildImagePath($basename, $ext);
+        $stream = Storage::disk($storage)->get($path);
+
+        $image = new Imagick();
+        $image->readImageBlob($stream);
+
+        if (strtolower($image->getImageMimeType()) === 'image/gif') {
+            throw new FileRepositoryException('can not read gif file', 9999);
+        }
+
+        $thumbnail = $this->buildThumbnailPath($basename, 'jpg');
+        $width = config('roda.thumbnail.width', 400);
+        $height = config('roda.thumbnail.height', 400);
+        $image->cropThumbnailImage($width, $height);
+
+        return Storage::disk($this->getImageStorage())->put($thumbnail, $image->getImageBlob());
+    }
+
     public function generateThumbnailGif(string $file, string $basename)
     {
         $image = new Imagick($file);
+        if (strtolower($image->getImageMimeType()) !== 'image/gif') {
+            throw new FileRepositoryException('read only gif file', 9999);
+        }
+
+        $width = config('roda.thumbnail.width', 400);
+        $height = config('roda.thumbnail.height', 400);
+
+        $image->setFirstIterator();
+        $image = $image->coalesceImages();
+        do {
+            $image->cropThumbnailImage($width, $height);
+        } while ($image->nextImage());
+
+        $image->optimizeimagelayers();
+
+        $thumbnail = $this->buildThumbnailPath($basename, 'gif');
+        return Storage::disk($this->getImageStorage())->put($thumbnail, $image->getImagesBlob());
+    }
+
+    public function generateThumbnailGifFromStream(string $basename, string $ext)
+    {
+        $storage = $this->getImageStorage();
+        $path = $this->buildImagePath($basename, $ext);
+        $stream = Storage::disk($storage)->get($path);
+
+        $image = new Imagick();
+        $image->readImageBlob($stream);
+
         if (strtolower($image->getImageMimeType()) !== 'image/gif') {
             throw new FileRepositoryException('read only gif file', 9999);
         }
