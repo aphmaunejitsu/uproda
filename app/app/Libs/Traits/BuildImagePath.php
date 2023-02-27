@@ -15,8 +15,12 @@ trait BuildImagePath
         );
     }
 
-    public function getThumbnailUrl(string $basename, string $ext)
+    public function getThumbnailUrl(string $basename, ?string $ext)
     {
+        if ($ext === null) {
+            return url('/images/noimage.png');
+        }
+
         $storage = $this->getImageStorage();
         $path = $this->buildThumbnailPath($basename, $ext);
         if (Storage::disk($storage)->exists($path)) {

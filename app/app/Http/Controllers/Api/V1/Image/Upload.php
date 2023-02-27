@@ -7,6 +7,7 @@ use App\Exceptions\ImageUploadServiceException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Image\UploadRequest;
 use App\Http\Resources\ImageResource;
+use App\Jobs\Image\ProcessGenerateThumbnail;
 use App\Services\UploadService;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -59,6 +60,9 @@ class Upload extends Controller
                         $merged['original'] = $imageData['original'];
                         $merged['delkey'] = $imageData['delkey'];
                         $image = $this->service->uploaded($merged['path'], $merged);
+
+                        ProcessGenerateThumbnail::dispatchAfterResponse($image);
+
                         return (new ImageResource($image))
                             ->response()
                             ->setStatusCode(201);
