@@ -43,6 +43,7 @@ class UploadedTest extends TestCase
     /**
      * A basic unit test example.
      *
+     * @group UploadedTest::testUpload
      * @return void
      */
     public function testUpload()

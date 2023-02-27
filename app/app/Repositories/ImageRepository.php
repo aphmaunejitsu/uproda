@@ -47,6 +47,17 @@ class ImageRepository implements ImageRepositoryInterface
         return $this->model->create($data);
     }
 
+    public function updateThumbnailExt(int $id, string $ext)
+    {
+        if (!($image = $this->model->find($id))) {
+            return null;
+        }
+
+        $image->t_ext = $ext;
+        $image->save();
+        return $image;
+    }
+
     public function saveComment(int $id, string $comment)
     {
         if (! ($image = $this->model->find($id))) {

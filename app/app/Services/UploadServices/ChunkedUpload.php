@@ -21,11 +21,12 @@ class ChunkedUpload extends UploadService
         // $size, $is_first, $is_last, $start, $end
         extract($content_range);
 
-        if ($is_first) {
-            $chunk = $this->chunk->createByUuid($data['uuid']);
-        } else {
-            $chunk = $this->chunk->getByUuid($data['uuid']);
-        }
+        // if ($is_first) {
+        //     $chunk = $this->chunk->createByUuid($data['uuid']);
+        // } else {
+        //     $chunk = $this->chunk->getByUuid($data['uuid']);
+        // }
+        $chunk = $this->chunk->findOrCreate($data);
 
         if (!$chunk) {
             return null;
@@ -35,26 +36,13 @@ class ChunkedUpload extends UploadService
         $path = $file->store($chunk->uuid, 'chunk');
         $result = $this->chunk->addChunk($chunk->uuid, $start, $path);
 
-        if (!$is_last) {
-            return [
-                'uuid'     => $chunk->uuid,
-                'size'     => $size,
-                'complete' => false,
-                'status'   => $result,
-                'path'     => null,
-            ];
-        }
-
-        if (! ($merged = $this->chunk->mergeChunks($chunk->uuid, 'tmp'))) {
-            return null;
-        }
-
         return [
             'uuid'     => $chunk->uuid,
-            'size'     => $merged['size'],
-            'complete' => true,
-            'status'   => true,
-            'path'     => $merged['path']
+            'size'     => $size,
+            'complete' => $is_last,
+            'status'   => $result,
+            'path'     => null,
+            'chunk'    => $chunk,
         ];
     }
 }

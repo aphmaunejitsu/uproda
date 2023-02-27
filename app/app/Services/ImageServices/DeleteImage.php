@@ -20,8 +20,8 @@ class DeleteImage extends ImageService implements TransactionInterface
             return null;
         }
 
-        if ($delkey !== config('roda.delkey')) {
-            if ($delkey !== $image->delkey) {
+        if ($delkey !== $image->delkey) {
+            if ($delkey !== config('roda.delkey')) {
                 return null;
             }
         }

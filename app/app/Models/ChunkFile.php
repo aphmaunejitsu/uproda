@@ -11,6 +11,9 @@ class ChunkFile extends Model
 
     public $fillable = [
         'uuid',
+        'ip',
+        'original',
+        'number',
         'is_uploaded',
         'is_fail'
     ];

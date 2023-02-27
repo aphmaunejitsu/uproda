@@ -2,12 +2,14 @@ FROM php:8-fpm
 RUN apt-get update --fix-missing --no-install-recommends \
     && apt-get install -y \
         curl \
+        jq \
         libzip-dev \
         zip \
         libonig-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
         libwebp-dev \
+        libfreetype6-dev \
         imagemagick \
         libmagickwand-dev \
         supervisor --no-install-recommends \
@@ -30,13 +32,13 @@ RUN apt-get update --fix-missing --no-install-recommends \
 
 ADD ./conf/upload.ini /usr/local/etc/php/conf.d/upload.ini
 ADD ./conf/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.ini
-ADD ./conf/imagick.ini /usr/local/etc/php/conf.d/imagick.ini
+# ADD ./conf/imagick.ini /usr/local/etc/php/conf.d/imagick.ini
 ADD ./cron/crontab /var/spool/cron/crontabs/root
 ADD ./supervisor/conf.d/cron.conf /etc/supervisor/conf.d/cron.conf
 ADD ./supervisor/conf.d/roda.conf /etc/supervisor/conf.d/roda.conf
 
-# Node
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+# Node 14
+RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm@latest
 

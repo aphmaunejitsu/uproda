@@ -14,11 +14,11 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
     use ImageTrait;
 
     private $model;
-
     public function __construct(ChunkFile $model)
     {
         $this->model = $model;
     }
+
     public function addChunk(string $uuid, int $start, string $file)
     {
         return Redis::zadd($uuid, $start, $file);
@@ -46,6 +46,14 @@ class ChunkFileRepository implements ChunkFileRepositoryInterface
         return $this->model
                     ->where('uuid', $uuid)
                     ->first();
+    }
+
+    public function findOrCreate(array $chunk)
+    {
+        return $this->model->firstOrCreate(
+            ['uuid' => $chunk['uuid']],
+            $chunk
+        );
     }
 
     public function mergeChunks(string $uuid, string $storage = 'chunk')
