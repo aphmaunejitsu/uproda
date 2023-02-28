@@ -20,6 +20,8 @@ class ProcessGenerateThumbnail implements ShouldQueue
 
     public $image;
 
+    public $timeout = 600;
+
     /**
      * Create a new job instance.
      *
