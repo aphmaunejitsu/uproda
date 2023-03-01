@@ -7,7 +7,6 @@ use App\Http\Requests\api\v1\image\DeleteRequest;
 use App\Jobs\Image\ProcessDelete;
 use App\Services\ImageService;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class Delete extends Controller
@@ -39,7 +38,7 @@ class Delete extends Controller
                 );
             }
 
-            ProcessDelete::dispatch($deletedImage);
+            ProcessDelete::dispatchAfterResponse($deletedImage);
 
             return response()->json(['message' => __('response.delete.success')], 204);
         } catch (Exception $e) {
