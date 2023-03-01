@@ -55,6 +55,8 @@ RUN cd /var/www/html && composer install --optimize-autoloader --no-dev
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
 ADD ./build/supervisor/conf.d/php-fpm.conf /etc/supervisor/conf.d/php-fpm.conf
 ADD ./build/supervisor/conf.d/nginx.conf /etc/supervisor/conf.d/nginx.conf
+ADD ./build/supervisor/conf.d/nginx.conf /etc/supervisor/conf.d/cron.conf
+ADD ./build/supervisor/conf.d/nginx.conf /etc/supervisor/conf.d/roda.conf
 
 # nginx conf
 ADD ./build/nginx/conf.d/log-json-format.conf /etc/nginx/http.d/00-log-json-format.conf
