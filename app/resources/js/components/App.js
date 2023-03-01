@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { loadReCaptcha } from 'react-recaptcha-v3';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-// import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import useWindowDarkMode from './hook/useWindowDarkMode';
 
