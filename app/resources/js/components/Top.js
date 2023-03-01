@@ -5,7 +5,6 @@ import Thumbnail from './top/Thumbnail';
 import Loading from './common/Loading';
 import ImageDialog from './top/ImageDialog';
 import DMMAd from './common/DMMAd';
-import { CircularProgress } from '@material-ui/core';
 
 function Top() {
   const [items, setItems] = React.useState([]);
@@ -74,7 +73,7 @@ function Top() {
         loadMore={getImages}
         hasMore={hasMore}
         loader={<Loading key={0} />}
-        className="images"
+        className='images'
       >
         {showImages}
       </InfiniteScroll>

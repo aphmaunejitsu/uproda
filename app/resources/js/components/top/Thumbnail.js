@@ -7,7 +7,6 @@ function Thumbnail({ image, handleClick }) {
   return (
     <>
       <LazyLoadImage
-        alt={image.comment}
         effect="blur"
         src={image.thumbnail}
         onClick={() => handleClick(image)}
