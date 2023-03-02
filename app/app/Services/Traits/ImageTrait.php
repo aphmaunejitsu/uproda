@@ -2,11 +2,8 @@
 
 namespace App\Services\Traits;
 
-use Illuminate\Http\UploadedFile;
-
 trait ImageTrait
 {
-
     public function getHash(string $file): string
     {
         $md5 = md5_file($file);
