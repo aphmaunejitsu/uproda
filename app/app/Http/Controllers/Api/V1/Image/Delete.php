@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Image;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\api\v1\image\DeleteRequest;
+use App\Http\Requests\Api\V1\Image\DeleteRequest;
 use App\Jobs\Image\ProcessDelete;
 use App\Services\ImageService;
 use Exception;
