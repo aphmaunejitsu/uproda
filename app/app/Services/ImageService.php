@@ -12,6 +12,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
  * @method bool deleteImage(string $basename, string $delkey)
  * @method Image FindByBasename(string $basename)
  * @method array updateSize(?array $ids = null)
+ * @method Image generateThumbnail(string $basename)
  */
 class ImageService extends Service
 {
