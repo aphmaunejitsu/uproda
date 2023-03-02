@@ -10,7 +10,8 @@ use Imagick;
 use App\Exceptions\FileRepositoryException;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use lsolesen\pel\PelEntryAscii; use lsolesen\pel\PelEntryByte;
+use lsolesen\pel\PelEntryAscii;
+use lsolesen\pel\PelEntryByte;
 use lsolesen\pel\PelEntryRational;
 use lsolesen\pel\PelIfd;
 use lsolesen\pel\PelJpeg;
@@ -236,4 +237,18 @@ class FileRepository implements FileRepositoryInterface
             [$seconds, 100]
         ];
     }
+
+    public function deleteTmpFiles(int $mintue = 60, string $storage = 'tmp')
+    {
+        $before = now()->subMinute($mintue)->getTimestamp();
+        collect(Storage::disk($storage)->allFiles())->each(function ($file) use ($storage, $before) {
+            $lastModified = Storage::disk($storage)->lastModified($file);
+            if ($lastModified < $before) {
+                Log::debug(__METHOD__, compact('file', 'lastModified', 'before'));
+
+                Storage::disk($storage)->delete($file);
+            }
+        });
+    }
+
 }
