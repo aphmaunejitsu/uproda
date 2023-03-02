@@ -31,7 +31,7 @@ class Uploaded extends UploadService implements TransactionInterface
     public function __invoke(string $file, array $imageData)
     {
         $imageData['basename'] = $this->generateBasename();
-        $tmp = Storage::disk('tmp')->path($file);
+        $tmp = Storage::disk('chunk')->path($this->buildMergedPath($file));
 
         // get hash
         $hash = $this->getHash($tmp);
@@ -61,13 +61,18 @@ class Uploaded extends UploadService implements TransactionInterface
         // save image
         $this->file->saveUploadImage($tmp, $imageData['basename'], $imageData['ext']);
 
-        if (Storage::disk('tmp')->exists($file)) {
-            Storage::disk('tmp')->delete($file);
+        if (Storage::disk('chunk')->exists($file)) {
+            Storage::disk('chunk')->deleteDirectory($file);
         }
 
         if (! ($image = $this->imageHash->firstOrCreateWithImage($hash, $imageData))) {
             throw new ImageUploadServiceException('ファイルが生成できませんでした', 10001);
         }
+
+        if (Storage::disk('tmp')->exists($hash)) {
+            Storage::disk('tmp')->delete($hash);
+        }
+
 
         return $image;
     }
