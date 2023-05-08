@@ -40,7 +40,7 @@ return [
             'channels' => [
                 env('LOG_CHANNELS_1', 'slack'),
                 env('LOG_CHANNELS_2', 'stdout'),
-                env('LOG_CHANNELS_2', 'daily'),
+                env('LOG_CHANNELS_3', 'daily'),
             ],
             'ignore_exceptions' => false,
         ],
@@ -63,6 +63,7 @@ return [
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
+            'https://api.slack.com/tap'  => [App\Logging\AppLogFormatter::class],
             'username' => 'roda',
             'emoji' => ':boom:',
             'level' => 'critical',
