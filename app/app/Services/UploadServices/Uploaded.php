@@ -9,6 +9,7 @@ use App\Repositories\ImageHashRepositoryInterface;
 use App\Services\Traits\ImageTrait;
 use App\Services\TransactionInterface;
 use App\Services\UploadService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class Uploaded extends UploadService implements TransactionInterface
@@ -30,7 +31,7 @@ class Uploaded extends UploadService implements TransactionInterface
     public function __invoke(string $file, array $imageData)
     {
         $imageData['basename'] = $this->generateBasename();
-        $tmp = Storage::disk('tmp')->path($file);
+        $tmp = Storage::disk('chunk')->path($this->buildMergedPath($file));
 
         // get hash
         $hash = $this->getHash($tmp);
@@ -60,20 +61,18 @@ class Uploaded extends UploadService implements TransactionInterface
         // save image
         $this->file->saveUploadImage($tmp, $imageData['basename'], $imageData['ext']);
 
-        // save thumbnail
-        // if (strtolower($imageData['mimetype']) === 'image/gif') {
-        //     $this->file->generateThumbnailGif($tmp, $imageData['basename']);
-        //     $imageData['t_ext'] = 'gif';
-        // } else {
-        //     $this->file->generateThumbnail($tmp, $imageData['basename']);
-        //     $imageData['t_ext'] = 'jpg';
-        // }
-
-        @unlink($tmp);
+        if (Storage::disk('chunk')->exists($file)) {
+            Storage::disk('chunk')->deleteDirectory($file);
+        }
 
         if (! ($image = $this->imageHash->firstOrCreateWithImage($hash, $imageData))) {
             throw new ImageUploadServiceException('ファイルが生成できませんでした', 10001);
         }
+
+        if (Storage::disk('tmp')->exists($hash)) {
+            Storage::disk('tmp')->delete($hash);
+        }
+
 
         return $image;
     }

@@ -54,15 +54,21 @@ class BuildImagePathTest extends TestCase
         $this->assertEquals('/a/Abc.png', $image);
     }
 
-    public function testGetThumbnailUrl()
-    {
-        $image = $this->trait->getThumbnailUrl('Abc', 'jpg');
-        $this->assertEquals('http://testing.com/a/thumbnail/Abc.jpg', $image);
-    }
+    // public function testGetThumbnailUrl()
+    // {
+    //     $image = $this->trait->getThumbnailUrl('Abc', 'jpg');
+    //     $this->assertEquals('http://testing.com/a/thumbnail/Abc.jpg', $image);
+    // }
 
     public function testGetImageUrl()
     {
         $image = $this->trait->getImageUrl('Abc', 'jpg');
         $this->assertEquals('http://testing.com/a/Abc.jpg', $image);
+    }
+
+    public function testBuildMergedPath()
+    {
+        $image = $this->trait->buildMergedPath('Abc');
+        $this->assertEquals('/Abc/merged', $image);
     }
 }

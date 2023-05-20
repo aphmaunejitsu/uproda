@@ -32,7 +32,12 @@ trait BuildImagePath
 
     public function getImageStorage()
     {
-        return config('roda.storage', 'image');
+        return config('roda.storage.image', 'image');
+    }
+
+    public function getChunkStorage()
+    {
+        return config('roda.storage.chunk', 'chunk');
     }
 
     public function buildImagePath(string $basename, string $ext)
@@ -70,5 +75,10 @@ trait BuildImagePath
     public function getSaveDirectory(string $basename)
     {
         return Str::lower(Str::substr($basename, 0, 1));
+    }
+
+    public function buildMergedPath(string $uuid)
+    {
+        return sprintf('/%s/%s', $uuid, 'merged');
     }
 }

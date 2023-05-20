@@ -11,7 +11,11 @@ return [
         ],
         'tor' => env('RODA_TOR_URL', 'https://check.torproject.org/exit-addresses'),
     ],
-    'storage' => env('RODA_IMAGE_STORAGE', 'image'),
+    'storage' => [
+        'image' => env('RODA_IMAGE_STORAGE', 'image'),
+        'chunk' => env('RODA_CHUNK_STORAGE', 'chunk'),
+        'tmp'   => env('RODA_TMP_STORAGE', 'tmp'),
+    ],
     'pagination' => [
         'perPage' => env('RODA_PAGINATION_PERPAGE', 100),
     ],

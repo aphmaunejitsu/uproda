@@ -21,4 +21,6 @@ interface FileRepositoryInterface
 
     public function orientate(string $path);
     public function changeLocation(string $path, float $latitude, float $logitude, float $altitude);
+
+    public function deleteTmpFiles(int $mintue = 60, string $storage = 'tmp');
 }

@@ -38,11 +38,11 @@ class GenerateThumbnail extends Command
      */
     public function handle(ImageService $service)
     {
-        $this->info('Start update tor exit address');
+        $this->info('Start Generate Thumbnail');
 
         $service->generateThumbnail($this->argument('basename'));
 
-        $this->info('End update tor exit address');
+        $this->info('End Generate Thumbnail');
         return 0;
     }
 }

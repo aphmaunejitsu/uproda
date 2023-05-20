@@ -4,7 +4,6 @@ namespace App\Services\UploadServices;
 
 use App\Repositories\ChunkFileRepositoryInterface;
 use App\Services\UploadService;
-use App\Repositories\FileRepositoryInterface;
 use Illuminate\Http\UploadedFile;
 
 class ChunkedUpload extends UploadService
@@ -21,11 +20,6 @@ class ChunkedUpload extends UploadService
         // $size, $is_first, $is_last, $start, $end
         extract($content_range);
 
-        // if ($is_first) {
-        //     $chunk = $this->chunk->createByUuid($data['uuid']);
-        // } else {
-        //     $chunk = $this->chunk->getByUuid($data['uuid']);
-        // }
         $chunk = $this->chunk->findOrCreate($data);
 
         if (!$chunk) {

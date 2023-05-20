@@ -7,8 +7,8 @@ interface ImageHashRepositoryInterface
     public function firstOrCreateWithImage(
         string $hash,
         array $image,
-        bool $ng,
-        ?string $comment,
+        bool $ng = false,
+        ?string $comment = null,
     );
 
     public function isNg($hash): bool;
