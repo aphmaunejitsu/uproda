@@ -1,10 +1,11 @@
 version: '2'
 services:
   web:
-    image: nginx:alpine
+    build:
+      context: local/nginx
+      dockerfile: "Dockerfile"
     volumes:
       - "./app/public:/var/www/html/public"
-      - "./local/nginx/default.conf.template:/etc/nginx/templates/default.conf.template"
     env_file:
       .env
     links:
