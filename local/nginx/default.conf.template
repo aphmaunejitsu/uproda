@@ -24,6 +24,10 @@ server {
         try_files $uri $uri/ /index.php$is_args$args;
     }
 
+    location /up {
+       alias /var/www/image;
+    }
+
     location ~ \.php$ {
         fastcgi_pass  app:9000;
         fastcgi_index index.php;
