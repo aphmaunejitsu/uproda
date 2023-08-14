@@ -7,7 +7,8 @@ return [
     ],
     'url'        => [
         'image' => [
-            'thumbnail' => env('RODA_THUMBNAIL_DIR', 'thumbnail')
+            'thumbnail' => env('RODA_THUMBNAIL_DIR', 'thumbnail'),
+            'dir'       => env('RODA_IMAGE_DIR', 'up'),
         ],
         'tor' => env('RODA_TOR_URL', 'https://check.torproject.org/exit-addresses'),
     ],
