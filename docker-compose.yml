@@ -6,6 +6,7 @@ services:
       dockerfile: "Dockerfile"
     volumes:
       - "./app/public:/var/www/html/public"
+      - "./app/storage/app/public/up:/var/www/up"
     env_file:
       .env
     links:
