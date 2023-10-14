@@ -34,16 +34,17 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && docker-php-ext-install zip \
     && pecl install -o -f imagick \
     && docker-php-ext-enable imagick \
-    && docker-php-source delete \
-    && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm@latest \
+    && npm install laravel-mix@latest --save-dev \
     && npm run prod \
     && chown -R www-data:www-data /var/www/html \
     && chown -R www-data:www-data /var/www/error \
-    && cd /var/www/html && composer install --optimize-autoloader --no-dev
+    && cd /var/www/html && composer install --optimize-autoloader --no-dev \
+    && docker-php-source delete \
+    && apt-get clean \
 
 # supervisor conf
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
