@@ -36,7 +36,8 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && pecl install -o -f imagick \
     && docker-php-ext-enable imagick \
     && docker-php-source delete \
-    && apt-get clean
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # mo
 COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
@@ -47,9 +48,9 @@ COPY --from=node /tmp/node /var/www/html
 COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
 ADD ./app /var/www/html
 ADD ./build/nginx/error /var/www/error
-RUN chown -R www-data:www-data /var/www/html
-RUN chown -R www-data:www-data /var/www/error
-RUN cd /var/www/html && composer install --optimize-autoloader --no-dev
+RUN chown -R www-data:www-data /var/www/html \
+ && chown -R www-data:www-data /var/www/error \
+ && cd /var/www/html && composer install --optimize-autoloader --no-dev
 
 # supervisor conf
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
@@ -70,6 +71,7 @@ ADD ./build/php/conf.d/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.i
 ADD ./build/cron/crontab /var/spool/cron/crontabs/root
 
 WORKDIR /var/www/html
+VOLUME  /var/www/html/storage
 
 # Environment
 RUN touch .env

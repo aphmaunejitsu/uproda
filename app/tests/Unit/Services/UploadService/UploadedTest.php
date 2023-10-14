@@ -4,7 +4,6 @@ namespace Tests\Unit\Services\UploadService;
 
 use App\Exceptions\ImageHashException;
 use App\Exceptions\ImageUploadServiceException;
-use App\Exceptions\ServiceException;
 use App\Libs\Traits\BuildImagePath;
 use App\Models\Image;
 use App\Models\ImageHash;

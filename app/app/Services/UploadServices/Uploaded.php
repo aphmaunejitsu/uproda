@@ -69,10 +69,9 @@ class Uploaded extends UploadService implements TransactionInterface
             throw new ImageUploadServiceException('ファイルが生成できませんでした', 10001);
         }
 
-        if (Storage::disk('tmp')->exists($hash)) {
-            Storage::disk('tmp')->delete($hash);
-        }
-
+        // if (Storage::disk('tmp')->exists($hash)) {
+        //     Storage::disk('tmp')->delete($hash);
+        // }
 
         return $image;
     }
