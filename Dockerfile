@@ -4,19 +4,15 @@ WORKDIR /tmp
 ADD ./app ./vendor
 RUN cd vendor && composer install --optimize-autoloader --no-dev --no-scripts
 
-# node
-FROM node:18.18.1-alpine as node
-WORKDIR /tmp
-ADD ./app ./node
-RUN cd node \
-    && rm package-lock.json \
-    && npm cache clear --force \
-    && npm install \
-    && npm install laravel-mix@latest --save-dev \
-    && npm run prod
-
-
 FROM php:8-fpm
+
+# Copy Source
+COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
+COPY --from=vendor /tmp/vendor /var/www/html
+COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
+ADD ./app /var/www/html
+ADD ./build/nginx/error /var/www/error
+
 RUN apt-get update --fix-missing --no-install-recommends \
     && apt-get install -y \
         curl \
@@ -40,20 +36,14 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && docker-php-ext-enable imagick \
     && docker-php-source delete \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# mo
-COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
-
-# Copy Source
-COPY --from=vendor /tmp/vendor /var/www/html
-COPY --from=node /tmp/node /var/www/html
-COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
-ADD ./app /var/www/html
-ADD ./build/nginx/error /var/www/error
-RUN chown -R www-data:www-data /var/www/html \
- && chown -R www-data:www-data /var/www/error \
- && cd /var/www/html && composer install --optimize-autoloader --no-dev
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm@latest \
+    && npm run prod \
+    && chown -R www-data:www-data /var/www/html \
+    && chown -R www-data:www-data /var/www/error \
+    && cd /var/www/html && composer install --optimize-autoloader --no-dev
 
 # supervisor conf
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
