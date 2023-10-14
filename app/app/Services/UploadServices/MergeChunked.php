@@ -8,6 +8,7 @@ use App\Repositories\ChunkFileRepositoryInterface;
 use App\Services\UploadService;
 use App\Libs\Traits\BuildImagePath;
 use App\Services\Traits\ImageTrait;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class MergeChunked extends UploadService
@@ -31,6 +32,7 @@ class MergeChunked extends UploadService
         $content = null;
         foreach ($chunks as $chunk) {
             $content .= Storage::disk($tmpDir)->get($chunk);
+            Storage::disk($tmpDir)->delete($chunk);
         }
 
         if ($content === null) {

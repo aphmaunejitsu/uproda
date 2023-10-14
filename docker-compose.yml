@@ -21,12 +21,10 @@ services:
       dockerfile: "Dockerfile"
     volumes:
       - ./app:/var/www/html
-      - ./.data/minio/${IMAGE_PATH}:/var/www/image
     links:
       - db-primary
       - db-secondary
       - redis
-      - storage
     networks:
       - default
       - uproda-proxy-network
@@ -65,7 +63,8 @@ services:
   storage:
     # docker pull minio/minio:RELEASE.2022-10-29T06-21-33Z
     # docker pull minio/minio:RELEASE.2022-10-08T20-11-00Z.fips
-    image: minio/minio:RELEASE.2022-10-08T20-11-00Z.fips
+    # image: minio/minio:RELEASE.2022-10-08T20-11-00Z.fips
+    image: minio/minio
     ports:
       - "29000:9000"
       - "29001:9001"
