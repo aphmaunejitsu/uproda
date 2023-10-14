@@ -9,7 +9,7 @@ FROM node:14.21.3 as node
 WORKDIR /tmp
 ADD ./app ./node
 RUN cd node && \
-    npm install laravel-mix@6.0.49 --save-dev && \
+    npm install laravel-mix --save-dev && \
     npm run prod
 
 
@@ -74,7 +74,6 @@ WORKDIR /var/www/html
 VOLUME  /var/www/html/storage
 
 # Environment
-RUN touch .env
 ARG APP_DEBUG
 ARG APP_ENV
 ARG APP_NAME
