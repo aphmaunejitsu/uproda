@@ -10,6 +10,8 @@ WORKDIR /tmp
 ADD ./app ./node
 RUN cd node \
     && rm package-lock.json \
+    && npm cache clear --force \
+    && npm install \
     && npm install laravel-mix --save-dev \
     && npm run prod
 
