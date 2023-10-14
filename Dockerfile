@@ -5,7 +5,7 @@ ADD ./app ./vendor
 RUN cd vendor && composer install --optimize-autoloader --no-dev --no-scripts
 
 # node
-FROM node:14.21.3 as node
+FROM node:18.18.1-alpine as node
 WORKDIR /tmp
 ADD ./app ./node
 RUN cd node \
