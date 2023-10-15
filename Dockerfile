@@ -34,7 +34,6 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && docker-php-ext-install zip \
     && pecl install -o -f imagick \
     && docker-php-ext-enable imagick \
-    && rm -rf /var/lib/apt/lists/* \
     && curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm@latest \
@@ -43,8 +42,9 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && chown -R www-data:www-data /var/www/html \
     && chown -R www-data:www-data /var/www/error \
     && cd /var/www/html && composer install --optimize-autoloader --no-dev \
+    && rm -rf /var/lib/apt/lists/* \
     && docker-php-source delete \
-    && apt-get clean \
+    && apt-get clean
 
 # supervisor conf
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
