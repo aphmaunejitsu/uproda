@@ -8,19 +8,11 @@ FROM node:14.21.3 as node
 WORKDIR /tmp
 ADD ./app ./node
 RUN cd node && \
+    npm install diff-so-fancy && \
     npm install laravel-mix@6.0.49 --save-dev && \
     npm run prod
 
 FROM php:8-fpm
-
-# Copy Source
-COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
-COPY --from=node /tmp/node /var/www/html
-COPY --from=vendor /tmp/vendor /var/www/html
-COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
-ADD ./app /var/www/html
-ADD ./build/nginx/error /var/www/error
-
 RUN apt-get update --fix-missing --no-install-recommends \
     && apt-get upgrade -y \
     && apt-get install -y \
@@ -44,17 +36,20 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && docker-php-ext-install zip \
     && pecl install -o -f imagick \
     && docker-php-ext-enable imagick \
-    # && curl -fsSL https://deb.nodesource.com/setup_14.x | bash - \
-    # && apt-get install -y nodejs \
-    # && npm install -g npm@latest \
-    # && npm install laravel-mix@latest --save-dev \
-    # && npm run prod \
-    && chown -R www-data:www-data /var/www/html \
-    && chown -R www-data:www-data /var/www/error \
-    && cd /var/www/html && composer install --optimize-autoloader --no-dev \
     && rm -rf /var/lib/apt/lists/* \
     && docker-php-source delete \
     && apt-get clean
+
+# Copy Source
+COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
+COPY --from=node /tmp/node /var/www/html
+COPY --from=vendor /tmp/vendor /var/www/html
+COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
+ADD ./app /var/www/html
+ADD ./build/nginx/error /var/www/error
+RUN chown -R www-data:www-data /var/www/html \
+    && chown -R www-data:www-data /var/www/error \
+    && cd /var/www/html && composer install --optimize-autoloader --no-dev
 
 # supervisor conf
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
