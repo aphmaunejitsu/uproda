@@ -1,15 +1,13 @@
 FROM composer:2.4.4 as vendor
 # composer
-WORKDIR /tmp
-ADD ./app ./vendor
-RUN cd vendor && composer install --optimize-autoloader --no-dev --no-scripts
+ADD ./app /tmp/vendor
+WORKDIR /tmp/vendor
+RUN composer install --optimize-autoloader --no-dev --no-scripts
 
 FROM node:14.21.3 as node
-WORKDIR /tmp
-ADD ./app ./node
-RUN cd node && \
-    npm install diff-so-fancy && \
-    npm install laravel-mix@6.0.49 --save-dev && \
+ADD ./app /tmp/node
+WORKDIR /tmp/node
+RUN npm install laravel-mix@6.0.49 --save-dev && \
     npm run prod
 
 FROM php:8-fpm
