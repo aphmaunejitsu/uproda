@@ -1,10 +1,11 @@
-FROM composer:2.4.4 as vendor
 # composer
+FROM composer:2.4.4 as vendor
 ADD ./app /tmp/vendor
 WORKDIR /tmp/vendor
 RUN composer install --optimize-autoloader --no-dev --no-scripts
 
-FROM node:14.21.3 as node
+# node
+FROM node:lts as node
 ADD ./app /tmp/node
 WORKDIR /tmp/node
 RUN npm install laravel-mix@6.0.49 --save-dev && \
@@ -43,11 +44,10 @@ COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
 COPY --from=node /tmp/node /var/www/html
 COPY --from=vendor /tmp/vendor /var/www/html
 COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
+
+# www
 ADD ./app /var/www/html
 ADD ./build/nginx/error /var/www/error
-RUN chown -R www-data:www-data /var/www/html \
-    && chown -R www-data:www-data /var/www/error \
-    && cd /var/www/html && composer install --optimize-autoloader --no-dev
 
 # supervisor conf
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
@@ -68,6 +68,10 @@ ADD ./build/php/conf.d/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.i
 ADD ./build/cron/crontab /var/spool/cron/crontabs/root
 
 WORKDIR /var/www/html
+RUN chown -R www-data:www-data /var/www/html \
+    && chown -R www-data:www-data /var/www/error \
+    && composer install --optimize-autoloader --no-dev
+
 VOLUME  /var/www/html/storage
 
 # Environment

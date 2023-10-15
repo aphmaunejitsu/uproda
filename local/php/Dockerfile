@@ -31,7 +31,7 @@ ADD ./cron/crontab /var/spool/cron/crontabs/root
 ADD ./supervisor/conf.d/cron.conf /etc/supervisor/conf.d/cron.conf
 ADD ./supervisor/conf.d/roda.conf /etc/supervisor/conf.d/roda.conf
 
-# Node 14
+# Node LTS
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm@latest
