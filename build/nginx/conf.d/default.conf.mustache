@@ -8,7 +8,7 @@ server {
     access_log  /var/log/nginx/{{VIRTUAL_HOST}}_access.log json;
     error_log /var/log/nginx/{{VIRTUAL_HOST}}_error.log;
 
-    root /var/www/html/web;
+    root /var/www/html/public;
     index index.php;
 
     server_tokens off;
@@ -27,6 +27,10 @@ server {
 
     location / {
       try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    location /up {
+       alias /var/www/html/app/storage/public/up
     }
 
     location ~ \.(css|gif|ico|jpeg|jpg|js|pdf|png|svg|swf|zip|eot|otf|ttf|woff|woff2) {
