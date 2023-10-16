@@ -5,7 +5,7 @@ WORKDIR /tmp/vendor
 RUN composer install --optimize-autoloader --no-dev --no-scripts
 
 # node
-FROM node:lts as node
+FROM node:14.21.3 as node
 ADD ./app /tmp/node
 WORKDIR /tmp/node
 RUN npm install laravel-mix@6.0.49 --save-dev && \
