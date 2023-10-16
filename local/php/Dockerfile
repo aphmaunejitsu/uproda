@@ -21,12 +21,6 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && docker-php-ext-install zip \
     && pecl install -o -f imagick \
     && docker-php-ext-enable imagick \
-    # && mkdir -p /usr/src/php/ext/imagick; \
-    # curl -fsSL https://github.com/Imagick/imagick/archive/ref/tags/3.7.0.tar.gz | tar xvz -C "/usr/src/php/ext/imagick" --strip 1 \
-    # && docker-php-ext-install imagick \
-    # && cd /usr/src/php/ext/imagick \
-    # && phpize && ./configure \
-    # && make && make install \
     && docker-php-source delete \
     && apt-get clean
 
@@ -37,7 +31,7 @@ ADD ./cron/crontab /var/spool/cron/crontabs/root
 ADD ./supervisor/conf.d/cron.conf /etc/supervisor/conf.d/cron.conf
 ADD ./supervisor/conf.d/roda.conf /etc/supervisor/conf.d/roda.conf
 
-# Node 14
+# Node LTS
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm@latest

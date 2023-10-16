@@ -1,21 +1,21 @@
-FROM composer:2.4.4 as vendor
 # composer
-WORKDIR /tmp
-ADD ./app ./vendor
-RUN cd vendor && composer install --optimize-autoloader --no-dev --no-scripts
+FROM composer:2.4.4 as vendor
+ADD ./app /tmp/vendor
+WORKDIR /tmp/vendor
+RUN composer install --optimize-autoloader --no-dev --no-scripts
 
 # node
 FROM node:14.21.3 as node
-WORKDIR /tmp
-ADD ./app ./node
-RUN cd node && \
-    npm install laravel-mix@6.0.49 --save-dev && \
+ADD ./app /tmp/node
+WORKDIR /tmp/node
+RUN npm install laravel-mix@6.0.49 --save-dev && \
     npm run prod
-
 
 FROM php:8-fpm
 RUN apt-get update --fix-missing --no-install-recommends \
+    && apt-get upgrade -y \
     && apt-get install -y \
+        build-essential \
         curl \
         libzip-dev \
         zip \
@@ -26,7 +26,7 @@ RUN apt-get update --fix-missing --no-install-recommends \
         imagemagick \
         libmagickwand-dev \
         nginx \
-        supervisor --no-install-recommends \
+        supervisor \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ --with-webp=/usr/include \
     && docker-php-ext-install -j$(nproc) gd exif iconv pdo pdo_mysql mbstring pcntl \
     && pecl install redis \
@@ -35,22 +35,19 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && docker-php-ext-install zip \
     && pecl install -o -f imagick \
     && docker-php-ext-enable imagick \
+    && rm -rf /var/lib/apt/lists/* \
     && docker-php-source delete \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# mo
-COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
+    && apt-get clean
 
 # Copy Source
-COPY --from=vendor /tmp/vendor /var/www/html
+COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
 COPY --from=node /tmp/node /var/www/html
+COPY --from=vendor /tmp/vendor /var/www/html
 COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
+
+# www
 ADD ./app /var/www/html
 ADD ./build/nginx/error /var/www/error
-RUN chown -R www-data:www-data /var/www/html \
- && chown -R www-data:www-data /var/www/error \
- && cd /var/www/html && composer install --optimize-autoloader --no-dev
 
 # supervisor conf
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
@@ -71,10 +68,13 @@ ADD ./build/php/conf.d/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.i
 ADD ./build/cron/crontab /var/spool/cron/crontabs/root
 
 WORKDIR /var/www/html
+RUN chown -R www-data:www-data /var/www/html \
+    && chown -R www-data:www-data /var/www/error \
+    && composer install --optimize-autoloader --no-dev
+
 VOLUME  /var/www/html/storage
 
 # Environment
-RUN touch .env
 ARG APP_DEBUG
 ARG APP_ENV
 ARG APP_NAME
