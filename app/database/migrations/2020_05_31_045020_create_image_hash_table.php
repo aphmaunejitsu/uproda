@@ -18,7 +18,7 @@ class CreateImageHashTable extends Migration
      */
     public function up()
     {
-        Schema::create('image_hashe', function (Blueprint $table) {
+        Schema::create('image_hash', function (Blueprint $table) {
             $table->bigInteger('id')->autoIncrement();
             $table->string('hash', 256);
             $table->text('comment')->nullable();
