@@ -1,4 +1,4 @@
-FROM php:8-fpm
+FROM php:8.0-fpm
 RUN apt-get update --fix-missing --no-install-recommends \
     && apt-get install -y \
         curl \
@@ -19,7 +19,7 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && docker-php-ext-enable redis \
     && docker-php-ext-configure zip \
     && docker-php-ext-install zip \
-    && pecl install -o -f imagick \
+    && pecl install imagick \
     && docker-php-ext-enable imagick \
     && docker-php-source delete \
     && apt-get clean
