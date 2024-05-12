@@ -13,6 +13,9 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
   },
+  link: {
+    color: 'blue'
+  },
 });
 
 function About() {
@@ -46,7 +49,7 @@ function About() {
           </dd>
           <dt>運営してる人</dt>
           <dd>
-            <a
+            <a className={classes.link}
               href={process.env.MIX_RODA_RENRAKU_TWITTER}
               target="_blank"
               rel="noopener noreferrer"
@@ -56,7 +59,7 @@ function About() {
           </dd>
           <dt>作った人</dt>
           <dd>
-            <a
+            <a className={classes.link}
               href="https://twitter.com/shikyou1"
               target="_blank"
               rel="noopener noreferrer"
