@@ -33,9 +33,9 @@
       margin-left: initial;
       margin-right: initial;
     }
+    padding: 0.25rem;
 
     & > img {
-      padding: 0.25rem;
       width: 100%;
       height: auto;
       @include border-radius(0.5rem);

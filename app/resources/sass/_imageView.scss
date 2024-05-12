@@ -28,6 +28,7 @@
         }
         filter: drop-shadow(1px 1px 1px rgba($black, 0.2));
         @media (prefers-color-scheme: dark) {
+          background-color: #E6E6E6;
           filter: drop-shadow(1px 1px 1px rgba($black-dark, 0.2));
         }
       }
