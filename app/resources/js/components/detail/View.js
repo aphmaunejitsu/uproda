@@ -18,12 +18,14 @@ function View({ image }) {
         <div
           className="image"
         >
-          <img
-            src={image.image}
-            alt={image.comment ? image.comment : image.basename}
-            onClick={handleNotClose}
-            aria-hidden="true"
-          />
+          <a href={image.image} target='_blank'>
+            <img
+              src={image.image}
+              alt={image.comment ? image.comment : image.basename}
+              onClick={handleNotClose}
+              aria-hidden="true"
+            />
+          </a>
         </div>
         <div className="contents">
           {image.comment}
