@@ -72,7 +72,6 @@ ADD ./build/cron/crontab /var/spool/cron/crontabs/root
 
 WORKDIR /var/www/html
 RUN chown -R www-data:www-data /var/www/html \
-    && chown -R www-data:www-data /var/www/error \
     && composer install --optimize-autoloader --no-dev
 
 VOLUME  /var/www/html/storage
