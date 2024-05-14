@@ -51,7 +51,6 @@ COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
 
 # www
 ADD ./app /var/www/html
-ADD ./build/nginx/error /var/www/error
 
 # supervisor conf
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf

@@ -49,9 +49,5 @@ server {
       fastcgi_param PATH_INFO $fastcgi_path_info;
     }
 
-    error_page 400 410 403 404 /40x.html;
-    location /40x.html {
-        root /var/www/error;
-        allow all;
-    }
+    error_page 400 410 403 404 /404;
 }

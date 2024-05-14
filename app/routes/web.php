@@ -31,7 +31,7 @@ Route::get(
     '/404',
     function () {
         return view('welcome');
-    }, 404
+    }
 )->name('NotFound');
 
 Route::get(
@@ -42,6 +42,5 @@ Route::get(
 )->where('hash', '[0-9a-zA-Z]{8}')
   ->name('image');
 
+// 404エラー
 Route::fallback(fn() => response()->view('welcome', [], 404));
-
-// Route::get('/{any?}', fn() => view('welcome'))->where('any', '(?!api).+');
