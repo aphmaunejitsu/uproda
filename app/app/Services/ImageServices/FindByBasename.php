@@ -8,6 +8,8 @@ use App\Services\CacheInterface;
 
 class FindByBasename extends ImageService implements CacheInterface
 {
+    protected $expire = 10;
+
     public function __construct(ImageRepositoryInterface $image)
     {
         $this->repo = $image;

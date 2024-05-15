@@ -51,7 +51,6 @@ COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
 
 # www
 ADD ./app /var/www/html
-ADD ./build/nginx/error /var/www/error
 
 # supervisor conf
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
@@ -73,7 +72,6 @@ ADD ./build/cron/crontab /var/spool/cron/crontabs/root
 
 WORKDIR /var/www/html
 RUN chown -R www-data:www-data /var/www/html \
-    && chown -R www-data:www-data /var/www/error \
     && composer install --optimize-autoloader --no-dev
 
 VOLUME  /var/www/html/storage

@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import DMMAd from './common/DMMAd';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles({
   title: {
@@ -22,6 +23,9 @@ function About() {
   const classes = useStyles();
   return (
     <>
+      <Helmet
+        title={`${process.env.MIX_RODA_NAME} | About`}
+      />
       <h1 className={classes.title}>About</h1>
       <div className={classes.kiyaku}>
         <dl>

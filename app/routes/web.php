@@ -28,9 +28,19 @@ Route::get(
 )->name('about');
 
 Route::get(
+    '/404',
+    function () {
+        return view('welcome');
+    }
+)->name('NotFound');
+
+Route::get(
     '/image/{hash}',
     function () {
         return view('welcome');
     }
 )->where('hash', '[0-9a-zA-Z]{8}')
   ->name('image');
+
+// 404エラー
+Route::fallback(fn() => response()->view('welcome', [], 404));

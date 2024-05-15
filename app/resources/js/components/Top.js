@@ -5,6 +5,7 @@ import Thumbnail from './top/Thumbnail';
 import Loading from './common/Loading';
 import ImageDialog from './top/ImageDialog';
 import DMMAd from './common/DMMAd';
+import { Helmet } from 'react-helmet';
 
 function Top() {
   const [items, setItems] = React.useState([]);
@@ -67,6 +68,9 @@ function Top() {
 
   return (
     <>
+      <Helmet
+        title={`${process.env.MIX_RODA_NAME}`}
+      />
       <DMMAd dmmid={process.env.MIX_RODA_DMM_ID1} />
       <InfiniteScroll
         pageStart={0}
