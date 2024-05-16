@@ -6,11 +6,9 @@ use App\Models\Comment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Image;
-use App\Observers\ImageObserver;
 use App\Repositories\ImageRepositoryInterface;
 use App\Repositories\ImageRepository;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Event;
 
 /**
  * @group api/v1/image/delete
@@ -52,7 +50,7 @@ class DeleteTest extends TestCase
      */
     public function testFailDeleteWrongPassword()
     {
-        $data = Image::factory()
+        Image::factory()
             ->has(Comment::factory()->count(10))
             ->create([
                 'basename' => 'xyz',
