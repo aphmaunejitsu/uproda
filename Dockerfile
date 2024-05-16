@@ -11,7 +11,7 @@ WORKDIR /tmp/node
 RUN npm install laravel-mix@6.0.49 --save-dev && \
     npm run prod
 
-FROM php:8.1-fpm
+FROM php:8.2-fpm
 RUN apt-get update --fix-missing --no-install-recommends \
     && apt-get upgrade -y \
     && apt-get install -y \
