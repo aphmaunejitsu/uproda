@@ -109,4 +109,9 @@ class ImageRepository implements ImageRepositoryInterface
         $image->delete();
         return $image;
     }
+
+    public function setNgByBasename(string $basename)
+    {
+    }
+
 }
