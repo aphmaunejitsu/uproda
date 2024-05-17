@@ -110,13 +110,13 @@ class ImageRepository implements ImageRepositoryInterface
         return $image;
     }
 
-    public function setNgByBasename(string $basename, int $ng = 1)
+    public function setNgByBasename(string $basename)
     {
         if (!($image = $this->model->where('basename', $basename)->first())) {
             return null;
         }
 
-        $image->imageHash->ng = $ng;
+        $image->imageHash->ng = 1;
         $image->imageHash->save();
         return $image;
     }
