@@ -120,5 +120,4 @@ class ImageRepository implements ImageRepositoryInterface
         $image->imageHash->save();
         return $image;
     }
-
 }
