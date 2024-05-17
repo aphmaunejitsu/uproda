@@ -145,7 +145,7 @@ class MergeChunksTest extends TestCase
         $this->assertEquals($md5, md5_file(Storage::disk($toStorage)->path($uuid)));
     }
 
-    public function mergeProvider()
+    public static function mergeProvider()
     {
         return [
             ['chunk'],

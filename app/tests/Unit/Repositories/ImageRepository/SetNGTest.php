@@ -10,7 +10,7 @@ use App\Models\Image;
 use App\Models\Comment;
 
 /**
- * @group api/v1/image/delete
+ * @group Image::SetNG
  * @group ImageRepository
  * @group SetNG
  * @group SetNGTest

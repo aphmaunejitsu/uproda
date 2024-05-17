@@ -81,7 +81,7 @@ class DeleteTest extends TestCase
         $this->assertEquals('2021-04-25 00:01:02', $comments->deleted_at);
     }
 
-    public function successDleteProvider()
+    public static function successDleteProvider()
     {
         return [
             ['xyz', 'abc',  'abc'],

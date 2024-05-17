@@ -48,7 +48,7 @@ class IsNgTest extends TestCase
         $this->assertEquals($is, $result);
     }
 
-    public function isNgProvider()
+    public static function isNgProvider()
     {
         return [
             [

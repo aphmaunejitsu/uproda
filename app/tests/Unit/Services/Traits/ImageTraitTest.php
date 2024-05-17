@@ -40,7 +40,7 @@ class ImageTraitTest extends TestCase
         $this->assertEquals($expected, strlen($result));
     }
 
-    public function generateBasenameProvider()
+    public static function generateBasenameProvider()
     {
         return [
             'length-8'  => [8, 8],
