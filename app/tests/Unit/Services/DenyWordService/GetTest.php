@@ -24,7 +24,7 @@ class GetTest extends TestCase
 
     public function testGetCache()
     {
-        $data = DenyWord::factory()->count(10)->create();
+        DenyWord::factory()->count(10)->create();
 
         $result = (new DenyWordService())->get();
         $cached = (new DenyWordService())->get();
@@ -40,7 +40,7 @@ class GetTest extends TestCase
 
     public function testGet()
     {
-        $data = DenyWord::factory()->count(10)->create();
+        DenyWord::factory()->count(10)->create();
 
         $result = (new DenyWordService())->get();
 

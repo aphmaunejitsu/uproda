@@ -24,7 +24,7 @@ class SetNg extends ImageService implements TransactionInterface
         }
 
         if (!$image->imageHash->ng) {
-            throw new ImageServiceException('NGに設定できませんでした', 100001);
+            throw new ImageServiceException('NGに設定できませんでした', 10001);
         }
 
         return $this->file->deleteByImage($image);
