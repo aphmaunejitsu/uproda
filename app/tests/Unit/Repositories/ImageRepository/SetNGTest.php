@@ -6,6 +6,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Repositories\ImageRepositoryInterface;
 use App\Repositories\ImageRepository;
+use App\Models\Image;
+use App\Models\Comment;
 
 /**
  * @group api/v1/image/delete
@@ -38,5 +40,17 @@ class SetNGTest extends TestCase
     {
         $image = $this->repo->setNgByBasename('aaaa');
         $this->assertNull($image);
+    }
+
+    public function testSetNg()
+    {
+        Image::factory()
+            ->has(Comment::factory()->count(10))
+            ->forImageHash(['ng' => 0])
+            ->create(['basename' => 'abcde']);
+
+        $image = $this->repo->setNgByBasename('abcde');
+
+        $this->assertTrue($image->imageHash->ng);
     }
 }

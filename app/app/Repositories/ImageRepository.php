@@ -116,8 +116,8 @@ class ImageRepository implements ImageRepositoryInterface
             return null;
         }
 
-        $image->imageHash->hg = 1;
-        $image->imageHash()->save();
+        $image->imageHash->ng = 1;
+        $image->imageHash->save();
         return $image;
     }
 
