@@ -55,7 +55,7 @@ class ChunkedUploadTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function chunkNullProvider()
+    public static function chunkNullProvider()
     {
         return [
             [

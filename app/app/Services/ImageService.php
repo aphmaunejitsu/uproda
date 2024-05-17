@@ -13,6 +13,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
  * @method Image FindByBasename(string $basename)
  * @method array updateSize(?array $ids = null)
  * @method Image generateThumbnail(string $basename)
+ * @method Image setNg(string $basename)
+ * @method array getImages(?array $ids = null)
  */
 class ImageService extends Service
 {

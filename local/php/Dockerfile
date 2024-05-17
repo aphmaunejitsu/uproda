@@ -1,4 +1,4 @@
-FROM php:8.0-fpm
+FROM php:8.2-fpm
 RUN apt-get update --fix-missing --no-install-recommends \
     && apt-get install -y \
         curl \

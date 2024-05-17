@@ -71,7 +71,7 @@ class IndexTest extends TestCase
                  ]);
     }
 
-    public function paginateProvider()
+    public static function paginateProvider()
     {
         return [
             ['page' => 1,  'current' => 1, 'from' =>  1, 'to' =>  5, 'total' => 11],

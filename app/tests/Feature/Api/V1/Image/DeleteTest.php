@@ -105,7 +105,7 @@ class DeleteTest extends TestCase
                  ]);
     }
 
-    public function validateErrorProvider()
+    public static function validateErrorProvider()
     {
         return [
             [

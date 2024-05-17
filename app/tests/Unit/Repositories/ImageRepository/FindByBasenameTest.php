@@ -67,7 +67,7 @@ class FindByBasenameTest extends TestCase
         $this->assertEmpty($result);
     }
 
-    public function notFoundProvider()
+    public static function notFoundProvider()
     {
         return [
             ['ng' => 0, 'basename' => 'abcde', 'search' => 'xyz'],

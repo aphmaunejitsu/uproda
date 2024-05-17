@@ -13,4 +13,5 @@ interface ImageRepositoryInterface
 
     public function getByIds(?array $ids);
     public function deleteByBasename(string $basename, string $password);
+    public function setNgByBasename(string $basename);
 }

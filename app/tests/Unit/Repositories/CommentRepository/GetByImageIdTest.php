@@ -43,7 +43,7 @@ class GetByImageIdTest extends TestCase
         $this->assertCount($count, $result);
     }
 
-    public function commentProvider()
+    public static function commentProvider()
     {
         return [
             ['create' => 100, 'get' => 10, 'count' => 10],

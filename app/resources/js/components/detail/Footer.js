@@ -57,15 +57,15 @@ function Main({ image }) {
         </ToolTip>
         <ShareTwitterButton image={image} />
         <ShareButton image={image} />
-        <Link
-          to={`${image.detail}`}
+        <a
+          href={`${image.image}`}
           target="_blank"
           rel="noopener noreferrer"
         >
           <IconButton>
             <OpenInNewIcon />
           </IconButton>
-        </Link>
+        </a>
         <IconButton onClick={openDeleteDialog}>
           <DeleteForeverIcon />
         </IconButton>
