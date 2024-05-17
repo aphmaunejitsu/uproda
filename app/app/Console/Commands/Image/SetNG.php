@@ -12,7 +12,7 @@ class SetNG extends Command
      *
      * @var string
      */
-    protected $signature = 'image:setNG {basename}';
+    protected $signature = 'image:setNG {basename} {--ng=1}';
 
     /**
      * The console command description.
@@ -38,6 +38,9 @@ class SetNG extends Command
      */
     public function handle(ImageService $service)
     {
-        return 0;
+        $this->info('Start Set NG image');
+        $result = $service->setNg($this->argument('basename'));
+        $this->info('Finished Set NG image');
+        return $result;
     }
 }
