@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Services\ImageServices;
@@ -21,11 +20,11 @@ class SetNg extends ImageService implements TransactionInterface
     public function __invoke(string $basename)
     {
         if (($image =$this->repo->setNgByBasename($basename)) === null) {
-           throw new ImageServiceException('画像をNGに設定できませんでした', 10000);
+           throw new ImageServiceException('NGに設定できませんでした', 10000);
         }
 
         if (!$image->imageHash->ng) {
-            throw new ImageServiceException('画像をNGに設定できませんでした', 100001);
+            throw new ImageServiceException('NGに設定できませんでした', 100001);
         }
 
         return $this->file->deleteByImage($image);
