@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 
 function View({ image }) {
   if (!image) {
@@ -19,14 +18,14 @@ function View({ image }) {
         <div
           className="image"
         >
-          <Link to={`${image.detail}`} target='_blank'>
+          <a href={`${image.image}`}>
             <img
               src={image.image}
               alt={image.comment ? image.comment : image.basename}
               onClick={handleNotClose}
               aria-hidden="true"
             />
-          </Link>
+          </a>
         </div>
         <div className="contents">
           {image.comment}

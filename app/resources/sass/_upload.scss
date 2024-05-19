@@ -28,10 +28,9 @@
     padding: 0.5rem;
     height: 100%;
 
-    @include mq(md) {
-      margin: auto;
-      width: 50%;
-    }
+    margin: auto;
+    width: 90%;
+
     @include mq(lg) {
       margin: auto;
       width: 50%;
@@ -50,12 +49,6 @@
       }
 
       position: relative;
-      @include mq(md) {
-        min-width: 400px;
-      }
-      @include mq(md) {
-        min-width: 500px;
-      }
 
       img {
         width: 160px;
