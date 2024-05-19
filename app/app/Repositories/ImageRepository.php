@@ -110,6 +110,14 @@ class ImageRepository implements ImageRepositoryInterface
         return $image;
     }
 
+    public function deleteByImageHash(string $hash)
+    {
+        return $this->model
+                    ->whereHas('imageHash', function ($query) use ($hash) {
+                        $query->where('hash', $hash);
+                    })->delete();
+    }
+
     public function setNgByBasename(string $basename)
     {
         if (!($image = $this->model->where('basename', $basename)->first())) {
@@ -118,6 +126,7 @@ class ImageRepository implements ImageRepositoryInterface
 
         $image->imageHash->ng = 1;
         $image->imageHash->save();
+        $image->delete();
         return $image;
     }
 }
