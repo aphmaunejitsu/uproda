@@ -173,6 +173,7 @@ function Main() {
         formData.append('comment', comment);
       }
 
+
       formData.append('hash', uuid);
       formData.append('file', chunk, image.name);
       formData.append('token', recaptcha);
