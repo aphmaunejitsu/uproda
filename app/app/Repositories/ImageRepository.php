@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Image;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Log;
 
 class ImageRepository implements ImageRepositoryInterface
 {
@@ -112,10 +113,16 @@ class ImageRepository implements ImageRepositoryInterface
 
     public function deleteByImageHash(string $hash)
     {
-        return $this->model
+        $images = $this->model
                     ->whereHas('imageHash', function ($query) use ($hash) {
                         $query->where('hash', $hash);
-                    })->delete();
+                    });
+
+        foreach ($images as $image) {
+            $image->delete();
+        }
+
+        return $images;
     }
 
     public function setNgByBasename(string $basename)

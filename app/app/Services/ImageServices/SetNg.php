@@ -27,6 +27,12 @@ class SetNg extends ImageService implements TransactionInterface
             throw new ImageServiceException('NGに設定できませんでした', 10001);
         }
 
-        return $this->file->deleteByImage($image);
+        $images = $this->repo->delteByImageHash($image->imageHash->hash);
+
+        foreach ($images as $i) {
+            $this->file->deleteByImage($i);
+        }
+
+        return $images->count();
     }
 }
