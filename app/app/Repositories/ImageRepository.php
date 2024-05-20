@@ -133,7 +133,6 @@ class ImageRepository implements ImageRepositoryInterface
 
         $image->imageHash->ng = 1;
         $image->imageHash->save();
-        $image->delete();
         return $image;
     }
 }
