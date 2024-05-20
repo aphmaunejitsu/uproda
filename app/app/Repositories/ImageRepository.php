@@ -116,7 +116,7 @@ class ImageRepository implements ImageRepositoryInterface
         $images = $this->model
                     ->whereHas('imageHash', function ($query) use ($hash) {
                         $query->where('hash', $hash);
-                    });
+                    })->get();
 
         foreach ($images as $image) {
             $image->delete();
