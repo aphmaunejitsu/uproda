@@ -169,7 +169,11 @@ function Main() {
         formData.append('delkey', delkey);
       }
 
-      formData.append('comment', comment ? comment : "");
+      if (comment) {
+        formData.append('comment', comment);
+      }
+
+
       formData.append('hash', uuid);
       formData.append('file', chunk, image.name);
       formData.append('token', recaptcha);

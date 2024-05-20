@@ -59,7 +59,7 @@ class Upload extends Controller
                         $merged['ip'] = $imageData['ip'];
                         $merged['original'] = $imageData['original'];
                         $merged['delkey'] = $imageData['delkey'];
-                        $merged['comment'] = $data['comment'];
+                        $merged['comment'] = $data['comment'] ?? null;
                         $image = $this->service->uploaded($merged['path'], $merged);
 
                         ProcessGenerateThumbnail::dispatchAfterResponse($image);
