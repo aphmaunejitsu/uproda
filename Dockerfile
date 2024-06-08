@@ -8,7 +8,7 @@ RUN composer install --optimize-autoloader --no-dev --no-scripts
 FROM node:14.21.3 as node
 ADD ./app /tmp/node
 WORKDIR /tmp/node
-RUN npm install laravel-mix@6.0.49 --save-dev && \
+RUN npm install laravel-mix@latest --save-dev && \
     npm run prod
 
 FROM php:8.2-fpm
@@ -28,6 +28,7 @@ RUN apt-get update --fix-missing --no-install-recommends \
         nginx \
         supervisor \
         busybox \
+        cron \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ --with-webp=/usr/include \
     && docker-php-ext-install -j$(nproc) gd exif iconv pdo pdo_mysql mbstring pcntl \
     && pecl install redis \
@@ -52,6 +53,10 @@ COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
 
 # www
 ADD ./app /var/www/html
+
+# cron
+RUN chmod 0644 /etc/cron.d/crontab
+RUN /usr/bin/crontab /etc/cron.d/crontab
 
 # supervisor conf
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
