@@ -55,8 +55,8 @@ COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
 ADD ./app /var/www/html
 
 # cron
-RUN chmod 0644 /etc/cron.d/crontab
-RUN /usr/bin/crontab /etc/cron.d/crontab
+# RUN chmod 0644 /etc/cron.d/crontab
+# RUN /usr/bin/crontab /etc/cron.d/crontab
 
 # supervisor conf
 ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
