@@ -27,6 +27,7 @@ RUN apt-get update --fix-missing --no-install-recommends \
         libmagickwand-dev \
         nginx \
         supervisor \
+        busybox \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ --with-webp=/usr/include \
     && docker-php-ext-install -j$(nproc) gd exif iconv pdo pdo_mysql mbstring pcntl \
     && pecl install redis \
