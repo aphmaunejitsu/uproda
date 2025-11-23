@@ -7,13 +7,12 @@
 	<header class='warecoli'>
 	<?php echo $partials['header'] ?>
 	</header>
-    <div id='top-ad' class="dmm">
-        <?php if (isset($_SERVER['DMM_BANNER1']) && ($_SERVER['DMM_BANNER1'])):  ?>
-        <?php echo $_SERVER['DMM_BANNER1']; ?>
-        <?php endif; ?>
-        <?php if (isset($_SERVER['DMM_BANNER2']) && ($_SERVER['DMM_BANNER2'])):  ?>
-        <?php echo $_SERVER['DMM_BANNER2']; ?>
-        <?php endif; ?>
+    <div id='top-ad' class="amazon">
+		<div id='top-ad-amazon'>
+			<a href="https://www.amazon.co.jp/hz/audible/mlp/membership/premiumplus/monthly/paid/?_encoding=UTF8&actionCode=AMAP30DTRIAL3191028256260&ref_=cct_cg_audible_1a1&pf_rd_p=e26c997d-cfd4-4e66-8714-209dbdb54cd3&pf_rd_r=EFJA3NNEHPGESPF6NCWD?rafale-22" target="_blank">
+				<img src="https://m.media-amazon.com/images/G/09/2025/x-site/BFW/9mh1pa7/event_page/LU/BFW25_EP_003_LU_PageHeader_mb_750x200_JP.jpg" alt="Amazonオーディブル無料体験">
+			</a>
+		</div>
     </div>
 	<div id="root">
 		<div id="content">
@@ -21,12 +20,6 @@
 		</div>
 	</div>
     <div id="footer-ad" class='dmm'>
-        <?php if (isset($_SERVER['DMM_BANNER3']) && ($_SERVER['DMM_BANNER3'])):  ?>
-        <?php echo $_SERVER['DMM_BANNER3']; ?>
-        <?php endif; ?>
-        <?php if (isset($_SERVER['DMM_BANNER4']) && ($_SERVER['DMM_BANNER4'])):  ?>
-        <?php echo $_SERVER['DMM_BANNER4']; ?>
-        <?php endif; ?>
     </div>
 	<footer id="footer">
 	<?php echo $partials['footer'] ?>
