@@ -1,6 +1,7 @@
 <?php
 
-use Database\Seeders\DenyWordSeeder;
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
