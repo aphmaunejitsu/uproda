@@ -6,7 +6,7 @@ use Tests\TestCase;
 use App\Repositories\FileRepositoryInterface;
 use App\Repositories\FileRepository;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Laravel\Facades\Image;
 
 /**
  * @group upload
@@ -36,8 +36,8 @@ class ChangeLocationTest extends TestCase
     {
         $test = Storage::disk('local')->path('test.jpg');
         Storage::fake('tmp');
-        $image = Image::make($test);
-        Storage::disk('tmp')->put('gps.jpg', $image->stream());
+        $image = Image::read($test);
+        Storage::disk('tmp')->put('gps.jpg', $image->encodeByMediaType());
         $path = Storage::disk('tmp')->path('gps.jpg');
 
         $latitude  = 35.630152;
@@ -53,7 +53,7 @@ class ChangeLocationTest extends TestCase
             $altitude
         );
 
-        $image = Image::make($path);
+        $image = Image::read($path);
         $exif = $image->exif();
 
         $this->assertNotEquals($old['GPSLatitude'][0], $exif['GPSLatitude'][0]);

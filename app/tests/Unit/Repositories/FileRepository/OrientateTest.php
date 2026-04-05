@@ -6,7 +6,7 @@ use Tests\TestCase;
 use App\Repositories\FileRepositoryInterface;
 use App\Repositories\FileRepository;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Laravel\Facades\Image;
 
 /**
  * @group upload
@@ -37,14 +37,14 @@ class OrientateTest extends TestCase
     {
         $test = Storage::disk('local')->path('test.jpg');
         Storage::fake('tmp');
-        $image = Image::make($test);
-        Storage::disk('tmp')->put('gps.jpg', $image->stream());
+        $image = Image::read($test);
+        Storage::disk('tmp')->put('gps.jpg', $image->encodeByMediaType());
         $path = Storage::disk('tmp')->path('gps.jpg');
 
-        $original = Image::make($test)->exif();
+        $original = Image::read($test)->exif();
         $this->repo->orientate($path);
 
-        $changed = Image::make($path)->exif();
+        $changed = Image::read($path)->exif();
 
         $this->assertNotEquals($changed['Orientation'], $original['Orientation']);
         Storage::disk('tmp')->assertExists('gps.jpg');

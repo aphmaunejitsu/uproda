@@ -13,7 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image as FacadesImage;
+use Intervention\Image\Laravel\Facades\Image as FacadesImage;
 use Tests\TestCase;
 
 /**
@@ -50,8 +50,8 @@ class UploadedTest extends TestCase
         $test = Storage::disk('local')->path('test.jpg');
         Storage::fake('image');
         Storage::fake('tmp');
-        $image = FacadesImage::make($test);
-        $file = UploadedFile::fake()->createWithContent('lua.jpg', $image->stream());
+        $image = FacadesImage::read($test);
+        $file = UploadedFile::fake()->createWithContent('lua.jpg', $image->encodeByMediaType());
 
         $old = $image->exif();
         $tmp = $file->store('', 'tmp');
@@ -72,7 +72,7 @@ class UploadedTest extends TestCase
 
         $path = $this->buildImagePath($result->basename, $result->ext);
         $thumb = $this->buildThumbnailPath($result->basename, $result->t_ext);
-        $up = FacadesImage::make(Storage::disk('image')->path($path));
+        $up = FacadesImage::read(Storage::disk('image')->path($path));
 
         $exif = $up->exif();
 
@@ -118,7 +118,7 @@ class UploadedTest extends TestCase
 
         $path = $this->buildImagePath($result->basename, $result->ext);
         $thumb = $this->buildThumbnailPath($result->basename, $result->t_ext);
-        $up = FacadesImage::make(Storage::disk('image')->path($path));
+        $up = FacadesImage::read(Storage::disk('image')->path($path));
 
         $this->assertInstanceOf(ImageHash::class, $result->imageHash);
         $this->assertInstanceOf(Image::class, $result);

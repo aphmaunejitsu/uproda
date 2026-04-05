@@ -5,7 +5,7 @@ namespace App\Repositories;
 use Illuminate\Support\Facades\Storage;
 use App\Libs\Traits\BuildImagePath;
 use App\Models\Image as ModelsImage;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Laravel\Facades\Image;
 use Imagick;
 use App\Exceptions\FileRepositoryException;
 use Exception;
@@ -27,7 +27,7 @@ class FileRepository implements FileRepositoryInterface
         $path = $this->buildImagePath($basename, $ext);
         $stream = Storage::disk($storage)->get($path);
 
-        $image = Image::make($stream);
+        $image = Image::read($stream);
 
 
         return [
@@ -38,7 +38,7 @@ class FileRepository implements FileRepositoryInterface
 
     public function getGeometryByFile(string $file)
     {
-        $image = Image::make($file);
+        $image = Image::read($file);
 
         return [
             'width'  => $image->width(),
@@ -158,13 +158,14 @@ class FileRepository implements FileRepositoryInterface
     public function orientate(string $path)
     {
         try {
-            $image = Image::make($path);
+            $image = Image::read($path);
             if (! $image->exif()) {
                 Log::debug('have no exif');
                 return false;
             }
-            $image->orientate();
-            return $image->save();
+            $image->orient();
+            $image->save($path);
+            return true;
         } catch (Exception $e) {
             // エラーは全て無視
             Log::warning(__METHOD__, ['message' => $e]);
