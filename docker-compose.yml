@@ -25,7 +25,7 @@ services:
       - redis
 
   db-primary:
-    image: mariadb:10.5
+    image: mariadb:11.4
     env_file:
       - .env
     ports:
@@ -36,14 +36,14 @@ services:
       - ./db/cnf/primary.cnf:/etc/mysql/conf.d/my.cnf
 
   db-secondary:
-    image: mariadb:10.5
+    image: mariadb:11.4
     env_file:
       - .env
     ports:
       - "127.0.0.1:53316:3306"
 
   db-test:
-    image: mariadb:10.5
+    image: mariadb:11.4
     env_file:
       - .env
     ports:

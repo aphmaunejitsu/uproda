@@ -1,28 +1,40 @@
-# composer
-FROM composer:2.4.4 as vendor
-ADD ./app /tmp/vendor
+# =============================================================================
+# Stage 1: Composer dependencies
+# =============================================================================
+FROM composer:2 AS vendor
+
 WORKDIR /tmp/vendor
-RUN composer install --optimize-autoloader --no-dev --no-scripts
+COPY ./app/composer.json ./app/composer.lock ./
+RUN composer install --optimize-autoloader --no-dev --no-scripts --no-interaction --prefer-dist
 
-# node
-FROM node:14.21.3 as node
-ADD ./app /tmp/node
-WORKDIR /tmp/node
-RUN npm install laravel-mix@6.0.49 --save-dev && \
-    npm run prod
+# =============================================================================
+# Stage 2: Frontend assets build
+# =============================================================================
+FROM node:20-alpine AS assets
 
-FROM php:8.2-fpm
+WORKDIR /tmp/assets
+COPY ./app/package.json ./app/package-lock.json ./
+RUN npm ci --no-audit
+
+COPY ./app/webpack.mix.js ./
+COPY ./app/resources ./resources
+RUN npm run prod
+
+# =============================================================================
+# Stage 3: PHP extensions build (cached layer)
+# =============================================================================
+FROM php:8.4-fpm AS php-base
+
 RUN apt-get update --fix-missing --no-install-recommends \
     && apt-get upgrade -y \
-    && apt-get install -y \
-        build-essential \
-        curl \
+    && apt-get install -y --no-install-recommends \
         libzip-dev \
         zip \
         libonig-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
         libwebp-dev \
+        libfreetype6-dev \
         imagemagick \
         libmagickwand-dev \
         nginx \
@@ -33,48 +45,61 @@ RUN apt-get update --fix-missing --no-install-recommends \
     && docker-php-ext-enable redis \
     && docker-php-ext-configure zip \
     && docker-php-ext-install zip \
-    && pecl install -o -f imagick \
-    && sed -i -e 's/<policy domain="resource" name="memory" value="256MiB"\/>/<policy domain="resource" name="memory" value="512MiB"\/>/g' /etc/ImageMagick-6/policy.xml \
-    && sed -i -e 's/<policy domain="resource" name="area" value="128MP"\/>/<policy domain="resource" name="area" value="512MP"\/>/g' /etc/ImageMagick-6/policy.xml \
-    && sed -i -e 's/<policy domain="resource" name="width" value="16KP"\/>/<policy domain="resource" name="width" value="32KP"\/>/g' /etc/ImageMagick-6/policy.xml \
-    && sed -i -e 's/<policy domain="resource" name="height" value="16KP"\/>/<policy domain="resource" name="height" value="32KP"\/>/g' /etc/ImageMagick-6/policy.xml \
+    && pecl install imagick \
     && docker-php-ext-enable imagick \
     && rm -rf /var/lib/apt/lists/* \
     && docker-php-source delete \
     && apt-get clean
 
-# Copy Source
+# Adjust ImageMagick resource limits
+RUN sed -i -e 's/<policy domain="resource" name="memory" value="256MiB"\/>/<policy domain="resource" name="memory" value="512MiB"\/>/g' /etc/ImageMagick-6/policy.xml \
+    && sed -i -e 's/<policy domain="resource" name="area" value="128MP"\/>/<policy domain="resource" name="area" value="512MP"\/>/g' /etc/ImageMagick-6/policy.xml \
+    && sed -i -e 's/<policy domain="resource" name="width" value="16KP"\/>/<policy domain="resource" name="width" value="32KP"\/>/g' /etc/ImageMagick-6/policy.xml \
+    && sed -i -e 's/<policy domain="resource" name="height" value="16KP"\/>/<policy domain="resource" name="height" value="32KP"\/>/g' /etc/ImageMagick-6/policy.xml
+
+# =============================================================================
+# Stage 4: Final runtime
+# =============================================================================
+FROM php-base AS runtime
+
+# Supervisor configuration
+COPY ./build/supervisor/supervisor.conf /etc/supervisor.conf
+COPY ./build/supervisor/conf.d/php-fpm.conf /etc/supervisor/conf.d/php-fpm.conf
+COPY ./build/supervisor/conf.d/nginx.conf /etc/supervisor/conf.d/nginx.conf
+COPY ./build/supervisor/conf.d/cron.conf /etc/supervisor/conf.d/cron.conf
+COPY ./build/supervisor/conf.d/roda.conf /etc/supervisor/conf.d/roda.conf
+
+# Nginx configuration
+COPY ./build/nginx/conf.d/log-json-format.conf /etc/nginx/http.d/00-log-json-format.conf
+COPY ./build/nginx/conf.d/default.conf.mustache /tmp/default.conf.mustache
+
+# PHP configuration
+COPY ./build/php/conf.d/upload.ini /usr/local/etc/php/conf.d/upload.ini
+COPY ./build/php/conf.d/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.ini
+
+# Crontab
+COPY ./build/cron/crontab /var/spool/cron/crontabs/root
+
+# Mustache template engine
 COPY --from=metal3d/mo /usr/local/bin/mo /usr/bin/mo
-COPY --from=node /tmp/node /var/www/html
-COPY --from=vendor /tmp/vendor /var/www/html
-COPY --from=composer:2.4.4 /usr/bin/composer /usr/bin/composer
-
-# www
-ADD ./app /var/www/html
-
-# supervisor conf
-ADD ./build/supervisor/supervisor.conf /etc/supervisor.conf
-ADD ./build/supervisor/conf.d/php-fpm.conf /etc/supervisor/conf.d/php-fpm.conf
-ADD ./build/supervisor/conf.d/nginx.conf /etc/supervisor/conf.d/nginx.conf
-ADD ./build/supervisor/conf.d/cron.conf /etc/supervisor/conf.d/cron.conf
-ADD ./build/supervisor/conf.d/roda.conf /etc/supervisor/conf.d/roda.conf
-
-# nginx conf
-ADD ./build/nginx/conf.d/log-json-format.conf /etc/nginx/http.d/00-log-json-format.conf
-ADD ./build/nginx/conf.d/default.conf.mustache /tmp/default.conf.mustache
-
-# php conf
-ADD ./build/php/conf.d/upload.ini /usr/local/etc/php/conf.d/upload.ini
-ADD ./build/php/conf.d/memory-limit.ini /usr/local/etc/php/conf.d/memory-limit.ini
-
-# crontab
-ADD ./build/cron/crontab /var/spool/cron/crontabs/root
 
 WORKDIR /var/www/html
-RUN chown -R www-data:www-data /var/www/html \
-    && composer install --optimize-autoloader --no-dev
 
-VOLUME  /var/www/html/storage
+# Application source (single copy)
+COPY ./app .
+
+# Overlay vendor dependencies from Stage 1
+COPY --from=vendor /tmp/vendor/vendor ./vendor
+
+# Overlay built assets from Stage 2
+COPY --from=assets /tmp/assets/public/js ./public/js
+COPY --from=assets /tmp/assets/public/css ./public/css
+COPY --from=assets /tmp/assets/public/mix-manifest.json ./public/mix-manifest.json
+COPY --from=assets /tmp/assets/public/images ./public/images
+
+RUN chown -R www-data:www-data /var/www/html
+
+VOLUME /var/www/html/storage
 
 # Environment
 ARG APP_DEBUG
@@ -183,7 +208,7 @@ ENV RODA_URL_IMAGE_BASE=$RODA_URL_IMAGE_BASE
 ENV RODA_WAIT_TIME=$RODA_WAIT_TIME
 
 ENV SESSION_DRIVER=$SESSION_DRIVER
-ENV SESSION_LIFETIMEA=$SESSION_LIFETIME
+ENV SESSION_LIFETIME=$SESSION_LIFETIME
 
 ENV MIX_RODA_NAME=$RODA_NAME
 ENV MIX_APP_URL=$APP_URL
@@ -203,8 +228,8 @@ ENV MIX_RODA_RENRAKU_NAME=$RODA_RENRAKU_NAME
 ENV MIX_RODA_RENRAKU_TWITTER=$RODA_RENRAKU_TWITTER
 ENV MIX_RODA_404_IMG_DESCRIPTION=$RODA_404_IMG_DESCRIPTION
 
-# script
-ADD ./build/start.sh /start.sh
+# Entrypoint
+COPY ./build/start.sh /start.sh
 RUN chmod +x /start.sh
 
 EXPOSE 80
